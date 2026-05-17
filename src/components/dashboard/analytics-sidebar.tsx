@@ -15,28 +15,30 @@ import {
   Tooltip
 } from "recharts";
 
-// Mock data for Radar Chart
-const radarData = [
-  { subject: 'Win %', A: 85, fullMark: 100 },
-  { subject: 'Profit factor', A: 65, fullMark: 100 },
-  { subject: 'Avg win/loss', A: 50, fullMark: 100 },
-  { subject: 'Recovery factor', A: 70, fullMark: 100 },
-  { subject: 'Max drawdown', A: 90, fullMark: 100 },
-  { subject: 'Consistency', A: 75, fullMark: 100 },
-];
+export function AnalyticsSidebar({ cumulativeData, kpis }: { cumulativeData?: any[], kpis?: any }) {
+  
+  // Use real data or fallback to empty state
+  const areaData = cumulativeData && cumulativeData.length > 0 ? cumulativeData : [
+    { date: 'No Data', value: 0 }
+  ];
 
-// Mock data for Area Chart
-const areaData = [
-  { date: '03/19/23', value: 0 },
-  { date: '04/01/24', value: 2000 },
-  { date: '05/01/24', value: 3500 },
-  { date: '06/11/24', value: 3000 },
-  { date: '06/18/24', value: 5000 },
-  { date: '06/24/24', value: 5500 },
-  { date: '06/30/24', value: 7183 },
-];
+  // Dynamic Radar Calculation based on KPIs
+  // In a real app, these would have complex algorithms comparing user to platform averages
+  const winScore = kpis ? Math.min(100, kpis.winRate * 1.5) : 50;
+  const pfScore = kpis ? Math.min(100, kpis.profitFactor * 30) : 50;
+  const avgScore = kpis && kpis.avgLoss > 0 ? Math.min(100, (kpis.avgWin / kpis.avgLoss) * 30) : 50;
 
-export function AnalyticsSidebar() {
+  const radarData = [
+    { subject: 'Win %', A: winScore, fullMark: 100 },
+    { subject: 'Profit factor', A: pfScore, fullMark: 100 },
+    { subject: 'Avg win/loss', A: avgScore, fullMark: 100 },
+    { subject: 'Recovery factor', A: 70, fullMark: 100 }, // Mocked for MVP
+    { subject: 'Max drawdown', A: 90, fullMark: 100 },    // Mocked for MVP
+    { subject: 'Consistency', A: 75, fullMark: 100 },     // Mocked for MVP
+  ];
+
+  const zellaScore = (winScore + pfScore + avgScore + 70 + 90 + 75) / 6;
+
   return (
     <>
       {/* Zella Score / Radar Chart */}
@@ -69,11 +71,10 @@ export function AnalyticsSidebar() {
           <div className="mt-4">
             <div className="text-xs text-slate-400 mb-1">Your Zella Score</div>
             <div className="flex items-end justify-between">
-              <div className="text-3xl font-semibold text-white">82.61</div>
+              <div className="text-3xl font-semibold text-white">{zellaScore.toFixed(2)}</div>
             </div>
-            {/* Custom gradient bar */}
             <div className="w-full h-1.5 rounded-full mt-3 bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-500 relative">
-               <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white border-2 border-[#131823] rounded-full" style={{ left: '82.61%' }}></div>
+               <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white border-2 border-[#131823] rounded-full" style={{ left: `${zellaScore}%` }}></div>
             </div>
             <div className="flex justify-between mt-2 text-[10px] text-slate-500">
               <span>0</span>
