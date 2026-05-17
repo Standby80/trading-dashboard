@@ -2,7 +2,6 @@ import { KPICards } from "@/components/dashboard/kpi-cards";
 import { TradingCalendar } from "@/components/dashboard/trading-calendar";
 import { AnalyticsSidebar } from "@/components/dashboard/analytics-sidebar";
 import { MT5ConnectForm } from "@/components/dashboard/mt5-connect-form";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { RefreshCcw, Rocket } from "lucide-react";
 import { TradeHistoryTable } from "@/components/dashboard/trade-history-table";
 import { getDashboardData } from "@/lib/data-service";
@@ -48,7 +47,7 @@ export default async function DashboardPage() {
         </header>
 
         {/* Scrollable Dashboard */}
-        <ScrollArea className="flex-1 px-4 sm:px-6 py-6">
+        <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6">
           <div className="max-w-[1600px] mx-auto space-y-6">
             
             {/* Top KPI Cards */}
@@ -75,7 +74,7 @@ export default async function DashboardPage() {
             </div>
             
           </div>
-        </ScrollArea>
+        </div>
       </div>
     </div>
   );
