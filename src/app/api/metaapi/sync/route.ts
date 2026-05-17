@@ -42,8 +42,8 @@ export async function POST(request: Request) {
       
       // Robust search: case-insensitive server match and string conversion for login
       metaApiAccount = accounts.find(a => 
-        a.login.toString() === account.toString() && 
-        a.server.toLowerCase() === broker.toLowerCase()
+        a.login.toString().trim() === account.toString().trim() && 
+        a.server.toLowerCase().trim() === broker.toLowerCase().trim()
       );
       
       if (!metaApiAccount) {
