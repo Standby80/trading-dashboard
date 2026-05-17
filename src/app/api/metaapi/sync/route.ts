@@ -66,7 +66,7 @@ export async function POST(request: Request) {
     // 3. Fetch Historical Deals (Last 60 days for MVP)
     const startTime = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
     const endTime = new Date();
-    const history = await connection.getHistoryOrdersByTimeRange(startTime, endTime);
+    const history = await connection.getDealsByTimeRange(startTime, endTime);
     
     // 4. Process Deals
     // In MT5, a completed trade is usually a DEAL_ENTRY_OUT
