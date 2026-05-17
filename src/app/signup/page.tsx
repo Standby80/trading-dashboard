@@ -31,7 +31,7 @@ export default function SignupPage() {
       <div className="w-full max-w-md space-y-8 bg-[#131823] p-8 rounded-2xl border border-white/5 shadow-2xl">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight">Create an account</h2>
-          <p className="text-sm text-slate-400 mt-2">Start analyzing your trades today</p>
+          <p className="text-sm text-slate-400 mt-2">Start analyzing your trades with MetaMetrics today</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6 mt-8">

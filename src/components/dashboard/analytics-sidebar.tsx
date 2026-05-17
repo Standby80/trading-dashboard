@@ -37,15 +37,15 @@ export function AnalyticsSidebar({ cumulativeData, kpis }: { cumulativeData?: an
     { subject: 'Consistency', A: 75, fullMark: 100 },     // Mocked for MVP
   ];
 
-  const zellaScore = (winScore + pfScore + avgScore + 70 + 90 + 75) / 6;
+  const metaMetricsScore = (winScore + pfScore + avgScore + 70 + 90 + 75) / 6;
 
   return (
     <>
-      {/* Zella Score / Radar Chart */}
+      {/* MetaMetrics Score / Radar Chart */}
       <Card className="bg-[#131823] border-white/5 rounded-xl shadow-none">
         <CardHeader className="pb-0 pt-5 px-5">
           <CardTitle className="text-sm font-medium text-slate-300 flex items-center gap-1.5">
-            Zella score <Info className="w-4 h-4 text-slate-500" />
+            MetaMetrics Score <Info className="w-4 h-4 text-slate-500" />
           </CardTitle>
         </CardHeader>
         <CardContent className="p-5 flex flex-col">
@@ -69,12 +69,12 @@ export function AnalyticsSidebar({ cumulativeData, kpis }: { cumulativeData?: an
           </div>
           
           <div className="mt-4">
-            <div className="text-xs text-slate-400 mb-1">Your Zella Score</div>
+            <div className="text-xs text-slate-400 mb-1">Your MetaMetrics Score</div>
             <div className="flex items-end justify-between">
-              <div className="text-3xl font-semibold text-white">{zellaScore.toFixed(2)}</div>
+              <div className="text-3xl font-semibold text-white">{metaMetricsScore.toFixed(2)}</div>
             </div>
             <div className="w-full h-1.5 rounded-full mt-3 bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-500 relative">
-               <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white border-2 border-[#131823] rounded-full" style={{ left: `${zellaScore}%` }}></div>
+               <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white border-2 border-[#131823] rounded-full" style={{ left: `${metaMetricsScore}%` }}></div>
             </div>
             <div className="flex justify-between mt-2 text-[10px] text-slate-500">
               <span>0</span>

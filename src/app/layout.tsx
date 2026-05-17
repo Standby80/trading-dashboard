@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Trading Analytics Dashboard",
-  description: "SaaS Trading Journal and Analytics",
+  title: "MetaMetrics",
+  description: "Advanced Trading Analytics & Journal",
 };
 
 export default function RootLayout({
