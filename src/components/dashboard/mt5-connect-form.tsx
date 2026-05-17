@@ -56,10 +56,10 @@ export function MT5ConnectForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className="bg-[#1e293b] hover:bg-[#334155] border border-white/10 text-white px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-2 transition-colors">
+        <Button className="bg-[#1e293b] hover:bg-[#334155] border border-white/10 text-white px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-2 transition-colors h-auto">
           <Link2 className="w-4 h-4" />
           Connect MT5
-        </button>
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-[#0b0e14] text-slate-50 border-white/10">
         <DialogHeader>
