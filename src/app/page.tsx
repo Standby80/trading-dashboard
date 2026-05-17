@@ -4,9 +4,15 @@ import { AnalyticsSidebar } from "@/components/dashboard/analytics-sidebar";
 import { MT5ConnectForm } from "@/components/dashboard/mt5-connect-form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RefreshCcw, Rocket } from "lucide-react";
+import { TradeHistoryTable } from "@/components/dashboard/trade-history-table";
 import { getDashboardData } from "@/lib/data-service";
+import { createClient } from '@/lib/supabase/server';
+import { logout } from '@/app/login/actions';
 
 export default async function DashboardPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
   const data = await getDashboardData();
   const isConnected = !!data;
 
@@ -27,11 +33,17 @@ export default async function DashboardPage() {
             )}
           </div>
           <div className="flex items-center gap-3">
+            <span className="text-xs text-slate-500 mr-2 hidden sm:inline-block">{user?.email}</span>
             {!isConnected && <MT5ConnectForm />}
             <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded-md text-sm font-medium flex items-center gap-2 transition-colors">
               <Rocket className="w-4 h-4" />
               Start my day
             </button>
+            <form action={logout}>
+              <button type="submit" className="text-xs text-slate-400 hover:text-white px-2 py-1 transition-colors">
+                Logout
+              </button>
+            </form>
           </div>
         </header>
 
@@ -43,7 +55,7 @@ export default async function DashboardPage() {
             <KPICards data={data?.kpis} />
 
             {/* Main Grid: Calendar + Analytics */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-20">
+            <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               
               {/* Calendar Module */}
               <div className="lg:col-span-2 xl:col-span-3">
@@ -56,6 +68,12 @@ export default async function DashboardPage() {
               </div>
 
             </div>
+
+            {/* Trade History Table */}
+            <div className="pb-20">
+              <TradeHistoryTable trades={data?.rawTrades} />
+            </div>
+            
           </div>
         </ScrollArea>
       </div>

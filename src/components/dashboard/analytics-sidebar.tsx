@@ -88,7 +88,7 @@ export function AnalyticsSidebar({ cumulativeData, kpis }: { cumulativeData?: an
         </CardContent>
       </Card>
 
-      {/* Cumulative P&L Graph */}
+    {/* Cumulative P&L Graph */}
       <Card className="bg-[#131823] border-white/5 rounded-xl shadow-none">
         <CardHeader className="pb-0 pt-5 px-5">
           <CardTitle className="text-sm font-medium text-slate-300 flex items-center gap-1.5">
@@ -135,6 +135,24 @@ export function AnalyticsSidebar({ cumulativeData, kpis }: { cumulativeData?: an
           </div>
         </CardContent>
       </Card>
+
+      {/* Additional Stats Grid */}
+      <div className="grid grid-cols-2 gap-4">
+        <Card className="bg-[#131823] border-white/5 rounded-xl shadow-none">
+          <CardContent className="p-4">
+            <div className="text-xs text-slate-400 mb-1">Max Win Streak</div>
+            <div className="text-xl font-semibold text-emerald-400">{kpis?.maxWinStreak || 0} trades</div>
+          </CardContent>
+        </Card>
+        <Card className="bg-[#131823] border-white/5 rounded-xl shadow-none">
+          <CardContent className="p-4">
+            <div className="text-xs text-slate-400 mb-1">Avg Trade Duration</div>
+            <div className="text-xl font-semibold text-indigo-400">
+              {kpis?.avgDurationMins ? `${Math.round(kpis.avgDurationMins)} min` : '-'}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 }
