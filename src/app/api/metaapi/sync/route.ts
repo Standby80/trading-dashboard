@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import MetaApi from 'metaapi.cloud-sdk';
+import MetaApi from 'metaapi.cloud-sdk/esm-node';
 
 export const dynamic = 'force-dynamic';
 
