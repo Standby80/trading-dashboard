@@ -39,7 +39,12 @@ export async function POST(request: Request) {
     let metaApiAccount;
     try {
       const accounts = await api.metatraderAccountApi.getAccountsWithInfiniteScrollPagination();
-      metaApiAccount = accounts.find(a => a.login === account && a.server === broker);
+      
+      // Robust search: case-insensitive server match and string conversion for login
+      metaApiAccount = accounts.find(a => 
+        a.login.toString() === account.toString() && 
+        a.server.toLowerCase() === broker.toLowerCase()
+      );
       
       if (!metaApiAccount) {
         metaApiAccount = await api.metatraderAccountApi.createAccount({
@@ -57,7 +62,10 @@ export async function POST(request: Request) {
     }
 
     // 2. Wait for deployment and connect
-    await metaApiAccount.deploy();
+    if (metaApiAccount.state !== 'DEPLOYED') {
+      await metaApiAccount.deploy();
+    }
+    
     await metaApiAccount.waitConnected();
     const connection = metaApiAccount.getRPCConnection();
     await connection.connect();
