@@ -1,13 +1,11 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import MetaApi from 'metaapi.cloud-sdk';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
-    // Dynamically import the SDK to prevent Next.js build/hydration errors from Node modules
-    const MetaApi = (await import('metaapi.cloud-sdk')).default;
-
     const supabase = await createClient();
     
     // Ensure user is authenticated
