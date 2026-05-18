@@ -84,39 +84,65 @@ export function ReportUploadForm() {
       
       rows.forEach(row => {
         const cells = row.querySelectorAll('td')
-        if (cells.length >= 13) {
-          const typeStr = cells[3]?.textContent?.trim().toLowerCase() || ''
-          
-          // Only process actual closed trades (buy/sell)
-          if (typeStr === 'buy' || typeStr === 'sell') {
-            const openTimeStr = cells[0]?.textContent?.trim() || ''
-            const closeTimeStr = cells[8]?.textContent?.trim() || '' // Second time column is usually close time
-            
-            // Format MT5 dates: "YYYY.MM.DD HH:mm:ss" -> "YYYY-MM-DDTHH:mm:ssZ"
-            const openTime = openTimeStr.replace(/\./g, '-')
-            const closeTime = closeTimeStr.replace(/\./g, '-')
-            
-            // If it doesn't look like a valid date, skip
-            if (!closeTime.includes('-')) return
+        if (cells.length < 10) return;
 
-            const profitRaw = cells[12]?.textContent?.replace(/ /g, '') || '0'
-            const commissionRaw = cells[10]?.textContent?.replace(/ /g, '') || '0'
-            const swapRaw = cells[11]?.textContent?.replace(/ /g, '') || '0'
+        const textContents = Array.from(cells).map(c => c.textContent?.trim() || '')
+        
+        // Match dates like 2023.01.01 12:00:00 or 2023-01-01 12:00
+        const timeRegex = /^\d{4}[\.\-\/]\d{2}[\.\-\/]\d{2}\s\d{2}:\d{2}(:\d{2})?$/
+        const timeIndices = textContents.map((t, i) => timeRegex.test(t) ? i : -1).filter(i => i !== -1)
+
+        // A closed trade must have an open and a close time
+        if (timeIndices.length >= 2) {
+          const openTimeStr = textContents[timeIndices[0]]
+          const closeTimeStr = textContents[timeIndices[timeIndices.length - 1]]
+
+          let typeStr = ''
+          for (const txt of textContents) {
+            const lower = txt.toLowerCase()
+            if (lower === 'buy') { typeStr = 'buy'; break; }
+            if (lower === 'sell') { typeStr = 'sell'; break; }
+          }
+
+          if (typeStr) {
+            const isMT4 = timeIndices[0] === 1 // In MT4, ticket is index 0, open time is index 1
+
+            const symbol = isMT4 ? textContents[4] : textContents[2]
             
-            // We only add deals that actually closed (have a close time and profit)
-            if (closeTimeStr.length > 5) {
+            const parseFloatSafe = (str: string) => parseFloat(str.replace(/ /g, '')) || 0
+            
+            const volume = parseFloatSafe(isMT4 ? textContents[3] : textContents[4])
+            const price = parseFloatSafe(isMT4 ? textContents[5] : textContents[5])
+            
+            // Profit, swap, commission are usually at the end
+            const profit = parseFloatSafe(textContents[textContents.length - 1])
+            const swap = parseFloatSafe(textContents[textContents.length - 2])
+            // In MT4, there's Taxes and Commission before Swap. In MT5, it's just Commission.
+            // Let's just grab the third from last as commission
+            const commission = parseFloatSafe(textContents[textContents.length - 3])
+
+            const parseMT5Date = (dateStr: string) => {
+              if (!dateStr) return null;
+              const isoFormat = dateStr.replace(/[\.\/]/g, '-').replace(' ', 'T') + (dateStr.length <= 16 ? ':00Z' : 'Z');
+              const d = new Date(isoFormat);
+              return isNaN(d.getTime()) ? null : d.toISOString();
+            };
+
+            const openTime = parseMT5Date(openTimeStr);
+            const closeTime = parseMT5Date(closeTimeStr);
+
+            if (openTime && closeTime) {
               trades.push({
-                // Ticket number or generated ID
-                id: cells[1]?.textContent?.trim() || Math.random().toString(36).substring(7),
-                open_time: new Date(openTime).toISOString(),
-                close_time: new Date(closeTime).toISOString(),
-                symbol: cells[2]?.textContent?.trim() || 'Unknown',
+                id: textContents[isMT4 ? 0 : 1] || Math.random().toString(36).substring(7),
+                open_time: openTime,
+                close_time: closeTime,
+                symbol: symbol || 'Unknown',
                 type: typeStr === 'buy' ? 'DEAL_TYPE_BUY' : 'DEAL_TYPE_SELL',
-                volume: parseFloat(cells[4]?.textContent?.trim() || '0'),
-                price: parseFloat(cells[5]?.textContent?.trim() || '0'),
-                profit: parseFloat(profitRaw),
-                commission: parseFloat(commissionRaw),
-                swap: parseFloat(swapRaw)
+                volume,
+                price,
+                profit,
+                commission,
+                swap
               })
             }
           }
@@ -157,12 +183,14 @@ export function ReportUploadForm() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded-md text-sm font-medium flex items-center gap-2 transition-colors">
-          <UploadCloud className="w-4 h-4" />
-          Upload Report
-        </button>
-      </DialogTrigger>
+      <DialogTrigger 
+        render={
+          <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded-md text-sm font-medium flex items-center gap-2 transition-colors">
+            <UploadCloud className="w-4 h-4" />
+            Upload Report
+          </button>
+        }
+      />
       
       <DialogContent className="sm:max-w-md bg-[#0b0e14] border-white/5 text-slate-50">
         <DialogHeader>
