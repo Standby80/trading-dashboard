@@ -80,59 +80,37 @@ export function ReportUploadForm() {
       // MT5 reports usually use standard <tr> and <td> tags.
       // A closed deal (trade) usually has 13 or more columns in MT5.
       // Format is generally: Time, Position, Symbol, Type, Volume, Price, S/L, T/P, Time, Price, Commission, Swap, Profit
-      const rows = doc.querySelectorAll('tr')
+      const elements = doc.querySelectorAll('tr, div')
       const seenTickets = new Set<string>()
       
-      let profitIdx = -1, swapIdx = -1, commIdx = -1, ticketIdx = -1, typeIdx = -1, volIdx = -1, symbolIdx = -1;
-      let timeIdx = -1, dirIdx = -1, priceIdx = -1, closeTimeIdx = -1;
-      let isDealsTable = false;
+      let inAffarerSection = false;
 
-      rows.forEach(row => {
+      elements.forEach(node => {
+        if (node.tagName.toLowerCase() === 'div') {
+           const text = node.textContent?.toLowerCase().trim() || '';
+           if (text === 'affärer' || text === 'deals') {
+              inAffarerSection = true;
+           } else if (text === 'positioner' || text === 'ordrar' || text === 'resultat' || text === 'positions' || text === 'orders') {
+              inAffarerSection = false;
+           }
+           return;
+        }
+
+        if (!inAffarerSection) return;
+
+        const row = node as HTMLTableRowElement;
         const cells = row.querySelectorAll('td, th')
-        if (cells.length < 5) return;
+        if (cells.length < 13) return; // The Affärer table has 14 columns, we need at least 13 for index 12 (Vinst)
 
         const textContents = Array.from(cells).map(c => c.textContent?.trim() || '')
-        const lowerTexts = textContents.map(t => t.toLowerCase())
 
-        // Check if this is a header row (must contain time and profit columns)
-        const hasTime = lowerTexts.some(h => h === 'tid' || h === 'time' || h === 'öppna tid')
-        const hasProfit = lowerTexts.some(h => h === 'vinst' || h === 'profit')
-        
-        if (hasTime && hasProfit) {
-          isDealsTable = lowerTexts.some(h => h === 'riktning' || h === 'direction' || h === 'affär' || h === 'deal')
-          
-          profitIdx = lowerTexts.findIndex(h => h === 'vinst' || h === 'profit')
-          swapIdx = lowerTexts.findIndex(h => h === 'byt' || h === 'swap')
-          commIdx = lowerTexts.findIndex(h => h === 'provision' || h === 'commission' || h === 'taxes')
-          ticketIdx = lowerTexts.findIndex(h => h === 'affär' || h === 'deal' || h === 'position' || h === 'ticket' || h === 'order')
-          typeIdx = lowerTexts.findIndex(h => h === 'typ' || h === 'type')
-          volIdx = lowerTexts.findIndex(h => h === 'volym' || h === 'volume' || h === 'size')
-          symbolIdx = lowerTexts.findIndex(h => h === 'symbol' || h === 'item')
-          dirIdx = lowerTexts.findIndex(h => h === 'riktning' || h === 'direction')
-          priceIdx = lowerTexts.findIndex(h => h === 'pris' || h === 'price')
-          
-          const tIdxs: number[] = []
-          lowerTexts.forEach((h, i) => {
-             if (h === 'tid' || h === 'time' || h === 'öppna tid') tIdxs.push(i)
-          })
-          
-          timeIdx = tIdxs[0] ?? -1
-          closeTimeIdx = tIdxs.length > 1 ? tIdxs[1] : tIdxs[0]
-          
-          return; // Skip this header row
-        }
+        // Check Direction (Riktning) at index 4
+        // We only want 'out' deals which represent closed positions
+        const dirStr = textContents[4]?.toLowerCase() || '';
+        if (dirStr !== 'out') return;
 
-        // If we haven't found a valid header yet, skip
-        if (profitIdx === -1) return;
-
-        // For MT5 Deals table, only look for realized PnL (Direction == "out")
-        if (isDealsTable && dirIdx !== -1) {
-           const dirStr = textContents[dirIdx]?.toLowerCase() || '';
-           if (dirStr !== 'out') return;
-        }
-
-        // Skip balance deposits
-        const typeStrRaw = textContents[typeIdx]?.toLowerCase() || ''
+        // Skip balance row (initial balance added)
+        const typeStrRaw = textContents[3]?.toLowerCase() || ''
         if (typeStrRaw.includes('balance')) return;
 
         let typeStr = ''
@@ -140,15 +118,14 @@ export function ReportUploadForm() {
         if (typeStrRaw.includes('sell')) typeStr = 'sell'
         
         if (typeStr) {
-           const timeStr = isDealsTable ? textContents[timeIdx] : textContents[closeTimeIdx];
-           const openTimeStr = isDealsTable ? textContents[timeIdx] : textContents[timeIdx];
-           
-           const ticket_id = textContents[ticketIdx] || Math.random().toString(36).substring(7)
+           // Deal ID / Ticket is at index 1
+           const ticket_id = textContents[1] || Math.random().toString(36).substring(7)
            
            if (seenTickets.has(ticket_id)) return;
            seenTickets.add(ticket_id)
            
-           const parseFloatSafe = (str: string) => parseFloat((str || '').replace(/ /g, '')) || 0
+           // Clean all types of spaces (regular spaces and non-breaking spaces) before parsing to float
+           const parseFloatSafe = (str: string) => parseFloat((str || '').replace(/[\s\u00A0]+/g, '')) || 0
            
            const parseMT5Date = (dateStr: string) => {
               if (!dateStr) return null;
@@ -157,22 +134,22 @@ export function ReportUploadForm() {
               return isNaN(d.getTime()) ? null : d.toISOString();
            };
            
-           const openTime = parseMT5Date(openTimeStr);
-           const closeTime = parseMT5Date(timeStr);
+           // Time is at index 0
+           const closeTime = parseMT5Date(textContents[0]);
            
-           if (openTime && closeTime) {
+           if (closeTime) {
               trades.push({
                 ticket_id,
-                open_time: openTime,
+                open_time: closeTime, // Deals table only gives execution time, so we use it for both
                 close_time: closeTime,
-                symbol: symbolIdx !== -1 ? textContents[symbolIdx] : 'Unknown',
+                symbol: textContents[2] || 'Unknown',
                 type: typeStr === 'buy' ? 'DEAL_TYPE_BUY' : 'DEAL_TYPE_SELL',
-                volume: volIdx !== -1 ? parseFloatSafe(textContents[volIdx]) : 0,
-                open_price: priceIdx !== -1 ? parseFloatSafe(textContents[priceIdx]) : 0,
-                close_price: priceIdx !== -1 ? parseFloatSafe(textContents[priceIdx]) : 0,
-                profit: parseFloatSafe(textContents[profitIdx]),
-                commission: commIdx !== -1 ? parseFloatSafe(textContents[commIdx]) : 0,
-                swap: swapIdx !== -1 ? parseFloatSafe(textContents[swapIdx]) : 0
+                volume: parseFloatSafe(textContents[5]),
+                open_price: parseFloatSafe(textContents[6]), // Pris
+                close_price: parseFloatSafe(textContents[6]), // Pris
+                commission: parseFloatSafe(textContents[9]), // Provision
+                swap: parseFloatSafe(textContents[11]), // Byt
+                profit: parseFloatSafe(textContents[12]) // Vinst
               })
            }
         }
