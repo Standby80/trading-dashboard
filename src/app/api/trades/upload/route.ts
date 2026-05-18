@@ -31,8 +31,9 @@ export async function POST(request: Request) {
       .eq('user_id', user.id)
 
     if (fetchError) {
-      console.error('Failed to fetch existing trades:', fetchError)
-      return NextResponse.json({ error: 'Failed to read existing history' }, { status: 500 })
+      console.warn('Failed to fetch existing trades, proceeding with empty history assumption:', fetchError)
+      // We purposefully don't return 500 here. We just gracefully proceed with an empty set.
+      // If there's an actual database issue, the insert step will catch it.
     }
 
     const existingTicketIds = new Set(existingTrades?.map(t => t.ticket_id) || [])

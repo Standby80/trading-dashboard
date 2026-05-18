@@ -80,38 +80,39 @@ export function ReportUploadForm() {
       // MT5 reports usually use standard <tr> and <td> tags.
       // A closed deal (trade) usually has 13 or more columns in MT5.
       // Format is generally: Time, Position, Symbol, Type, Volume, Price, S/L, T/P, Time, Price, Commission, Swap, Profit
-      const elements = doc.querySelectorAll('tr, div')
+      const rows = doc.querySelectorAll('tr')
       const seenTickets = new Set<string>()
       
       let inAffarerSection = false;
 
-      elements.forEach(node => {
-        if (node.tagName.toLowerCase() === 'div') {
-           const text = node.textContent?.toLowerCase().trim() || '';
-           if (text === 'affärer' || text === 'deals') {
+      rows.forEach(row => {
+        const rowText = row.textContent?.toLowerCase().replace(/\s+/g, ' ').trim() || '';
+        
+        // Stop parsing if we reach the summary section
+        if (rowText.includes('resultat') || rowText.includes('saldo:')) {
+           inAffarerSection = false;
+        }
+
+        // Start parsing when we hit the Affärer section
+        if (!inAffarerSection) {
+           if (rowText === 'affärer' || rowText === 'deals' || rowText.includes('affärer') && rowText.length < 20) {
               inAffarerSection = true;
-           } else if (text === 'positioner' || text === 'ordrar' || text === 'resultat' || text === 'positions' || text === 'orders') {
-              inAffarerSection = false;
            }
            return;
         }
 
-        if (!inAffarerSection) return;
-
-        const row = node as HTMLTableRowElement;
         const cells = row.querySelectorAll('td, th')
-        if (cells.length < 13) return; // The Affärer table has 14 columns, we need at least 13 for index 12 (Vinst)
+        if (cells.length < 13) return; // Exact Deals table has 14 columns
 
         const textContents = Array.from(cells).map(c => c.textContent?.trim() || '')
 
-        // Check Direction (Riktning) at index 4
-        // We only want 'out' deals which represent closed positions
+        // Column 4 is Riktning (Direction)
         const dirStr = textContents[4]?.toLowerCase() || '';
-        if (dirStr !== 'out') return;
+        if (dirStr !== 'out') return; // CRITICAL: Only 'out' deals
 
-        // Skip balance row (initial balance added)
+        // Column 3 is Typ (Type)
         const typeStrRaw = textContents[3]?.toLowerCase() || ''
-        if (typeStrRaw.includes('balance')) return;
+        if (typeStrRaw.includes('balance')) return; // Skip initial balance added
 
         let typeStr = ''
         if (typeStrRaw.includes('buy')) typeStr = 'buy'
@@ -124,7 +125,7 @@ export function ReportUploadForm() {
            if (seenTickets.has(ticket_id)) return;
            seenTickets.add(ticket_id)
            
-           // Clean all types of spaces (regular spaces and non-breaking spaces) before parsing to float
+           // Clean all spaces and non-breaking spaces for floats
            const parseFloatSafe = (str: string) => parseFloat((str || '').replace(/[\s\u00A0]+/g, '')) || 0
            
            const parseMT5Date = (dateStr: string) => {
@@ -134,22 +135,21 @@ export function ReportUploadForm() {
               return isNaN(d.getTime()) ? null : d.toISOString();
            };
            
-           // Time is at index 0
            const closeTime = parseMT5Date(textContents[0]);
            
            if (closeTime) {
               trades.push({
                 ticket_id,
-                open_time: closeTime, // Deals table only gives execution time, so we use it for both
+                open_time: closeTime,
                 close_time: closeTime,
                 symbol: textContents[2] || 'Unknown',
                 type: typeStr === 'buy' ? 'DEAL_TYPE_BUY' : 'DEAL_TYPE_SELL',
                 volume: parseFloatSafe(textContents[5]),
-                open_price: parseFloatSafe(textContents[6]), // Pris
-                close_price: parseFloatSafe(textContents[6]), // Pris
-                commission: parseFloatSafe(textContents[9]), // Provision
-                swap: parseFloatSafe(textContents[11]), // Byt
-                profit: parseFloatSafe(textContents[12]) // Vinst
+                open_price: parseFloatSafe(textContents[6]),
+                close_price: parseFloatSafe(textContents[6]),
+                commission: parseFloatSafe(textContents[9]),
+                swap: parseFloatSafe(textContents[11]),
+                profit: parseFloatSafe(textContents[12])
               })
            }
         }
