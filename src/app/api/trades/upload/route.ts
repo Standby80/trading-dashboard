@@ -24,25 +24,32 @@ export async function POST(request: Request) {
       user_id: user.id
     }))
 
-    // 1. Delete existing trades for the user
-    const { error: deleteError } = await supabase
+    // 1. Fetch existing ticket IDs for this user to avoid duplicate/update conflicts
+    const { data: existingTrades, error: fetchError } = await supabase
       .from('trades')
-      .delete()
+      .select('ticket_id')
       .eq('user_id', user.id)
 
-    if (deleteError) {
-      console.error('Failed to delete old trades:', deleteError)
-      return NextResponse.json({ error: 'Failed to clear old history' }, { status: 500 })
+    if (fetchError) {
+      console.error('Failed to fetch existing trades:', fetchError)
+      return NextResponse.json({ error: 'Failed to read existing history' }, { status: 500 })
     }
 
-    // 2. Insert or update new trades
-    const { error: insertError } = await supabase
-      .from('trades')
-      .upsert(tradesWithUser)
+    const existingTicketIds = new Set(existingTrades?.map(t => t.ticket_id) || [])
+    
+    // 2. Filter out trades that already exist in the database
+    const newTrades = tradesWithUser.filter(t => !existingTicketIds.has(t.ticket_id))
 
-    if (insertError) {
-      console.error('Failed to insert new trades:', insertError)
-      return NextResponse.json({ error: insertError.message || 'Failed to save new trades' }, { status: 500 })
+    // 3. Only insert the truly new trades
+    if (newTrades.length > 0) {
+      const { error: insertError } = await supabase
+        .from('trades')
+        .insert(newTrades)
+
+      if (insertError) {
+        console.error('Failed to insert new trades:', insertError)
+        return NextResponse.json({ error: insertError.message || 'Failed to save new trades' }, { status: 500 })
+      }
     }
 
     // 3. Clear Redis cache
