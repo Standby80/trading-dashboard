@@ -26,12 +26,12 @@ export function TradeHistoryTable({ trades = [] }: { trades?: any[] }) {
             </tr>
           </thead>
           <tbody className="[&_tr:last-child]:border-0">
-            {trades.slice(0, 100).map((trade) => {
+            {trades.slice(0, 100).map((trade, index) => {
               const profit = Number(trade.profit) + Number(trade.swap) + Number(trade.commission);
               const isWin = profit > 0;
               
               return (
-                <tr key={trade.id} className="border-b border-white/5 transition-colors hover:bg-white/5 data-[state=selected]:bg-muted">
+                <tr key={trade.id || `trade-${index}`} className="border-b border-white/5 transition-colors hover:bg-white/5 data-[state=selected]:bg-muted">
                   <td className="p-4 align-middle text-slate-300 font-mono text-xs whitespace-nowrap">
                     {new Date(trade.close_time).toLocaleString()}
                   </td>
@@ -51,10 +51,10 @@ export function TradeHistoryTable({ trades = [] }: { trades?: any[] }) {
                     {trade.volume}
                   </td>
                   <td className="p-4 align-middle text-right text-slate-300 font-mono text-xs">
-                    {trade.price}
+                    {trade.open_price || '-'}
                   </td>
                   <td className="p-4 align-middle text-right text-slate-300 font-mono text-xs">
-                    {trade.price}
+                    {trade.close_price || '-'}
                   </td>
                   <td className={`p-4 align-middle text-right font-medium ${isWin ? 'text-emerald-400' : 'text-rose-400'}`}>
                     {profit > 0 ? '+' : ''}{profit.toFixed(2)}

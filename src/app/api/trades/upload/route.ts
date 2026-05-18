@@ -35,14 +35,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to clear old history' }, { status: 500 })
     }
 
-    // 2. Insert new trades
+    // 2. Insert or update new trades
     const { error: insertError } = await supabase
       .from('trades')
-      .insert(tradesWithUser)
+      .upsert(tradesWithUser)
 
     if (insertError) {
       console.error('Failed to insert new trades:', insertError)
-      return NextResponse.json({ error: 'Failed to save new trades' }, { status: 500 })
+      return NextResponse.json({ error: insertError.message || 'Failed to save new trades' }, { status: 500 })
     }
 
     // 3. Clear Redis cache
