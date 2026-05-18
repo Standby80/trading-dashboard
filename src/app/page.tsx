@@ -1,9 +1,6 @@
-import { KPICards } from "@/components/dashboard/kpi-cards";
-import { TradingCalendar } from "@/components/dashboard/trading-calendar";
-import { AnalyticsSidebar } from "@/components/dashboard/analytics-sidebar";
+import { DashboardGrid } from "@/components/dashboard/dashboard-grid";
 import { ReportUploadForm } from "@/components/dashboard/report-upload-form";
-import { RefreshCcw, Rocket } from "lucide-react";
-import { TradeHistoryTable } from "@/components/dashboard/trade-history-table";
+import { ClearDataButton } from "@/components/dashboard/clear-data-button";
 import { getDashboardData } from "@/lib/data-service";
 import { createClient } from '@/lib/supabase/server';
 import { logout } from '@/app/login/actions';
@@ -34,10 +31,7 @@ export default async function DashboardPage() {
           <div className="flex items-center gap-3">
             <span className="text-xs text-slate-500 mr-2 hidden sm:inline-block">{user?.email}</span>
             <ReportUploadForm />
-            <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded-md text-sm font-medium flex items-center gap-2 transition-colors">
-              <Rocket className="w-4 h-4" />
-              Start my day
-            </button>
+            <ClearDataButton />
             <form action={logout}>
               <button type="submit" className="text-xs text-slate-400 hover:text-white px-2 py-1 transition-colors">
                 Logout
@@ -48,31 +42,8 @@ export default async function DashboardPage() {
 
         {/* Scrollable Dashboard */}
         <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6">
-          <div className="max-w-[1600px] mx-auto space-y-6">
-            
-            {/* Top KPI Cards */}
-            <KPICards data={data?.kpis} />
-
-            {/* Main Grid: Calendar + Analytics */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              
-              {/* Calendar Module */}
-              <div className="lg:col-span-2 xl:col-span-3">
-                <TradingCalendar data={data?.dailyData} />
-              </div>
-
-              {/* Analytics Sidebar */}
-              <div className="lg:col-span-1 xl:col-span-1 space-y-6">
-                <AnalyticsSidebar cumulativeData={data?.cumulativeData} kpis={data?.kpis} />
-              </div>
-
-            </div>
-
-            {/* Trade History Table */}
-            <div className="pb-20">
-              <TradeHistoryTable trades={data?.rawTrades} />
-            </div>
-            
+          <div className="w-full">
+            <DashboardGrid data={data} />
           </div>
         </div>
       </div>

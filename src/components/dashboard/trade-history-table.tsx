@@ -8,11 +8,11 @@ export function TradeHistoryTable({ trades = [] }: { trades?: any[] }) {
   }
 
   return (
-    <div className="bg-[#131823] border border-white/5 rounded-2xl overflow-hidden">
-      <div className="p-4 border-b border-white/5">
+    <div className="bg-[#131823] border border-white/5 rounded-2xl overflow-hidden h-full flex flex-col">
+      <div className="p-4 border-b border-white/5 shrink-0">
         <h3 className="font-medium text-slate-200">Recent Trades</h3>
       </div>
-      <div className="overflow-x-auto max-h-[500px]">
+      <div className="overflow-x-auto overflow-y-auto flex-1 h-full">
         <table className="w-full caption-bottom text-sm">
           <thead className="bg-[#0b0e14] sticky top-0 [&_tr]:border-b [&_tr]:border-white/5">
             <tr className="border-b border-white/5 hover:bg-transparent data-[state=selected]:bg-muted">

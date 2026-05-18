@@ -108,11 +108,51 @@ export function ReportUploadForm() {
 
         // Column 4 is Riktning (Direction)
         const dirStr = textContents[4]?.toLowerCase() || '';
-        if (dirStr !== 'out') return; // CRITICAL: Only 'out' deals
 
         // Column 3 is Typ (Type)
         const typeStrRaw = textContents[3]?.toLowerCase() || ''
-        if (typeStrRaw.includes('balance')) return; // Skip initial balance added
+        
+        const parseFloatSafe = (str: string) => parseFloat((str || '').replace(/[\s\u00A0]+/g, '')) || 0
+        
+        const parseMT5Date = (dateStr: string) => {
+           if (!dateStr) return null;
+           const isoFormat = dateStr.replace(/[\.\/]/g, '-').replace(' ', 'T') + (dateStr.length <= 16 ? ':00Z' : 'Z');
+           const d = new Date(isoFormat);
+           return isNaN(d.getTime()) ? null : d.toISOString();
+        };
+
+        // Handle initial balance added
+        if (typeStrRaw.includes('balance')) {
+            const ticket_id = textContents[1] || 'BALANCE_' + Math.random().toString(36).substring(7)
+            if (seenTickets.has(ticket_id)) return;
+            seenTickets.add(ticket_id)
+
+            // Balance value could be in Vinst (12) or Saldo (13+). We check 11, 12, 13, 14 to be safe.
+            const possibleValues = [11, 12, 13, 14].map(idx => parseFloatSafe(textContents[idx]));
+            const depositAmount = Math.max(...possibleValues.filter(v => !isNaN(v)));
+
+            const closeTime = parseMT5Date(textContents[0]);
+            
+            if (closeTime && depositAmount > 0) {
+               trades.push({
+                 ticket_id,
+                 open_time: closeTime,
+                 close_time: closeTime,
+                 symbol: 'DEPOSIT',
+                 type: 'DEAL_TYPE_BALANCE',
+                 volume: 0,
+                 open_price: 0,
+                 close_price: 0,
+                 commission: 0,
+                 swap: 0,
+                 profit: depositAmount
+               })
+            }
+            return;
+        }
+
+        // For regular trades, CRITICAL: Only 'out' deals
+        if (dirStr !== 'out') return; 
 
         let typeStr = ''
         if (typeStrRaw.includes('buy')) typeStr = 'buy'
@@ -124,16 +164,6 @@ export function ReportUploadForm() {
            
            if (seenTickets.has(ticket_id)) return;
            seenTickets.add(ticket_id)
-           
-           // Clean all spaces and non-breaking spaces for floats
-           const parseFloatSafe = (str: string) => parseFloat((str || '').replace(/[\s\u00A0]+/g, '')) || 0
-           
-           const parseMT5Date = (dateStr: string) => {
-              if (!dateStr) return null;
-              const isoFormat = dateStr.replace(/[\.\/]/g, '-').replace(' ', 'T') + (dateStr.length <= 16 ? ':00Z' : 'Z');
-              const d = new Date(isoFormat);
-              return isNaN(d.getTime()) ? null : d.toISOString();
-           };
            
            const closeTime = parseMT5Date(textContents[0]);
            

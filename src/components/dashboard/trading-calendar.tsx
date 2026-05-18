@@ -1,15 +1,36 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import { Card } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight, Settings, Info, Calendar as CalendarIcon } from "lucide-react";
 
 export function TradingCalendar({ data }: { data?: Record<string, { pnl: number, trades: number, wins: number }> }) {
-  // Use current month or provided month
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth(); // 0-indexed
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handlePrevMonth = () => {
+    setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
+  };
+
+  const handleNextMonth = () => {
+    setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+  };
+
+  const handleThisMonth = () => {
+    setCurrentDate(new Date());
+  };
+
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth(); // 0-indexed
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstDayOfWeek = new Date(year, month, 1).getDay(); // 0 = Sun, 1 = Mon
   
-  const monthName = today.toLocaleString('default', { month: 'long' });
+  // Force 'en-US' to prevent Next.js hydration mismatch between server and client browser locales
+  const monthName = currentDate.toLocaleString('en-US', { month: 'long' });
 
   // Generate days array based on real data or empty
   const calendarDays = [];
@@ -62,11 +83,13 @@ export function TradingCalendar({ data }: { data?: Record<string, { pnl: number,
       <div className="p-4 flex items-center justify-between border-b border-white/5">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-slate-300">
-            <button className="p-1 hover:bg-white/5 rounded"><ChevronLeft className="w-5 h-5" /></button>
-            <span className="font-medium text-white px-2">{monthName} {year}</span>
-            <button className="p-1 hover:bg-white/5 rounded"><ChevronRight className="w-5 h-5" /></button>
+            <button onClick={handlePrevMonth} className="p-1 hover:bg-white/5 rounded transition-colors"><ChevronLeft className="w-5 h-5" /></button>
+            <span className="font-medium text-white px-2 min-w-[120px] text-center">
+               {mounted ? `${monthName} ${year}` : 'Loading...'}
+            </span>
+            <button onClick={handleNextMonth} className="p-1 hover:bg-white/5 rounded transition-colors"><ChevronRight className="w-5 h-5" /></button>
           </div>
-          <button className="px-3 py-1 bg-indigo-600/20 text-indigo-400 rounded-md text-sm font-medium border border-indigo-500/20">
+          <button onClick={handleThisMonth} className="px-3 py-1 bg-indigo-600/20 text-indigo-400 rounded-md text-sm font-medium border border-indigo-500/20 hover:bg-indigo-600/30 transition-colors">
             This month
           </button>
         </div>
@@ -84,7 +107,7 @@ export function TradingCalendar({ data }: { data?: Record<string, { pnl: number,
         </div>
       </div>
 
-      <div className="flex flex-1 min-h-[500px]">
+      <div className="flex flex-1 h-full min-h-0">
         {/* Main Grid */}
         <div className="flex-1 flex flex-col border-r border-white/5">
           {/* Days of week */}
