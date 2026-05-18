@@ -1,7 +1,7 @@
 import { KPICards } from "@/components/dashboard/kpi-cards";
 import { TradingCalendar } from "@/components/dashboard/trading-calendar";
 import { AnalyticsSidebar } from "@/components/dashboard/analytics-sidebar";
-import { MT5ConnectForm } from "@/components/dashboard/mt5-connect-form";
+import { ReportUploadForm } from "@/components/dashboard/report-upload-form";
 import { RefreshCcw, Rocket } from "lucide-react";
 import { TradeHistoryTable } from "@/components/dashboard/trade-history-table";
 import { getDashboardData } from "@/lib/data-service";
@@ -33,7 +33,7 @@ export default async function DashboardPage() {
           </div>
           <div className="flex items-center gap-3">
             <span className="text-xs text-slate-500 mr-2 hidden sm:inline-block">{user?.email}</span>
-            {!isConnected && <MT5ConnectForm />}
+            <ReportUploadForm />
             <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded-md text-sm font-medium flex items-center gap-2 transition-colors">
               <Rocket className="w-4 h-4" />
               Start my day
