@@ -1,15 +1,25 @@
 import { DashboardGrid } from "@/components/dashboard/dashboard-grid";
 import { ReportUploadForm } from "@/components/dashboard/report-upload-form";
+import { ConnectLiveSyncButton } from "@/components/dashboard/connect-live-sync-button";
 import { ClearDataButton } from "@/components/dashboard/clear-data-button";
+import { ResetLayoutButton } from "@/components/dashboard/reset-layout-button";
+import { DashboardFilters } from "@/components/dashboard/dashboard-filters";
+import { LanguageSwitcher } from "@/components/dashboard/language-switcher";
 import { getDashboardData } from "@/lib/data-service";
 import { createClient } from '@/lib/supabase/server';
 import { logout } from '@/app/login/actions';
+import { LineChart } from "lucide-react";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({ 
+  searchParams 
+}: { 
+  searchParams: Promise<{ period?: string, symbols?: string }> 
+}) {
+  const params = await searchParams;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  const data = await getDashboardData();
+  const data = await getDashboardData(params?.period, params?.symbols);
   const isConnected = !!data;
 
   return (
@@ -19,6 +29,12 @@ export default async function DashboardPage() {
         {/* Top Navbar */}
         <header className="h-14 border-b border-white/5 flex items-center justify-between px-6 shrink-0 bg-[#0b0e14]">
           <div className="text-sm text-slate-400 flex items-center gap-4">
+            <div className="flex items-center gap-2 mr-4 text-white font-bold tracking-wide">
+              <div className="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30">
+                <LineChart className="w-5 h-5 text-indigo-400" />
+              </div>
+              <span className="hidden sm:inline-block">MetaMetrics</span>
+            </div>
             <span>Status: <span className={isConnected ? "text-emerald-400" : "text-rose-400"}>
               {isConnected ? "Live Sync Active" : "Not Connected"}
             </span></span>
@@ -30,7 +46,11 @@ export default async function DashboardPage() {
           </div>
           <div className="flex items-center gap-3">
             <span className="text-xs text-slate-500 mr-2 hidden sm:inline-block">{user?.email}</span>
+            <LanguageSwitcher />
+            <DashboardFilters />
+            <ConnectLiveSyncButton profile={data?.profile} />
             <ReportUploadForm />
+            <ResetLayoutButton />
             <ClearDataButton />
             <form action={logout}>
               <button type="submit" className="text-xs text-slate-400 hover:text-white px-2 py-1 transition-colors">

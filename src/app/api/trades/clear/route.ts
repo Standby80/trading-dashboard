@@ -24,11 +24,10 @@ export async function DELETE() {
 
     // Clear the cache
     if (redis) {
-      const cacheKey = `dashboard_data_v2_${user.id}`;
-      await redis.del(cacheKey);
-      
-      // Also clear old cache key just in case
-      await redis.del(`dashboard_data_${user.id}`);
+      const keys = await redis.keys(`dashboard_data_*${user.id}*`);
+      if (keys.length > 0) {
+        await redis.del(...keys);
+      }
     }
 
     return NextResponse.json({ success: true });

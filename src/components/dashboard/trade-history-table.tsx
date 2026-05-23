@@ -1,14 +1,14 @@
 export function TradeHistoryTable({ trades = [] }: { trades?: any[] }) {
   if (!trades || trades.length === 0) {
     return (
-      <div className="bg-[#131823] border border-white/5 rounded-2xl p-6 text-center text-slate-500 text-sm">
+      <div className="bg-transparent border-transparent rounded-2xl p-6 text-center text-slate-500 text-sm">
         No trades found in history.
       </div>
     );
   }
 
   return (
-    <div className="bg-[#131823] border border-white/5 rounded-2xl overflow-hidden h-full flex flex-col">
+    <div className="bg-transparent border-transparent rounded-2xl overflow-hidden h-full flex flex-col">
       <div className="p-4 border-b border-white/5 shrink-0">
         <h3 className="font-medium text-slate-200">Recent Trades</h3>
       </div>

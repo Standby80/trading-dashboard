@@ -1,30 +1,249 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { redis } from '@/lib/redis'
+import * as cheerio from 'cheerio'
+
+export const dynamic = 'force-dynamic';
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
 
 export async function POST(request: Request) {
   try {
+    const contentType = request.headers.get('content-type') || ''
     const supabase = await createClient()
+
+    // ==========================================
+    // SPÅR 1: LIVE SYNC (JSON-DATA FRÅN MT5)
+    // ==========================================
+    if (contentType.includes('application/json')) {
+      const body = await request.json();
+      console.log("Inkommande trade:", body);
+      
+      const { apiKey, positionId, symbol, type, volume, openTime, closeTime, commission, swap, grossProfit } = body;
+
+      const { data: profile, error: authError } = await supabase
+          .from('users')
+          .select('id, subscription_tier')
+          .eq('api_key', apiKey)
+          .single();
+
+      if (authError || !profile || profile.subscription_tier !== 'premium') {
+          console.error("Auth error:", authError);
+          return NextResponse.json({ error: 'Obehörig eller ogiltig API-nyckel för Live Sync.' }, { status: 401, headers: corsHeaders });
+      }
+
+      const openTimestamp = new Date(openTime.replace(/\./g, '-')).getTime();
+      const closeTimestamp = new Date(closeTime.replace(/\./g, '-')).getTime();
+      let holdTimeMins = 0;
+      if (!isNaN(openTimestamp) && !isNaN(closeTimestamp)) {
+          holdTimeMins = Math.round((closeTimestamp - openTimestamp) / 1000 / 60);
+      }
+
+      const netProfit = parseFloat((grossProfit + commission + swap).toFixed(2));
+
+      const { error: dbError } = await supabase
+          .from('trades')
+          .insert([{
+              user_id: profile.id,
+              ticket_id: positionId.toString(),
+              symbol,
+              type: type.toUpperCase(),
+              volume,
+              open_time: openTime.replace(/\./g, '-'),
+              close_time: closeTime.replace(/\./g, '-'),
+              hold_time_mins: holdTimeMins,
+              commission,
+              swap,
+              profit: netProfit,
+              open_price: 0,
+              close_price: 0
+          }]);
+
+      if (dbError) {
+         console.error("DB Error:", dbError);
+         return NextResponse.json({ error: 'Kunde inte spara live-trade.', details: dbError }, { status: 500, headers: corsHeaders });
+      }
+      return NextResponse.json({ success: true, message: 'Live trade synkad direkt!' }, { headers: corsHeaders });
+    }
+
+    // ==========================================
+    // SPÅR 2: MANUELL UPPLADDNING (HTML / FORM DATA)
+    // ==========================================
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await request.json()
-    const { trades } = body
+    const formData = await request.formData()
+    const file = formData.get('file') as File | null
 
-    if (!trades || !Array.isArray(trades)) {
-      return NextResponse.json({ error: 'Invalid trades payload' }, { status: 400 })
+    if (!file) {
+      return NextResponse.json({ error: 'No file uploaded' }, { status: 400 })
     }
 
-    // Assign user_id to all trades
-    const tradesWithUser = trades.map((t: any) => ({
-      ...t,
-      user_id: user.id
-    }))
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
 
-    // 1. Fetch existing ticket IDs for this user to avoid duplicate/update conflicts
+    let htmlContent = '';
+    // 2. Kolla efter BOM (Byte Order Mark) för UTF-16 LE (0xFF 0xFE)
+    if (buffer[0] === 0xff && buffer[1] === 0xfe) {
+      // Filen är UTF-16 LE – Avkoda den rätt!
+      htmlContent = buffer.toString('utf16le');
+    } else {
+      // Filen är vanlig UTF-8 (eller UTF-16 utan BOM där Node hanterar)
+      // We can also do the 0x00 check as fallback
+      const sample = buffer.subarray(0, 100);
+      if (sample.includes(0x00)) {
+          htmlContent = buffer.toString('utf16le');
+      } else {
+          htmlContent = buffer.toString('utf-8');
+      }
+    }
+
+    // FELSÖKNINGSLOGG: Se vad servern faktiskt ser
+    console.log("HTML Start-chars:", htmlContent.substring(0, 100));
+
+    // 1. Isolera Deals-tabellen (Skottsäker Regex-metod)
+    const cleanNum = (txt: string) => {
+        if (!txt) return 0;
+        return parseFloat(txt.replace(/\s/g, '').replace(',', '.')) || 0;
+    };
+    const formatDateTime = (str: string) => str.replace(/\./g, '-');
+
+    const trades: any[] = [];
+    
+    // SÄKERSTÄLL ATT DETTA BLOCK BARA FINNS EN GÅNG INUTI FUNKTIONEN
+    const openTradesMap = new Map();
+    let rowMatch; // Deklarera matchen här
+
+    const parseCleanNumber = (str: string) => {
+      if (!str) return 0;
+      // Ersätt kommatecken med punkt för decimaler, ta sedan bort alla mellanslag och ogiltiga tecken
+      const sanitized = str.replace(',', '.').replace(/\s+/g, '').replace(/[^0-9.-]/g, '');
+      return parseFloat(sanitized) || 0;
+    };
+
+    let totalNetProfitLog = 0;
+    let winCountLog = 0;
+    let grossProfitLog = 0;
+    let grossLossLog = 0;
+
+    // 1. Skapa en map för symboler i toppen av din POST-funktion
+    const symbolOpenMap = new Map<string, string>();
+
+    // ANVÄND REGEX DIREKT I LOOPEN ISTÄLLET FÖR ATT DEKLARERA EN VARIABEL HÖGRE UPP
+    const rowRegexPattern = /<tr[^>]*>([\s\S]*?)<\/tr>/g;
+
+    while ((rowMatch = rowRegexPattern.exec(htmlContent)) !== null) {
+      const rowContent = rowMatch[1];
+      
+      const cellRegex = /<td[^>]*>([\s\S]*?)<\/td>/g;
+      let cellMatch;
+      const cells = [];
+      
+      while ((cellMatch = cellRegex.exec(rowContent)) !== null) {
+        const cleanText = cellMatch[1].replace(/<[^>]*>/g, '').trim();
+        cells.push(cleanText);
+      }
+
+      // Ta bort eventuella tomma "spök-kolumner" på slutet av raden (t.ex. osynliga <td> i vissa MT5-versioner)
+      while (cells.length > 0 && cells[cells.length - 1] === "") {
+          cells.pop();
+      }
+
+      if (cells.length >= 13) {
+        const symbol = cells[2];
+        const direction = cells[4]?.toLowerCase();
+        
+        // Hoppa över rader som saknar symbol (t.ex. tabellhuvud eller tomma rader)
+        if (!symbol || symbol.length < 2) continue;
+
+        // Om det är startinsättningen, spara den som DEPOSIT
+        if (direction === 'balance' || cells[3]?.toLowerCase() === 'balance') {
+          // Spara insättningen separat eller hoppa över den för KPI-matten
+          continue;
+        }
+
+        if (direction === 'out') {
+          const commission = parseCleanNumber(cells[9]);   // Index 9: Provision
+          const swap = parseCleanNumber(cells[11]);         // Index 11: Byt
+          const grossProfit = parseCleanNumber(cells[12]);  // Index 12: Vinst
+          const netProfit = parseFloat((grossProfit + commission + swap).toFixed(2));
+
+          const trueCloseTime = cells[0]; // Stängningstiden är ALLTID index 0 på utgångsraden
+          const trueOpenTime = symbolOpenMap.get(symbol) || cells[0]; // Hämta sparad öppningstid, eller använd stängningstid som fallback så det ALDRIG blir en tom sträng
+
+          let holdTimeMins = 0;
+          if (trueOpenTime && trueCloseTime) {
+            const start = new Date(trueOpenTime.replace(/\./g, '/'));
+            const end = new Date(trueCloseTime.replace(/\./g, '/'));
+            holdTimeMins = Math.max(0, Math.floor((end.getTime() - start.getTime()) / 1000 / 60));
+          }
+
+          const openData = openTradesMap.get(cells[7]);
+          const openPrice = openData ? openData.openPrice : parseCleanNumber(cells[6]);
+          const closePrice = parseCleanNumber(cells[6]);
+
+          trades.push({
+            ticket_id: cells[1],
+            user_id: user.id, // needed for db insert
+            symbol: symbol.replace('.', ''), // Ta bort eventuella punkter i slutet (t.ex. XAUUSD.)
+            type: cells[3].toUpperCase().includes('BUY') ? 'BUY' : 'SELL',
+            open_time: trueOpenTime, // Skickar garanterat en giltig tidsstämpel till databasen
+            close_time: trueCloseTime,
+            commission,
+            swap,
+            profit: netProfit, // Spara den RENA nettovinsten direkt här
+            volume: parseCleanNumber(cells[5]),
+            hold_time_mins: holdTimeMins,
+            open_price: openPrice || 0,
+            close_price: closePrice || 0
+          });
+        } else if (direction === 'in') {
+          // Spara öppningstiden (index 0) för denna symbol
+          symbolOpenMap.set(symbol, cells[0]);
+          
+          openTradesMap.set(cells[7], { 
+            openTime: cells[0],
+            openPrice: parseCleanNumber(cells[6])
+          });
+        }
+      }
+    }
+
+    // Plocka ut Max Drawdown procent direkt från HTML-sammanställningen i botten
+    // Plocka ut Max Drawdown procent direkt från HTML-sammanställningen i botten
+    let extractedDrawdown = 0;
+    const drawdownMatch = htmlContent.match(/Saldo Värdeminskning Maximal:[^\(]*\(([^)]+)%\)/i) || htmlContent.match(/Maximal Drawdown:[^\(]*\(([^)]+)%\)/i);
+    if (drawdownMatch) {
+      extractedDrawdown = parseFloat(drawdownMatch[1].replace(/\s+/g, '')) || 0;
+    }
+    const finalDrawdown = extractedDrawdown; // LÅST SOM EN KONSTANT!
+
+    // Regel 4: Verifiera Mål-värden (Console log for debugging)
+    const winRateLog = trades.length > 0 ? (winCountLog / trades.length) * 100 : 0;
+    const profitFactorLog = grossLossLog === 0 ? grossProfitLog : grossProfitLog / grossLossLog;
+    console.log("MT5 HTML Parsing Summary:");
+    console.log("- Total Trades:", trades.length);
+    console.log(`- Win Rate: ${winRateLog.toFixed(2)}% (${winCountLog} vinster, ${trades.length - winCountLog} förluster)`);
+    console.log(`- Total Net Profit: $${totalNetProfitLog.toFixed(2)}`);
+    console.log(`- Profit Factor: ${profitFactorLog.toFixed(2)}`);
+    console.log(`- Max Drawdown Extracted: ${finalDrawdown}%`);
+
+    if (trades.length === 0) {
+      return NextResponse.json({ error: 'No trades could be found in the uploaded report. Ensure it contains Positions or Deals history.' }, { status: 400 })
+    }
+
+    // Insert database logic
     const { data: existingTrades, error: fetchError } = await supabase
       .from('trades')
       .select('ticket_id')
@@ -32,16 +251,11 @@ export async function POST(request: Request) {
 
     if (fetchError) {
       console.warn('Failed to fetch existing trades, proceeding with empty history assumption:', fetchError)
-      // We purposefully don't return 500 here. We just gracefully proceed with an empty set.
-      // If there's an actual database issue, the insert step will catch it.
     }
 
     const existingTicketIds = new Set(existingTrades?.map(t => t.ticket_id) || [])
-    
-    // 2. Filter out trades that already exist in the database
-    const newTrades = tradesWithUser.filter(t => !existingTicketIds.has(t.ticket_id))
+    const newTrades = trades.filter(t => !existingTicketIds.has(t.ticket_id))
 
-    // 3. Only insert the truly new trades
     if (newTrades.length > 0) {
       const { error: insertError } = await supabase
         .from('trades')
@@ -53,17 +267,37 @@ export async function POST(request: Request) {
       }
     }
 
-    // 3. Clear Redis cache
+    // Spara finalDrawdown till "reports" databasen om den finns
+    if (finalDrawdown > 0) {
+      // 1. Rensa gammal rapport för användaren först
+      await supabase
+        .from('reports')
+        .delete()
+        .eq('user_id', user.id);
+
+      // 2. Skjut in den nya fräscha rapporten med rätt drawdown
+      const { error: reportError } = await supabase
+        .from('reports')
+        .insert({
+          user_id: user.id,
+          max_drawdown: finalDrawdown // Dina perfekta 2.04%
+        });
+
+      if (reportError) {
+        console.error("Fel vid sparande av rapport:", reportError.message);
+      }
+    }
+
+    // Clear Cache
     if (redis) {
       try {
         await redis.del(`dashboard_data_${user.id}`)
       } catch (redisErr) {
         console.error('Failed to clear redis cache:', redisErr)
-        // non-blocking
       }
     }
 
-    return NextResponse.json({ success: true, count: trades.length })
+    return NextResponse.json({ success: true, count: trades.length, inserted: newTrades.length })
 
   } catch (error: any) {
     console.error('Upload error:', error)

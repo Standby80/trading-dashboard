@@ -53,7 +53,6 @@ export function ReportUploadForm() {
     setError(null)
     setSuccess(false)
     
-    // Check if HTML or HTM
     if (!selectedFile.name.toLowerCase().endsWith('.html') && !selectedFile.name.toLowerCase().endsWith('.htm')) {
       setError('Please upload a valid MT5 HTML report file (.html or .htm)')
       return
@@ -67,135 +66,15 @@ export function ReportUploadForm() {
 
     setParsing(true)
     setError(null)
+    setSuccess(false)
 
     try {
-      const text = await file.text()
-      
-      // Parse HTML
-      const parser = new DOMParser()
-      const doc = parser.parseFromString(text, 'text/html')
-      
-      const trades: any[] = []
-      
-      // MT5 reports usually use standard <tr> and <td> tags.
-      // A closed deal (trade) usually has 13 or more columns in MT5.
-      // Format is generally: Time, Position, Symbol, Type, Volume, Price, S/L, T/P, Time, Price, Commission, Swap, Profit
-      const rows = doc.querySelectorAll('tr')
-      const seenTickets = new Set<string>()
-      
-      let inAffarerSection = false;
+      const formData = new FormData()
+      formData.append('file', file)
 
-      rows.forEach(row => {
-        const rowText = row.textContent?.toLowerCase().replace(/\s+/g, ' ').trim() || '';
-        
-        // Stop parsing if we reach the summary section
-        if (rowText.includes('resultat') || rowText.includes('saldo:')) {
-           inAffarerSection = false;
-        }
-
-        // Start parsing when we hit the Affärer section
-        if (!inAffarerSection) {
-           if (rowText === 'affärer' || rowText === 'deals' || rowText.includes('affärer') && rowText.length < 20) {
-              inAffarerSection = true;
-           }
-           return;
-        }
-
-        const cells = row.querySelectorAll('td, th')
-        if (cells.length < 13) return; // Exact Deals table has 14 columns
-
-        const textContents = Array.from(cells).map(c => c.textContent?.trim() || '')
-
-        // Column 4 is Riktning (Direction)
-        const dirStr = textContents[4]?.toLowerCase() || '';
-
-        // Column 3 is Typ (Type)
-        const typeStrRaw = textContents[3]?.toLowerCase() || ''
-        
-        const parseFloatSafe = (str: string) => parseFloat((str || '').replace(/[\s\u00A0]+/g, '')) || 0
-        
-        const parseMT5Date = (dateStr: string) => {
-           if (!dateStr) return null;
-           const isoFormat = dateStr.replace(/[\.\/]/g, '-').replace(' ', 'T') + (dateStr.length <= 16 ? ':00Z' : 'Z');
-           const d = new Date(isoFormat);
-           return isNaN(d.getTime()) ? null : d.toISOString();
-        };
-
-        // Handle initial balance added
-        if (typeStrRaw.includes('balance')) {
-            const ticket_id = textContents[1] || 'BALANCE_' + Math.random().toString(36).substring(7)
-            if (seenTickets.has(ticket_id)) return;
-            seenTickets.add(ticket_id)
-
-            // Balance value could be in Vinst (12) or Saldo (13+). We check 11, 12, 13, 14 to be safe.
-            const possibleValues = [11, 12, 13, 14].map(idx => parseFloatSafe(textContents[idx]));
-            const depositAmount = Math.max(...possibleValues.filter(v => !isNaN(v)));
-
-            const closeTime = parseMT5Date(textContents[0]);
-            
-            if (closeTime && depositAmount > 0) {
-               trades.push({
-                 ticket_id,
-                 open_time: closeTime,
-                 close_time: closeTime,
-                 symbol: 'DEPOSIT',
-                 type: 'DEAL_TYPE_BALANCE',
-                 volume: 0,
-                 open_price: 0,
-                 close_price: 0,
-                 commission: 0,
-                 swap: 0,
-                 profit: depositAmount
-               })
-            }
-            return;
-        }
-
-        // For regular trades, CRITICAL: Only 'out' deals
-        if (dirStr !== 'out') return; 
-
-        let typeStr = ''
-        if (typeStrRaw.includes('buy')) typeStr = 'buy'
-        if (typeStrRaw.includes('sell')) typeStr = 'sell'
-        
-        if (typeStr) {
-           // Deal ID / Ticket is at index 1
-           const ticket_id = textContents[1] || Math.random().toString(36).substring(7)
-           
-           if (seenTickets.has(ticket_id)) return;
-           seenTickets.add(ticket_id)
-           
-           const closeTime = parseMT5Date(textContents[0]);
-           
-           if (closeTime) {
-              trades.push({
-                ticket_id,
-                open_time: closeTime,
-                close_time: closeTime,
-                symbol: textContents[2] || 'Unknown',
-                type: typeStr === 'buy' ? 'DEAL_TYPE_BUY' : 'DEAL_TYPE_SELL',
-                volume: parseFloatSafe(textContents[5]),
-                open_price: parseFloatSafe(textContents[6]),
-                close_price: parseFloatSafe(textContents[6]),
-                commission: parseFloatSafe(textContents[9]),
-                swap: parseFloatSafe(textContents[11]),
-                profit: parseFloatSafe(textContents[12])
-              })
-           }
-        }
-      })
-
-      if (trades.length === 0) {
-        throw new Error("No trades could be found in this HTML file. Ensure it's a closed positions report.")
-      }
-
-      // Send to backend
       const response = await fetch('/api/trades/upload', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ trades }),
+        body: formData,
       })
 
       if (!response.ok) {

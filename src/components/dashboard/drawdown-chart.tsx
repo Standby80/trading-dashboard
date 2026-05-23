@@ -1,9 +1,13 @@
 'use client'
 
+import React, { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { ResponsiveContainer, ComposedChart, Line, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
 export function DrawdownChart({ data }: { data: any[] }) {
+  const [showBalance, setShowBalance] = useState(true);
+  const [showDrawdown, setShowDrawdown] = useState(true);
+
   if (!data || data.length === 0) return null;
 
   const currentBalance = data[data.length - 1]?.balance || 0;
@@ -12,7 +16,7 @@ export function DrawdownChart({ data }: { data: any[] }) {
   const formatMoney = (val: number) => Math.abs(val).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
   return (
-    <Card className="bg-[#131823] border-white/5 rounded-xl p-6 shadow-none flex flex-col h-full">
+    <Card className="bg-transparent border-transparent rounded-xl p-6 shadow-none flex flex-col h-full">
       <div className="flex justify-between items-start mb-6 shrink-0">
          <div>
             <div className="flex gap-6">
@@ -32,14 +36,26 @@ export function DrawdownChart({ data }: { data: any[] }) {
                </div>
             </div>
          </div>
-         <div className="flex gap-4 text-xs font-medium text-slate-500">
-            <span>Drawdown</span>
-            <span>Deposit Load</span>
+         <div className="flex gap-4 text-xs font-medium">
+            <button 
+              onClick={() => setShowDrawdown(!showDrawdown)}
+              className={`transition-colors flex items-center gap-1.5 ${showDrawdown ? 'text-rose-400' : 'text-slate-500 hover:text-slate-300'}`}
+            >
+              <div className={`w-2 h-2 rounded-full transition-colors ${showDrawdown ? 'bg-rose-500' : 'bg-slate-600'}`}></div>
+              Drawdown
+            </button>
+            <button 
+              onClick={() => setShowBalance(!showBalance)}
+              className={`transition-colors flex items-center gap-1.5 ${showBalance ? 'text-blue-400' : 'text-slate-500 hover:text-slate-300'}`}
+            >
+              <div className={`w-2 h-2 rounded-full transition-colors ${showBalance ? 'bg-blue-500' : 'bg-slate-600'}`}></div>
+              Balance
+            </button>
          </div>
       </div>
 
-      <div className="flex-1 w-full relative">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="flex-1 w-full min-h-[350px] relative">
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
           <ComposedChart data={data} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
             
@@ -82,25 +98,29 @@ export function DrawdownChart({ data }: { data: any[] }) {
             />
 
             {/* Drawdown Area (Right Axis) */}
-            <Area 
-              yAxisId="right"
-              type="monotone" 
-              dataKey="drawdownPct" 
-              fill="rgba(244, 63, 94, 0.1)" 
-              stroke="#f43f5e" 
-              strokeWidth={1}
-            />
+            {showDrawdown && (
+              <Area 
+                yAxisId="right"
+                type="monotone" 
+                dataKey="drawdownPct" 
+                fill="rgba(244, 63, 94, 0.1)" 
+                stroke="#f43f5e" 
+                strokeWidth={1}
+              />
+            )}
 
             {/* Balance Line (Left Axis) */}
-            <Line 
-              yAxisId="left"
-              type="stepAfter" 
-              dataKey="balance" 
-              stroke="#3b82f6" 
-              strokeWidth={2} 
-              dot={false} 
-              activeDot={{ r: 4 }} 
-            />
+            {showBalance && (
+              <Line 
+                yAxisId="left"
+                type="stepAfter" 
+                dataKey="balance" 
+                stroke="#3b82f6" 
+                strokeWidth={2} 
+                dot={false} 
+                activeDot={{ r: 4 }} 
+              />
+            )}
 
           </ComposedChart>
         </ResponsiveContainer>
