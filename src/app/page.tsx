@@ -67,29 +67,10 @@ export default async function DashboardPage({
             </div>
           </div>
 
-          {/* Desktop Actions */}
-          <div className="hidden lg:flex items-center gap-3">
-            <span className="text-xs text-slate-500 mr-2">{user?.email}</span>
-            {!isPremium && (
-              <Link href="/upgrade" className="text-xs font-medium bg-gradient-to-r from-indigo-500 to-cyan-500 text-white px-3 py-1.5 rounded-md hover:opacity-90 transition-opacity mr-2 flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                Upgrade to Premium
-              </Link>
-            )}
-            <DashboardFilters />
-            <ConnectLiveSyncButton profile={data?.profile} />
-            <ReportUploadForm />
-            <ResetLayoutButton />
-            <ClearDataButton />
-            <form action={logout}>
-              <button type="submit" className="text-xs text-slate-400 hover:text-white px-2 py-1 transition-colors">
-                Logout
-              </button>
-            </form>
-          </div>
 
-          {/* Mobile Actions (Hamburger Menu) */}
-          <div className="flex lg:hidden items-center gap-2">
+
+          {/* Actions (Hamburger Menu on all screens) */}
+          <div className="flex items-center gap-2">
             <DashboardFilters />
             
             <Sheet>
