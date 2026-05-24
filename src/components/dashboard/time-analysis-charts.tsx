@@ -10,7 +10,7 @@ export function TimeAnalysisCharts({ hourlyData, weekdayData }: TimeAnalysisProp
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full col-span-full">
       {/* Timdistribution */}
       <div className="bg-[#0b0e14] border border-[#1e2330] p-5 rounded-xl">
-        <h3 className="text-gray-400 text-sm font-medium mb-4">Net Profit per Hour (Stängningstid)</h3>
+        <h3 className="text-gray-400 text-sm font-medium mb-4">Net Profit per Hour (Closing Time)</h3>
         <div className="h-[250px] w-full min-w-0">
           <ResponsiveContainer width="100%" height="100%" minWidth={0}>
             <BarChart data={hourlyData} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>

@@ -117,7 +117,7 @@ export async function getDashboardData(period?: string, symbolsStr?: string) {
     tradeCount: 0
   }));
 
-  const daysMap = ['Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'];
+  const daysMap = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const englishDaysMap = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const monthsMap = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   
@@ -568,7 +568,7 @@ export async function getDashboardData(period?: string, symbolsStr?: string) {
 
 export function generateExpectancyCurve(trades: any[], currentBalance: number, projectionSteps: number = 100) {
     if (trades.length < 5) {
-        return Array.from({ length: projectionSteps }, (_, i) => ({ tradeNumber: i + 1, "Förväntad utveckling": currentBalance }));
+        return Array.from({ length: projectionSteps }, (_, i) => ({ tradeNumber: i + 1, "Expected Growth": currentBalance }));
     }
 
     const winTrades = trades.filter(t => t.netProfit > 0);
@@ -591,7 +591,7 @@ export function generateExpectancyCurve(trades: any[], currentBalance: number, p
 
         curveData.push({
             tradeNumber: i,
-            "Förväntad utveckling": parseFloat(simulatedBalanceMedian.toFixed(2)),
+            "Expected Growth": parseFloat(simulatedBalanceMedian.toFixed(2)),
         });
     }
 

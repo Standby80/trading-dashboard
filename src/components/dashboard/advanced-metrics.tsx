@@ -57,7 +57,7 @@ export function TradeExecutionWidget({ kpis, isPremium = false }: { kpis: any, i
             <UITooltip>
               <TooltipTrigger className="outline-none"><Info className="w-4 h-4 text-slate-500 cursor-pointer" /></TooltipTrigger>
               <TooltipContent className="bg-[#1e293b] text-white border-white/10 w-64">
-                 <p><strong>Risk to Reward:</strong> Avg Loss (Risk) vs Avg Win (Reward).<br/><strong>Hold Times:</strong> Tiden du stannar i vinnande vs förlorande trades.</p>
+                 <p><strong>Risk to Reward:</strong> Avg Loss (Risk) vs Avg Win (Reward).<br/><strong>Hold Times:</strong> Time you stay in winning vs losing trades.</p>
               </TooltipContent>
             </UITooltip>
           </CardTitle>
@@ -155,35 +155,33 @@ export function TradeExecutionWidget({ kpis, isPremium = false }: { kpis: any, i
 
           {submitted ? (
              <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 text-center">
-               <h3 className="font-semibold mb-1">Tack för ditt intresse! 🎉</h3>
-               <p className="text-sm">Vi rullar ut betalsystemet inom kort. Din 50% rabattkod kommer på mailen.</p>
+               <h3 className="font-semibold mb-1">Thanks for your interest! 🎉</h3>
+               <p className="text-sm">We are rolling out the payment system shortly. Your 50% discount code will be emailed to you.</p>
              </div>
           ) : (
-            <div className="space-y-4 mt-2">
-              <div className="bg-[#131823] p-4 rounded-xl border border-white/5 space-y-2">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-slate-400">Premium Plan</span>
-                  <span className="font-medium">99 kr / mån</span>
-                </div>
-                <div className="flex justify-between items-center text-sm text-indigo-400 font-medium">
-                  <span>Your Early Bird Price</span>
-                  <span>49 kr / mån</span>
-                </div>
-              </div>
-              <form onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }} className="space-y-3">
-                <Input 
-                  type="email" 
-                  placeholder="name@example.com" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="bg-[#1a2130] border-white/10 text-white placeholder:text-slate-500"
-                />
-                <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
-                  Säkra min 50% rabatt
+            <form onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }} className="mt-5 space-y-3">
+             <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-400">Regular price</span>
+                <span className="font-medium">$9.99 / month</span>
+             </div>
+             <div className="flex items-center justify-between text-sm font-bold text-emerald-400">
+                <span>Your price (50% off)</span>
+                <span>$4.99 / month</span>
+             </div>
+             <div className="pt-3 border-t border-indigo-500/20">
+               <Input 
+                 type="email" 
+                 placeholder="Enter your email..." 
+                 value={email}
+                 onChange={(e) => setEmail(e.target.value)}
+                 required
+                 className="w-full bg-slate-900/50 border border-indigo-500/30 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 mb-2"
+               />
+               <Button type="submit" className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 rounded-lg transition-colors text-sm">
+                 Secure my 50% discount
                 </Button>
-              </form>
-            </div>
+             </div>
+            </form>
           )}
         </DialogContent>
       </Dialog>

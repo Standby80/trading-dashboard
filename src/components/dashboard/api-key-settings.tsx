@@ -26,16 +26,16 @@ export default function ApiKeySettings() {
         }
         const data = await res.json();
         
-        // Mappa från databasen till den struktur som komponenten kräver
+        // Map from database to the structure the component requires
         setProfile({
           plan_level: (data.plan_level === 'PREMIUM' || data.subscription_tier === 'premium') ? 'PREMIUM' : 'FREE',
           api_key: data.api_key || null
         });
       } catch (err: any) {
         console.error('Failed to fetch profile:', err);
-        setError(err.message || 'Kunde inte ladda API-inställningar.');
+        setError(err.message || 'Could not load API settings.');
         
-        // Sätt en fallback-profil för att låsa upp UI:t istället för att fastna i laddningsskärmen
+        // Set a fallback profile to unlock the UI instead of getting stuck in the loading screen
         setProfile({ plan_level: 'FREE', api_key: null });
       }
     }
@@ -50,7 +50,7 @@ export default function ApiKeySettings() {
   };
 
   const handleRotateKey = async () => {
-    if (!confirm("Är du säker på att du vill generera en ny API-nyckel? Ditt gamla MT5-skript kommer att sluta synka tills du uppdaterar nyckeln där.")) return;
+    if (!confirm("Are you sure you want to generate a new API key? Your old MT5 script will stop syncing until you update the key there.")) return;
     
     setLoading(true);
     setError(null);
@@ -70,13 +70,13 @@ export default function ApiKeySettings() {
     }
   };
 
-  if (!profile) return <div className="text-zinc-400">Laddar inställningar...</div>;
+  if (!profile) return <div className="text-zinc-400">Loading settings...</div>;
 
   return (
     <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl backdrop-blur-md max-w-2xl">
       <h2 className="text-xl font-semibold text-white mb-2">MetaMetrics Live Sync API</h2>
       <p className="text-sm text-zinc-400 mb-6">
-        Använd din unika API-nyckel för att koppla ihop ditt MetaTrader 5-skript med din dashboard för realtidssynkning.
+        Use your unique API key to connect your MetaTrader 5 script with your dashboard for real-time syncing.
       </p>
 
       {profile.plan_level === 'FREE' ? (
@@ -86,9 +86,9 @@ export default function ApiKeySettings() {
             <div className="p-3 bg-indigo-600/10 rounded-full border border-indigo-500/20 mb-4">
               <Lock className="w-6 h-6 text-indigo-500" />
             </div>
-            <h3 className="text-white font-medium mb-1">Premium-funktion</h3>
+            <h3 className="text-white font-medium mb-1">Premium Feature</h3>
             <p className="text-xs text-zinc-400 max-w-sm mb-4">
-              Automatisk Live Sync kräver ett Premium-medlemskap. Just nu kan du ladda upp dina rapporter manuellt via HTML.
+              Automatic Live Sync requires a Premium membership. For now, you can upload your reports manually via HTML.
             </p>
             <button className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-2 px-4 rounded-lg transition duration-200">
               Upgrade to Premium (50% Off)
@@ -97,7 +97,7 @@ export default function ApiKeySettings() {
         </div>
       ) : (
         <div className="space-y-4">
-          <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Din API-nyckel</label>
+          <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Your API Key</label>
           <div className="flex gap-2">
             <div className="relative flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2.5 font-mono text-sm text-zinc-300 flex items-center justify-between overflow-hidden">
               <span className="truncate">
@@ -116,13 +116,13 @@ export default function ApiKeySettings() {
               className="px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg border border-zinc-700 flex items-center gap-2 text-sm font-medium transition duration-150"
             >
               <Copy className="w-4 h-4" />
-              {copied ? 'Kopierad!' : 'Kopiera'}
+              {copied ? 'Copied!' : 'Copy'}
             </button>
           </div>
 
           <div className="flex justify-between items-center pt-2">
             <span className="text-xs text-zinc-500">
-              Dela aldrig din API-nyckel. Den ger direkt tillgång till att mata in trades på ditt konto.
+              Never share your API key. It grants direct access to input trades to your account.
             </span>
             <button 
               onClick={handleRotateKey}
@@ -130,7 +130,7 @@ export default function ApiKeySettings() {
               className="text-xs flex items-center gap-1.5 text-red-400 hover:text-red-300 transition duration-150 font-medium"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-              Generera ny nyckel
+              Generate new key
             </button>
           </div>
           {error && <p className="text-red-500 text-xs mt-2">{error}</p>}

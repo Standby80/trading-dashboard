@@ -21,7 +21,7 @@ export function ExpectancyCurve({ data }: { data?: any[] }) {
       <CardHeader>
         <CardTitle className="text-white text-lg">Expectancy Curve (Next 100 Trades)</CardTitle>
         <CardDescription className="text-slate-400">
-          Projektion baserad på din historiska Win Rate, Average Win och Average Loss.
+          Projection based on your historical Win Rate, Average Win, and Average Loss.
         </CardDescription>
       </CardHeader>
       <CardContent className="p-5 pt-0">
@@ -55,12 +55,12 @@ export function ExpectancyCurve({ data }: { data?: any[] }) {
               contentStyle={{ backgroundColor: '#1e293b', borderColor: 'rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
               itemStyle={{ color: '#818cf8' }}
               labelStyle={{ color: '#94a3b8', marginBottom: '4px' }}
-              formatter={(value: any) => [`$${value.toLocaleString()}`, 'Förväntad utveckling']}
+              formatter={(value: any) => [`$${value.toLocaleString()}`, 'Expected Growth']}
               labelFormatter={(label) => `Trade #${label}`}
             />
             <Area 
               type="monotone" 
-              dataKey="Förväntad utveckling" 
+              dataKey="Expected Growth" 
               stroke="#818cf8" 
               strokeWidth={3}
               fillOpacity={1} 
