@@ -85,6 +85,7 @@ export async function POST(request: Request) {
 
     const formData = await request.formData()
     const file = formData.get('file') as File | null
+    const accountName = (formData.get('accountName') as string) || 'Default'
 
     if (!file) {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 })
@@ -196,6 +197,7 @@ export async function POST(request: Request) {
           trades.push({
             ticket_id: cells[1],
             user_id: user.id, // needed for db insert
+            account_name: accountName,
             symbol: symbol.replace('.', ''), // Ta bort eventuella punkter i slutet (t.ex. XAUUSD.)
             type: cells[3].toUpperCase().includes('BUY') ? 'BUY' : 'SELL',
             open_time: trueOpenTime, // Skickar garanterat en giltig tidsstämpel till databasen
@@ -248,6 +250,7 @@ export async function POST(request: Request) {
       .from('trades')
       .select('ticket_id')
       .eq('user_id', user.id)
+      .eq('account_name', accountName)
 
     if (fetchError) {
       console.warn('Failed to fetch existing trades, proceeding with empty history assumption:', fetchError)
@@ -267,25 +270,25 @@ export async function POST(request: Request) {
       }
     }
 
-    // Spara finalDrawdown till "reports" databasen om den finns
-    if (finalDrawdown > 0) {
-      // 1. Rensa gammal rapport för användaren först
-      await supabase
-        .from('reports')
-        .delete()
-        .eq('user_id', user.id);
+    // Spara finalDrawdown till "reports" databasen (används också för att hålla reda på konton)
+    // 1. Rensa gammal rapport för användaren först
+    await supabase
+      .from('reports')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('account_name', accountName);
 
-      // 2. Skjut in den nya fräscha rapporten med rätt drawdown
-      const { error: reportError } = await supabase
-        .from('reports')
-        .insert({
-          user_id: user.id,
-          max_drawdown: finalDrawdown // Dina perfekta 2.04%
-        });
+    // 2. Skjut in den nya fräscha rapporten med rätt drawdown
+    const { error: reportError } = await supabase
+      .from('reports')
+      .insert({
+        user_id: user.id,
+        account_name: accountName,
+        max_drawdown: finalDrawdown // Dina perfekta 2.04%
+      });
 
-      if (reportError) {
-        console.error("Fel vid sparande av rapport:", reportError.message);
-      }
+    if (reportError) {
+      console.error("Fel vid sparande av rapport:", reportError.message);
     }
 
     // Clear Cache

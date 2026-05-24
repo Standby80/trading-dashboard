@@ -16,6 +16,7 @@ export function ReportUploadForm() {
   const [open, setOpen] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [file, setFile] = useState<File | null>(null)
+  const [accountName, setAccountName] = useState('Default')
   const [parsing, setParsing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -64,6 +65,11 @@ export function ReportUploadForm() {
   const processReport = async () => {
     if (!file) return
 
+    if (!accountName.trim()) {
+      setError('Account name cannot be empty')
+      return
+    }
+
     setParsing(true)
     setError(null)
     setSuccess(false)
@@ -71,6 +77,7 @@ export function ReportUploadForm() {
     try {
       const formData = new FormData()
       formData.append('file', file)
+      formData.append('accountName', accountName.trim())
 
       const response = await fetch('/api/trades/upload', {
         method: 'POST',
@@ -116,6 +123,20 @@ export function ReportUploadForm() {
         </DialogHeader>
 
         <div className="mt-4 space-y-4">
+          <div>
+            <label htmlFor="accountName" className="block text-sm font-medium text-slate-300 mb-1">
+              Account Name
+            </label>
+            <input
+              id="accountName"
+              type="text"
+              value={accountName}
+              onChange={(e) => setAccountName(e.target.value)}
+              placeholder="e.g. Prop Firm Challenge 1"
+              className="w-full bg-[#131823] border border-white/10 rounded-md px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors"
+            />
+          </div>
+
           {!file ? (
             <div 
               className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer ${

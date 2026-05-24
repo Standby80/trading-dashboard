@@ -6,6 +6,7 @@ export function ResetLayoutButton() {
   const resetLayout = () => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('metametrics-layout');
+      localStorage.removeItem('metametrics-layout-v2');
       window.location.reload();
     }
   };

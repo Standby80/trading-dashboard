@@ -26,7 +26,7 @@ export function DashboardGrid({ data }: { data: any }) {
 
   useEffect(() => {
     setMounted(true);
-    const savedLayouts = localStorage.getItem('metametrics-layout');
+    const savedLayouts = localStorage.getItem('metametrics-layout-v2');
     if (savedLayouts) {
       try {
         setLayoutState(JSON.parse(savedLayouts));

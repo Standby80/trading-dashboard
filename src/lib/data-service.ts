@@ -1,7 +1,7 @@
 import { createClient } from './supabase/server';
 import { redis } from './redis';
 
-export async function getDashboardData(period?: string, symbolsStr?: string) {
+export async function getDashboardData(period?: string, symbolsStr?: string, accountName: string = 'Default') {
   const supabase = await createClient();
   
   const { data: { user } } = await supabase.auth.getUser();
@@ -15,11 +15,12 @@ export async function getDashboardData(period?: string, symbolsStr?: string) {
      const { data: profile } = await supabase.from('users').select('subscription_tier, api_key').eq('id', userId).single();
      userProfile = profile;
      
-     const { data: report, error } = await supabase
-       .from('reports')
-       .select('*')
-       .eq('user_id', userId)
-       .maybeSingle();
+       const { data: report, error } = await supabase
+         .from('reports')
+         .select('*')
+         .eq('user_id', userId)
+         .eq('account_name', accountName)
+         .maybeSingle();
        
      if (report?.max_drawdown) {
        reportMaxDrawdown = report.max_drawdown;
@@ -28,7 +29,7 @@ export async function getDashboardData(period?: string, symbolsStr?: string) {
      console.log("VAD FRONTENDEN FÅR FRÅN SUPABASE:", report);
   }
 
-  const cacheKey = `dashboard_data_v3_${userId}_${period || 'all'}_${symbolsStr || 'all'}`;
+  const cacheKey = `dashboard_data_v3_${userId}_${accountName}_${period || 'all'}_${symbolsStr || 'all'}`;
 
   // 2. Check Redis Cache First
   if (redis) {
@@ -49,6 +50,7 @@ export async function getDashboardData(period?: string, symbolsStr?: string) {
     .from('trades')
     .select('*')
     .eq('user_id', userId)
+    .eq('account_name', accountName)
     .order('close_time', { ascending: true });
 
   if (error || !trades || trades.length === 0) {
@@ -658,4 +660,23 @@ export function calculateMetaMetricsScore(trades: any[], initialBalance: number 
         drawdownScore: Math.round(drawdownScore),
         recoveryScore: Math.round(recoveryScore)
     };
+}
+
+export async function getUserAccounts() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return ['Default'];
+
+  const { data, error } = await supabase
+    .from('reports')
+    .select('account_name')
+    .eq('user_id', user.id);
+
+  if (error || !data || data.length === 0) {
+    return ['Default'];
+  }
+
+  // Extract unique account names
+  const accounts = Array.from(new Set(data.map(r => r.account_name || 'Default')));
+  return accounts;
 }
