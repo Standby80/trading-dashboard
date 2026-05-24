@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Download, FolderOpen, Globe, Play, ChevronRight, ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export function LiveSyncGuide() {
+export default function LiveSyncGuide() {
   const [step, setStep] = useState(1);
 
   const steps = [
