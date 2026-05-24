@@ -16,6 +16,8 @@ import { DrawdownChart } from "@/components/dashboard/drawdown-chart";
 import { RiskOverview } from "@/components/dashboard/risk-overview";
 import { TradeExecutionWidget, TimeAnalyticsWidget, SecondaryStats, TradeDistribution, DrawdownAnalysis } from "@/components/dashboard/advanced-metrics";
 import { ExpectancyCurve } from "@/components/dashboard/expectancy-curve";
+import { TimeExtremesCards } from "@/components/dashboard/time-extremes-cards";
+import { MonthlyHeatmap } from "@/components/dashboard/monthly-heatmap";
 
 const ResponsiveGridLayout = WP(Responsive);
 
@@ -96,85 +98,94 @@ export function DashboardGrid({ data }: { data: any }) {
         draggableHandle=".drag-handle"
         margin={[24, 24]}
       >
-        <div key="kpis" data-grid={{ x: 0, y: 0, w: 60, h: 2, minW: 10, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="kpis" data-grid={{ x: 0, y: 0, w: 60, h: 2, minW: 5, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <div className="flex-1 overflow-visible">
                <KPICards data={data?.kpis} />
             </div>
         </div>
 
-        <div key="secondary-stats" data-grid={{ x: 0, y: 2, w: 60, h: 4, minW: 10, minH: 3 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="secondary-stats" data-grid={{ x: 0, y: 2, w: 60, h: 4, minW: 5, minH: 3 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <div className="flex-1 overflow-visible">
                <SecondaryStats data={data} />
             </div>
         </div>
 
-        <div key="calendar" data-grid={{ x: 0, y: 6, w: 35, h: 10, minW: 20, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="calendar" data-grid={{ x: 0, y: 6, w: 35, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                <TradingCalendar data={data?.dailyData} availableSymbols={data?.availableSymbols} />
             </div>
         </div>
 
-        <div key="risk-overview" data-grid={{ x: 35, y: 6, w: 25, h: 10, minW: 15, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="risk-overview" data-grid={{ x: 35, y: 6, w: 25, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                <RiskOverview kpis={data?.kpis} />
             </div>
         </div>
 
-        <div key="trade-execution" data-grid={{ x: 0, y: 16, w: 20, h: 8, minW: 10, minH: 6 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="trade-execution" data-grid={{ x: 0, y: 16, w: 20, h: 8, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <TradeExecutionWidget kpis={data?.kpis} isPremium={data?.profile?.subscription_tier === 'premium'} />
         </div>
 
-        <div key="trades-analysis" data-grid={{ x: 20, y: 16, w: 20, h: 8, minW: 10, minH: 6 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="trades-analysis" data-grid={{ x: 20, y: 16, w: 20, h: 8, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <TimeAnalyticsWidget hourlyData={data?.hourlyData} weekdayData={data?.weekdayData} />
         </div>
 
-        <div key="trade-distribution" data-grid={{ x: 40, y: 16, w: 20, h: 8, minW: 10, minH: 6 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="trade-distribution" data-grid={{ x: 40, y: 16, w: 20, h: 8, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <TradeDistribution data={data} />
         </div>
 
-        <div key="asset-performance" data-grid={{ x: 0, y: 24, w: 20, h: 7, minW: 10, minH: 6 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="asset-performance" data-grid={{ x: 0, y: 24, w: 20, h: 7, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                <AnalyticsSidebar cumulativeData={data?.cumulativeData} kpis={data?.kpis} />
             </div>
         </div>
 
-        <div key="drawdown-analysis" data-grid={{ x: 20, y: 24, w: 20, h: 7, minW: 10, minH: 6 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="drawdown-analysis" data-grid={{ x: 20, y: 24, w: 20, h: 7, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                <DrawdownAnalysis kpis={data?.kpis} />
             </div>
         </div>
 
-        <div key="long-short" data-grid={{ x: 40, y: 24, w: 20, h: 7, minW: 10, minH: 6 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="long-short" data-grid={{ x: 40, y: 24, w: 20, h: 7, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                <LongShortCharts kpis={data?.kpis} />
             </div>
         </div>
 
-        <div key="equity-curve" data-grid={{ x: 0, y: 31, w: 30, h: 9, minW: 15, minH: 6 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="equity-curve" data-grid={{ x: 0, y: 31, w: 30, h: 9, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                <DrawdownChart data={data?.drawdownData} />
             </div>
         </div>
 
-        <div key="expectancy-curve" data-grid={{ x: 30, y: 31, w: 30, h: 9, minW: 15, minH: 6 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="expectancy-curve" data-grid={{ x: 30, y: 31, w: 30, h: 9, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                 <ExpectancyCurve data={data?.expectancyData} />
             </div>
         </div>
 
-        <div key="recent-trades" data-grid={{ x: 0, y: 40, w: 60, h: 10, minW: 20, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="performance-matrix" data-grid={{ x: 0, y: 40, w: 60, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+            <DragHandle />
+            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-6">
+                <TimeExtremesCards kpis={data?.kpis} />
+                <div className="w-full h-px bg-white/5 hidden md:block"></div>
+                <MonthlyHeatmap kpis={data?.kpis} />
+            </div>
+        </div>
+
+        <div key="recent-trades" data-grid={{ x: 0, y: 50, w: 60, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden flex flex-col">
                <TradeHistoryTable trades={data?.rawTrades} />
