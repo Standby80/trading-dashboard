@@ -36,32 +36,37 @@ export function DashboardGrid({ data }: { data: any }) {
 
   const defaultLayouts = {
     lg: [
-      // Row 1: KPI Cards (5 columns)
-      { i: 'kpis', x: 0, y: 0, w: 60, h: 2, minW: 10, minH: 2 }, // KPICards component will handle the 5-col split internally
+      // Row 1: Top 5 KPIs
+      { i: 'metric-equity', x: 0, y: 0, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-netpnl', x: 12, y: 0, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-winrate', x: 24, y: 0, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-pf', x: 36, y: 0, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-trades', x: 48, y: 0, w: 12, h: 2, minW: 3, minH: 2 },
       
-      // Row 2: Secondary Stats (4 columns) - we'll handle this inside a new component or split here
-      { i: 'secondary-stats', x: 0, y: 2, w: 60, h: 4, minW: 10, minH: 3 }, // Handled internally
+      // Row 2: Secondary KPIs
+      { i: 'metric-avgwin', x: 0, y: 2, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-avgloss', x: 12, y: 2, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-sharpe', x: 24, y: 2, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-maxdd', x: 36, y: 2, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-expectancy', x: 48, y: 2, w: 12, h: 2, minW: 3, minH: 2 },
       
-      // Row 3: Calendar (left) & Risk Overview (right)
-      { i: 'calendar', x: 0, y: 6, w: 35, h: 10, minW: 20, minH: 5 },
-      { i: 'risk-overview', x: 35, y: 6, w: 25, h: 10, minW: 15, minH: 5 },
+      // Row 3: Calendar & MetaMetrics
+      { i: 'calendar', x: 0, y: 4, w: 40, h: 10, minW: 5, minH: 5 },
+      { i: 'asset-performance', x: 40, y: 4, w: 20, h: 10, minW: 5, minH: 5 },
       
-      // Row 4: Trade Execution, Trades Analysis, Trade Distribution
-      { i: 'trade-execution', x: 0, y: 16, w: 20, h: 8, minW: 10, minH: 6 },
-      { i: 'trades-analysis', x: 20, y: 16, w: 20, h: 8, minW: 10, minH: 6 },
-      { i: 'trade-distribution', x: 40, y: 16, w: 20, h: 8, minW: 10, minH: 6 },
+      // Row 4: Monthly P/L & Long vs Short
+      { i: 'performance-matrix', x: 0, y: 14, w: 40, h: 10, minW: 5, minH: 5 },
+      { i: 'long-short', x: 40, y: 14, w: 20, h: 10, minW: 5, minH: 5 },
       
-      // Row 5: Asset Performance, Drawdown Analysis, Long vs Short
-      { i: 'asset-performance', x: 0, y: 24, w: 20, h: 7, minW: 10, minH: 6 },
-      { i: 'drawdown-analysis', x: 20, y: 24, w: 20, h: 7, minW: 10, minH: 6 },
-      { i: 'long-short', x: 40, y: 24, w: 20, h: 7, minW: 10, minH: 6 },
+      // Row 5: Trade Execution & Time Analytics
+      { i: 'trade-execution', x: 0, y: 24, w: 30, h: 8, minW: 5, minH: 5 },
+      { i: 'trades-analysis', x: 30, y: 24, w: 30, h: 8, minW: 5, minH: 5 },
       
-      // Row 6: Equity Curve, Expectancy Curve
-      { i: 'equity-curve', x: 0, y: 31, w: 30, h: 9, minW: 15, minH: 6 },
-      { i: 'expectancy-curve', x: 30, y: 31, w: 30, h: 9, minW: 15, minH: 6 },
+      // Row 6: Expectancy Curve
+      { i: 'expectancy-curve', x: 0, y: 32, w: 60, h: 9, minW: 5, minH: 5 },
       
       // Row 7: Recent Trades
-      { i: 'recent-trades', x: 0, y: 40, w: 60, h: 10, minW: 20, minH: 5 },
+      { i: 'recent-trades', x: 0, y: 41, w: 60, h: 10, minW: 5, minH: 5 },
     ]
   };
 
