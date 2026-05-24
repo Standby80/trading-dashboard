@@ -95,7 +95,7 @@ export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record
            {calendarDays.map((d, i) => {
              const isWin = d.pnl !== null && d.pnl >= 0;
              const isLoss = d.pnl !== null && d.pnl < 0;
-             const isBigWin = isWin && d.pnl > 50;
+             const isBigWin = isWin && d.pnl !== null && d.pnl > 50;
              
              let bgClass = "bg-[#0b0e14]";
              if (isBigWin) bgClass = "bg-[#10b981]/20";
