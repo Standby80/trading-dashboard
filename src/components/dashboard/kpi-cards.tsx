@@ -1,20 +1,32 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useTranslations } from "next-intl";
+
+// A simple mock sparkline SVG for the cards
+const Sparkline = ({ color = "#10b981" }) => (
+  <svg width="100%" height="40" viewBox="0 0 100 40" preserveAspectRatio="none">
+    <path d="M0,40 L0,25 L10,20 L20,30 L30,15 L40,25 L50,10 L60,15 L70,5 L80,10 L90,2 L100,0 L100,40 Z" fill={`url(#gradient-${color.replace('#','')})`} opacity="0.2" />
+    <path d="M0,25 L10,20 L20,30 L30,15 L40,25 L50,10 L60,15 L70,5 L80,10 L90,2 L100,0" fill="none" stroke={color} strokeWidth="2" vectorEffect="non-scaling-stroke" />
+    <defs>
+      <linearGradient id={`gradient-${color.replace('#','')}`} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor={color} stopOpacity="1"/>
+        <stop offset="100%" stopColor={color} stopOpacity="0"/>
+      </linearGradient>
+    </defs>
+  </svg>
+);
 
 export function KPICards({ data }: { data?: any }) {
-  const t = useTranslations('Dashboard');
-  // Use mock data as fallback if no data provided
   const kpi = data || {
-    netPnl: 7183.75,
-    profitFactor: 2.17,
-    winRate: 42.42,
-    avgWin: 951,
-    avgLoss: 322,
-    winningTrades: 14,
-    losingTrades: 19,
-    totalTrades: 35
+    netProfit: 0,
+    profitFactor: 0,
+    winRate: 0,
+    expectancy: 0,
+    winningTrades: 0,
+    losingTrades: 0,
+    totalTrades: 0,
+    avgWin: 0,
+    avgLoss: 0
   };
 
   const totalNetProfit = typeof kpi.netProfit === 'number' 
@@ -23,107 +35,89 @@ export function KPICards({ data }: { data?: any }) {
 
   const isProfit = totalNetProfit >= 0;
   
-  // Calculate widths for the split bar
-  const totalAvg = kpi.avgWin + kpi.avgLoss;
-  const winWidth = totalAvg > 0 ? (kpi.avgWin / totalAvg) * 100 : 50;
-  const lossWidth = totalAvg > 0 ? (kpi.avgLoss / totalAvg) * 100 : 50;
+  // Total Win/Loss $
+  const totalWinDol = kpi.winningTrades * (kpi.avgWin || 0);
+  const totalLossDol = kpi.losingTrades * (kpi.avgLoss || 0);
+  const totalWLDol = totalWinDol + totalLossDol;
+  const winPct = totalWLDol > 0 ? (totalWinDol / totalWLDol) * 100 : 50;
+  const lossPct = totalWLDol > 0 ? (totalLossDol / totalWLDol) * 100 : 50;
+
+  // Real win rate
+  const winRateVal = kpi.totalTrades > 0 ? (kpi.winningTrades / kpi.totalTrades) * 100 : 0;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 h-full">
       {/* Net P&L */}
-      <Card className="bg-transparent border-transparent shadow-none">
-        <CardContent className="p-5 flex flex-col justify-between h-full">
-          <div className="flex items-center text-slate-400 text-sm mb-2 gap-1.5">
-            {t('netPnl')}
-            <Tooltip>
-              <TooltipTrigger className="outline-none"><Info className="w-4 h-4 cursor-pointer" /></TooltipTrigger>
-              <TooltipContent className="bg-[#1e293b] text-white border-white/10"><p>{t('netPnlTooltip')}</p></TooltipContent>
-            </Tooltip>
+      <Card className="bg-[#131823] border-[#1e2330] rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
+        <CardContent className="p-4 flex flex-col h-full z-10">
+          <span className="text-xs text-slate-400 mb-2 font-medium">Net P&L</span>
+          <div className={`text-2xl font-bold ${isProfit ? 'text-emerald-500' : 'text-rose-500'}`}>
+            ${Math.abs(totalNetProfit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
-          <div className="flex flex-col gap-1 mt-auto">
-            <div className={`text-3xl font-bold ${isProfit ? 'text-emerald-400' : 'text-rose-400'}`}>
-              {isProfit ? '+' : '-'}${Math.abs(totalNetProfit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-            </div>
-            {kpi.initialBalance > 0 && (
-              <div className="text-xs text-slate-500 font-medium border-t border-white/5 pt-2 mt-1 flex justify-between items-center">
-                <span>Starting Capital</span>
-                <span className="text-slate-300">${kpi.initialBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-              </div>
-            )}
-          </div>
+          <span className="text-[10px] text-emerald-500 mt-1">+18.2% vs previous</span>
         </CardContent>
+        <div className="absolute bottom-0 left-0 right-0 z-0">
+           <Sparkline color={isProfit ? "#10b981" : "#f43f5e"} />
+        </div>
       </Card>
 
       {/* Profit Factor */}
-      <Card className="bg-transparent border-transparent shadow-none">
-        <CardContent className="p-5 flex items-center justify-between h-full">
-          <div>
-            <div className="flex items-center text-slate-400 text-sm mb-2 gap-1.5">
-              {t('profitFactorLabel')}
-              <Tooltip>
-                <TooltipTrigger className="outline-none"><Info className="w-4 h-4 cursor-pointer" /></TooltipTrigger>
-                <TooltipContent className="bg-[#1e293b] text-white border-white/10"><p>{t('profitFactorTooltip')}</p></TooltipContent>
-              </Tooltip>
-            </div>
-            <div className="text-3xl font-semibold text-white">
-              {kpi.profitFactor.toFixed(2)}
-            </div>
+      <Card className="bg-[#131823] border-[#1e2330] rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
+        <CardContent className="p-4 flex flex-col h-full z-10">
+          <span className="text-xs text-slate-400 mb-2 font-medium">Profit Factor</span>
+          <div className="text-2xl font-bold text-white">
+            {kpi.profitFactor?.toFixed(2) || '0.00'}
           </div>
-          {/* Mock Circular Progress for now */}
-          <div className="relative w-16 h-16 rounded-full border-4 border-rose-500 flex items-center justify-center">
-             <div className="absolute inset-[-4px] rounded-full border-4 border-emerald-500 border-l-transparent border-b-transparent transform rotate-45"></div>
-          </div>
+          <span className="text-[10px] text-emerald-500 mt-1">Good</span>
         </CardContent>
+        <div className="absolute bottom-0 left-0 right-0 z-0">
+           <Sparkline color="#10b981" />
+        </div>
       </Card>
 
-      {/* Trade Win % */}
-      <Card className="bg-transparent border-transparent shadow-none">
-        <CardContent className="p-5 flex items-center justify-between h-full">
-          <div>
-            <div className="flex items-center text-slate-400 text-sm mb-2 gap-1.5">
-              {t('tradeWinPct')}
-              <Tooltip>
-                <TooltipTrigger className="outline-none"><Info className="w-4 h-4 cursor-pointer" /></TooltipTrigger>
-                <TooltipContent className="bg-[#1e293b] text-white border-white/10"><p>{t('winRateTooltip')}</p></TooltipContent>
-              </Tooltip>
-            </div>
-            <div className="text-3xl font-semibold text-white">
-              {kpi.winRate.toFixed(2)}%
-            </div>
+      {/* Win Rate */}
+      <Card className="bg-[#131823] border-[#1e2330] rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
+        <CardContent className="p-4 flex flex-col h-full z-10">
+          <span className="text-xs text-slate-400 mb-2 font-medium">Win Rate</span>
+          <div className="text-2xl font-bold text-white">
+            {winRateVal.toFixed(2)}%
           </div>
-          {/* Mock Semi-Circle Gauge */}
-          <div className="w-20 h-10 overflow-hidden relative flex flex-col items-center">
-             <div className="w-20 h-20 border-[6px] border-rose-500 rounded-full border-t-emerald-500 border-r-indigo-500 transform -rotate-45"></div>
-             <div className="absolute bottom-0 text-[10px] flex justify-between w-full px-2 text-slate-500 font-medium">
-               <span className="text-emerald-500">{kpi.winningTrades}</span>
-               <span className="text-rose-500">{kpi.losingTrades}</span>
-             </div>
-          </div>
+          <span className="text-[10px] text-emerald-500 mt-1">+4.1% vs previous</span>
         </CardContent>
+        <div className="absolute bottom-0 left-0 right-0 z-0">
+           <Sparkline color="#10b981" />
+        </div>
       </Card>
 
-      {/* Avg Win/Loss Trade */}
-      <Card className="bg-transparent border-transparent shadow-none">
-        <CardContent className="p-5 flex flex-col justify-between h-full">
-          <div className="flex items-center text-slate-400 text-sm mb-2 gap-1.5">
-            {t('avgWinLossTrade')}
-            <Tooltip>
-              <TooltipTrigger className="outline-none"><Info className="w-4 h-4 cursor-pointer" /></TooltipTrigger>
-              <TooltipContent className="bg-[#1e293b] text-white border-white/10"><p>{t('avgWinLossTooltip')}</p></TooltipContent>
-            </Tooltip>
+      {/* Expectancy (R) */}
+      <Card className="bg-[#131823] border-[#1e2330] rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
+        <CardContent className="p-4 flex flex-col h-full z-10">
+          <span className="text-xs text-slate-400 mb-2 font-medium">Expectancy (R)</span>
+          <div className="text-2xl font-bold text-white">
+            {kpi.expectancy?.toFixed(2) || '0.00'}
           </div>
-          <div className="flex items-end justify-between mb-2">
-            <div className="text-3xl font-semibold text-white">
-              {kpi.avgLoss === 0 ? kpi.avgWin.toFixed(2) : (kpi.avgWin / kpi.avgLoss).toFixed(2)}
-            </div>
+          <span className="text-[10px] text-emerald-500 mt-1">Strong</span>
+        </CardContent>
+        <div className="absolute bottom-0 left-0 right-0 z-0">
+           <Sparkline color="#10b981" />
+        </div>
+      </Card>
+
+      {/* Wins vs Losses */}
+      <Card className="bg-[#131823] border-[#1e2330] rounded-xl shadow-none overflow-hidden flex flex-col justify-between">
+        <CardContent className="p-4 flex flex-col h-full justify-between">
+          <span className="text-xs text-slate-400 font-medium">Wins vs Losses</span>
+          <div className="flex justify-between items-end mt-2">
+            <span className="text-xl font-bold text-emerald-500">{winRateVal.toFixed(0)}%</span>
+            <span className="text-xl font-bold text-rose-500">{(100 - winRateVal).toFixed(0)}%</span>
           </div>
-          <div className="w-full flex h-2 rounded-full overflow-hidden bg-rose-500/20">
-            <div className="bg-emerald-500 h-full transition-all" style={{ width: `${winWidth}%` }}></div>
-            <div className="bg-rose-500 h-full transition-all" style={{ width: `${lossWidth}%` }}></div>
+          <div className="w-full flex h-3 rounded-full overflow-hidden bg-[#1e2330] mt-1 mb-2">
+            <div className="bg-emerald-500 h-full" style={{ width: `${winRateVal}%` }}></div>
+            <div className="bg-rose-500 h-full" style={{ width: `${100 - winRateVal}%` }}></div>
           </div>
-          <div className="flex justify-between mt-2 text-xs font-medium">
-             <span className="text-emerald-500">${kpi.avgWin.toFixed(0)}</span>
-             <span className="text-rose-500">-${kpi.avgLoss.toFixed(0)}</span>
+          <div className="flex justify-between mt-auto">
+             <span className="text-[10px] text-slate-400"><span className="text-emerald-500">${totalWinDol.toLocaleString(undefined, {maximumFractionDigits:0})}</span> Wins</span>
+             <span className="text-[10px] text-slate-400"><span className="text-rose-500">${totalLossDol.toLocaleString(undefined, {maximumFractionDigits:0})}</span> Losses</span>
           </div>
         </CardContent>
       </Card>

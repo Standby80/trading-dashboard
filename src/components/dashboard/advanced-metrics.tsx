@@ -285,3 +285,187 @@ export function TimeAnalyticsWidget({ hourlyData = [], weekdayData = [] }: { hou
     </Card>
   );
 }
+
+// --- WIDGET 3: Secondary Stats Row (Trades, Equity, Risk, Key Stats) ---
+export function SecondaryStats({ data }: { data: any }) {
+  if (!data || !data.kpis) return null;
+  const { kpis } = data;
+  
+  const tradesWinPct = kpis.totalTrades > 0 ? (kpis.winningTrades / kpis.totalTrades) * 100 : 0;
+  
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-full">
+      {/* Trades */}
+      <div className="bg-[#131823] border border-[#1e2330] rounded-xl p-4 flex justify-between items-center h-full">
+        <div className="flex flex-col">
+          <span className="text-xs text-slate-400 uppercase tracking-wider mb-2 font-semibold">Trades</span>
+          <span className="text-3xl font-bold text-white mb-1">{kpis.totalTrades}</span>
+          <span className="text-xs text-slate-500 mb-2">Total</span>
+          <div className="flex gap-4 mt-auto">
+             <div className="flex flex-col">
+               <span className="text-emerald-500 font-bold">{kpis.winningTrades}</span>
+               <span className="text-[10px] text-slate-500">Won</span>
+             </div>
+             <div className="flex flex-col">
+               <span className="text-rose-500 font-bold">{kpis.losingTrades}</span>
+               <span className="text-[10px] text-slate-500">Lost</span>
+             </div>
+          </div>
+        </div>
+        {/* Simple CSS Donut */}
+        <div className="relative w-16 h-16 rounded-full border-4 border-[#1e2330] mr-2 flex items-center justify-center">
+            {kpis.totalTrades > 0 && (
+                <svg className="absolute inset-[-4px] w-[72px] h-[72px] -rotate-90">
+                    <circle cx="36" cy="36" r="34" fill="none" stroke="#f43f5e" strokeWidth="4" />
+                    <circle cx="36" cy="36" r="34" fill="none" stroke="#10b981" strokeWidth="4" strokeDasharray={`${tradesWinPct * 2.13} 213`} />
+                </svg>
+            )}
+        </div>
+      </div>
+
+      {/* Equity */}
+      <div className="bg-[#131823] border border-[#1e2330] rounded-xl p-4 flex flex-col justify-between h-full relative overflow-hidden">
+        <div className="flex flex-col relative z-10">
+          <span className="text-xs text-slate-400 uppercase tracking-wider mb-1 font-semibold">Equity</span>
+          <span className="text-2xl font-bold text-white">${kpis.currentBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}</span>
+          <span className="text-[10px] text-slate-500 mb-3">Account Value</span>
+          
+          <span className="text-lg font-bold text-emerald-400">${Math.abs(kpis.netProfit || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+          <span className="text-[10px] text-slate-500">Equity Growth</span>
+        </div>
+      </div>
+
+      {/* Risk */}
+      <div className="bg-[#131823] border border-[#1e2330] rounded-xl p-4 flex flex-col justify-between h-full">
+        <span className="text-xs text-slate-400 uppercase tracking-wider mb-2 font-semibold">Risk</span>
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col">
+            <span className="text-emerald-500 font-bold">${(kpis.bestTrade || 0).toFixed(2)}</span>
+            <span className="text-[10px] text-slate-500">Largest Win</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-rose-500 font-bold">-${Math.abs(kpis.worstTrade || 0).toFixed(2)}</span>
+            <span className="text-[10px] text-slate-500">Largest Loss</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Key Stats */}
+      <div className="bg-[#131823] border border-[#1e2330] rounded-xl p-4 flex flex-col justify-between h-full">
+        <span className="text-xs text-slate-400 uppercase tracking-wider mb-2 font-semibold">Key Stats</span>
+        <div className="flex flex-col gap-2 mt-1">
+          <div className="flex justify-between items-center text-xs">
+            <span className="text-slate-400">Avg. Win</span>
+            <span className="text-emerald-500 font-medium">${(kpis.avgWin || 0).toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between items-center text-xs">
+            <span className="text-slate-400">Avg. Loss</span>
+            <span className="text-rose-500 font-medium">-${(kpis.avgLoss || 0).toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between items-center text-xs">
+            <span className="text-slate-400">Max Drawdown</span>
+            <span className="text-white font-medium">{((kpis.maxDrawdownDol || 0) / (kpis.peakBalance || 1) * 100).toFixed(2)}%</span>
+          </div>
+          <div className="flex justify-between items-center text-xs">
+            <span className="text-slate-400">Sharpe Ratio</span>
+            <span className="text-white font-medium">{kpis.sharpeRatio?.toFixed(2) || '0.00'}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- WIDGET 4: Trade Distribution ---
+export function TradeDistribution({ data }: { data: any }) {
+  if (!data || !data.kpis) return null;
+  const { kpis } = data;
+  const tradesWinPct = kpis.totalTrades > 0 ? (kpis.winningTrades / kpis.totalTrades) * 100 : 0;
+  
+  return (
+    <Card className="bg-transparent border-transparent rounded-xl shadow-none h-full overflow-hidden flex flex-col">
+      <CardHeader className="pb-2 pt-4 px-4 flex flex-row items-center justify-between border-b border-white/5">
+        <CardTitle className="text-sm font-semibold text-slate-400 uppercase tracking-wider">
+          Trade Distribution
+        </CardTitle>
+        <div className="flex bg-[#0b0e14] rounded p-1 border border-white/5">
+           <button className="text-[10px] px-2 py-0.5 rounded bg-[#1e2330] text-white">By Asset</button>
+           <button className="text-[10px] px-2 py-0.5 rounded text-slate-500 hover:text-white">By Direction</button>
+        </div>
+      </CardHeader>
+      <CardContent className="p-4 flex-1 flex flex-col items-center justify-center relative">
+        <div className="relative w-32 h-32 flex items-center justify-center">
+            <div className="absolute inset-0 rounded-full border-[8px] border-[#1e2330]"></div>
+            {kpis.totalTrades > 0 && (
+                <svg className="absolute inset-[-8px] w-[144px] h-[144px] -rotate-90">
+                    <circle cx="72" cy="72" r="64" fill="none" stroke="#f43f5e" strokeWidth="8" />
+                    <circle cx="72" cy="72" r="64" fill="none" stroke="#10b981" strokeWidth="8" strokeDasharray={`${tradesWinPct * 4.02} 402`} />
+                </svg>
+            )}
+            <div className="flex flex-col items-center text-center">
+               <span className="text-2xl font-bold text-white">{kpis.totalTrades}</span>
+               <span className="text-[10px] text-slate-500">Total</span>
+            </div>
+        </div>
+        
+        <div className="w-full flex justify-between px-4 mt-6">
+            <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                <span className="text-xs text-slate-400">Winners</span>
+                <span className="text-xs text-white font-medium ml-1">{kpis.winningTrades} ({tradesWinPct.toFixed(1)}%)</span>
+            </div>
+            <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-rose-500"></div>
+                <span className="text-xs text-slate-400">Losers</span>
+                <span className="text-xs text-white font-medium ml-1">{kpis.losingTrades} ({(100 - tradesWinPct).toFixed(1)}%)</span>
+            </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// --- WIDGET 5: Drawdown Analysis ---
+export function DrawdownAnalysis({ kpis }: { kpis: any }) {
+  if (!kpis) return null;
+  const ddPct = ((kpis.maxDrawdownDol || 0) / (kpis.peakBalance || 1) * 100).toFixed(2);
+  
+  return (
+    <Card className="bg-transparent border-transparent rounded-xl shadow-none h-full overflow-hidden flex flex-col">
+      <CardHeader className="pb-2 pt-4 px-4 border-b border-white/5">
+        <CardTitle className="text-sm font-semibold text-slate-400 uppercase tracking-wider">
+          Drawdown Analysis
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="p-4 flex-1 flex flex-col items-center justify-center relative">
+        <div className="relative w-32 h-32 flex items-center justify-center mb-4">
+            <div className="absolute inset-0 rounded-full border-[8px] border-[#1e2330]"></div>
+            <svg className="absolute inset-[-8px] w-[144px] h-[144px] -rotate-90">
+                <circle cx="72" cy="72" r="64" fill="none" stroke="#8b5cf6" strokeWidth="8" strokeDasharray="100 402" />
+            </svg>
+            <div className="flex flex-col items-center text-center">
+               <span className="text-[10px] text-slate-500">Max<br/>Drawdown</span>
+               <span className="text-lg font-bold text-white mt-1">{ddPct}%</span>
+            </div>
+        </div>
+        
+        <div className="w-full flex flex-col gap-2 mt-2 px-2">
+            <div className="flex justify-between items-center w-full">
+                <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-violet-500"></div>
+                    <span className="text-xs text-slate-400">Current</span>
+                </div>
+                <span className="text-xs text-white font-medium">{ddPct}%</span>
+            </div>
+            <div className="flex justify-between items-center w-full">
+                <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-[#1e2330]"></div>
+                    <span className="text-xs text-slate-400">Previous Max</span>
+                </div>
+                <span className="text-xs text-white font-medium">-</span>
+            </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

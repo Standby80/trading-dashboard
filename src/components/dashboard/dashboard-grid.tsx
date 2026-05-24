@@ -13,14 +13,9 @@ import { AnalyticsSidebar } from "@/components/dashboard/analytics-sidebar";
 import { TradeHistoryTable } from "@/components/dashboard/trade-history-table";
 import { LongShortCharts } from "@/components/dashboard/long-short-charts";
 import { DrawdownChart } from "@/components/dashboard/drawdown-chart";
-import { RiskMetrics } from "@/components/dashboard/risk-metrics";
-import { TradeExecutionWidget, TimeAnalyticsWidget } from "@/components/dashboard/advanced-metrics";
+import { RiskOverview } from "@/components/dashboard/risk-overview";
+import { TradeExecutionWidget, TimeAnalyticsWidget, SecondaryStats, TradeDistribution, DrawdownAnalysis } from "@/components/dashboard/advanced-metrics";
 import { ExpectancyCurve } from "@/components/dashboard/expectancy-curve";
-import { TimeAnalysisCharts } from "@/components/dashboard/time-analysis-charts";
-import { MarketAnalysisModule } from "@/components/dashboard/market-analysis-module";
-import { PsychologyGrid } from "@/components/dashboard/psychology-grid";
-import { TimeExtremesCards } from "@/components/dashboard/time-extremes-cards";
-import { MonthlyHeatmap } from "@/components/dashboard/monthly-heatmap";
 
 const ResponsiveGridLayout = WP(Responsive);
 
@@ -40,36 +35,42 @@ export function DashboardGrid({ data }: { data: any }) {
 
   const defaultLayouts = {
     lg: [
-      { i: 'kpis', x: 0, y: 0, w: 12, h: 2, minW: 4, minH: 2 },
-      { i: 'psychology', x: 0, y: 2, w: 12, h: 4, minW: 6, minH: 3 },
+      // Row 1: KPI Cards (5 columns)
+      { i: 'kpis', x: 0, y: 0, w: 60, h: 2, minW: 10, minH: 2 }, // KPICards component will handle the 5-col split internally
       
-      { i: 'calendar', x: 0, y: 6, w: 8, h: 10, minW: 4, minH: 5 },
-      { i: 'radar', x: 8, y: 6, w: 4, h: 5, minW: 2, minH: 5 },
-      { i: 'risk', x: 8, y: 11, w: 4, h: 5, minW: 2, minH: 5 },
+      // Row 2: Secondary Stats (4 columns) - we'll handle this inside a new component or split here
+      { i: 'secondary-stats', x: 0, y: 2, w: 60, h: 4, minW: 10, minH: 3 }, // Handled internally
       
-      { i: 'drawdown', x: 0, y: 16, w: 8, h: 6, minW: 4, minH: 4 },
-      { i: 'longshort', x: 8, y: 16, w: 4, h: 6, minW: 4, minH: 3 },
+      // Row 3: Calendar (left) & Risk Overview (right)
+      { i: 'calendar', x: 0, y: 6, w: 35, h: 10, minW: 20, minH: 5 },
+      { i: 'risk-overview', x: 35, y: 6, w: 25, h: 10, minW: 15, minH: 5 },
       
-      { i: 'trades', x: 0, y: 22, w: 12, h: 6, minW: 2, minH: 5 },
+      // Row 4: Trade Execution, Trades Analysis, Trade Distribution
+      { i: 'trade-execution', x: 0, y: 16, w: 20, h: 8, minW: 10, minH: 6 },
+      { i: 'trades-analysis', x: 20, y: 16, w: 20, h: 8, minW: 10, minH: 6 },
+      { i: 'trade-distribution', x: 40, y: 16, w: 20, h: 8, minW: 10, minH: 6 },
       
-      { i: 'trade-execution', x: 0, y: 28, w: 6, h: 6, minW: 3, minH: 4 },
-      { i: 'time-analytics', x: 6, y: 28, w: 6, h: 6, minW: 4, minH: 4 },
+      // Row 5: Asset Performance, Drawdown Analysis, Long vs Short
+      { i: 'asset-performance', x: 0, y: 24, w: 20, h: 7, minW: 10, minH: 6 },
+      { i: 'drawdown-analysis', x: 20, y: 24, w: 20, h: 7, minW: 10, minH: 6 },
+      { i: 'long-short', x: 40, y: 24, w: 20, h: 7, minW: 10, minH: 6 },
       
-      { i: 'expectancy', x: 0, y: 34, w: 12, h: 6, minW: 6, minH: 4 },
+      // Row 6: Equity Curve, Expectancy Curve
+      { i: 'equity-curve', x: 0, y: 31, w: 30, h: 9, minW: 15, minH: 6 },
+      { i: 'expectancy-curve', x: 30, y: 31, w: 30, h: 9, minW: 15, minH: 6 },
       
-      { i: 'market-analysis', x: 0, y: 40, w: 12, h: 6, minW: 6, minH: 4 },
-      
-      { i: 'performance-matrix', x: 0, y: 46, w: 12, h: 10, minW: 6, minH: 6 },
+      // Row 7: Recent Trades
+      { i: 'recent-trades', x: 0, y: 40, w: 60, h: 10, minW: 20, minH: 5 },
     ]
   };
 
   const handleLayoutChange = (layout: any, layouts: any) => {
     setLayoutState(layouts);
-    localStorage.setItem('metametrics-layout', JSON.stringify(layouts));
+    localStorage.setItem('metametrics-layout-v2', JSON.stringify(layouts));
   };
 
   const resetLayout = () => {
-    localStorage.removeItem('metametrics-layout');
+    localStorage.removeItem('metametrics-layout-v2');
     setLayoutState(null); // Force it to use defaultLayouts on next render
   };
 
@@ -95,92 +96,88 @@ export function DashboardGrid({ data }: { data: any }) {
         draggableHandle=".drag-handle"
         margin={[24, 24]}
       >
-        <div key="kpis" data-grid={{ x: 0, y: 0, w: 12, h: 2, minW: 4, minH: 2 }} className="flex flex-col bg-[#0b0e14] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="kpis" data-grid={{ x: 0, y: 0, w: 60, h: 2, minW: 10, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
-            <div className="flex-1 overflow-hidden p-2">
+            <div className="flex-1 overflow-visible">
                <KPICards data={data?.kpis} />
             </div>
         </div>
 
-        <div key="calendar" data-grid={{ x: 0, y: 6, w: 8, h: 10, minW: 4, minH: 5 }} className="flex flex-col bg-[#0b0e14] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="secondary-stats" data-grid={{ x: 0, y: 2, w: 60, h: 4, minW: 10, minH: 3 }} className="flex flex-col h-full relative transition-all duration-300">
+            <DragHandle />
+            <div className="flex-1 overflow-visible">
+               <SecondaryStats data={data} />
+            </div>
+        </div>
+
+        <div key="calendar" data-grid={{ x: 0, y: 6, w: 35, h: 10, minW: 20, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                <TradingCalendar data={data?.dailyData} availableSymbols={data?.availableSymbols} />
             </div>
         </div>
 
-        <div key="drawdown" data-grid={{ x: 0, y: 16, w: 8, h: 6, minW: 4, minH: 4 }} className="flex flex-col bg-[#0b0e14] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="risk-overview" data-grid={{ x: 35, y: 6, w: 25, h: 10, minW: 15, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
-               <DrawdownChart data={data?.drawdownData} />
+               <RiskOverview kpis={data?.kpis} />
             </div>
         </div>
 
-        <div key="longshort" data-grid={{ x: 8, y: 16, w: 4, h: 6, minW: 4, minH: 3 }} className="flex flex-col bg-[#0b0e14] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="trade-execution" data-grid={{ x: 0, y: 16, w: 20, h: 8, minW: 10, minH: 6 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
-            <div className="flex-1 overflow-hidden">
-               <LongShortCharts kpis={data?.kpis} />
-            </div>
+            <TradeExecutionWidget kpis={data?.kpis} isPremium={data?.profile?.subscription_tier === 'premium'} />
         </div>
 
-        <div key="trades" data-grid={{ x: 0, y: 22, w: 12, h: 6, minW: 2, minH: 5 }} className="flex flex-col bg-[#0b0e14] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="trades-analysis" data-grid={{ x: 20, y: 16, w: 20, h: 8, minW: 10, minH: 6 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
-            <div className="flex-1 overflow-hidden flex flex-col">
-               <TradeHistoryTable trades={data?.rawTrades} />
-            </div>
+            <TimeAnalyticsWidget hourlyData={data?.hourlyData} weekdayData={data?.weekdayData} />
         </div>
 
-        <div key="radar" data-grid={{ x: 8, y: 6, w: 4, h: 5, minW: 2, minH: 5 }} className="flex flex-col bg-[#0b0e14] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="trade-distribution" data-grid={{ x: 40, y: 16, w: 20, h: 8, minW: 10, minH: 6 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+            <DragHandle />
+            <TradeDistribution data={data} />
+        </div>
+
+        <div key="asset-performance" data-grid={{ x: 0, y: 24, w: 20, h: 7, minW: 10, minH: 6 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                <AnalyticsSidebar cumulativeData={data?.cumulativeData} kpis={data?.kpis} />
             </div>
         </div>
 
-        <div key="risk" data-grid={{ x: 8, y: 11, w: 4, h: 5, minW: 2, minH: 5 }} className="flex flex-col bg-[#0b0e14] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="drawdown-analysis" data-grid={{ x: 20, y: 24, w: 20, h: 7, minW: 10, minH: 6 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
-            <div className="flex-1 overflow-y-auto">
-               <RiskMetrics kpis={data?.kpis} />
+            <div className="flex-1 overflow-hidden">
+               <DrawdownAnalysis kpis={data?.kpis} />
             </div>
         </div>
 
-        <div key="trade-execution" data-grid={{ x: 0, y: 28, w: 6, h: 6, minW: 3, minH: 4 }} className="flex flex-col bg-[#0b0e14] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="long-short" data-grid={{ x: 40, y: 24, w: 20, h: 7, minW: 10, minH: 6 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
-            <TradeExecutionWidget kpis={data?.kpis} isPremium={data?.profile?.subscription_tier === 'premium'} />
+            <div className="flex-1 overflow-hidden">
+               <LongShortCharts kpis={data?.kpis} />
+            </div>
         </div>
 
-        <div key="time-analytics" data-grid={{ x: 6, y: 28, w: 6, h: 6, minW: 4, minH: 4 }} className="flex flex-col bg-[#0b0e14] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="equity-curve" data-grid={{ x: 0, y: 31, w: 30, h: 9, minW: 15, minH: 6 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
-            <TimeAnalyticsWidget hourlyData={data?.hourlyData} weekdayData={data?.weekdayData} />
+            <div className="flex-1 overflow-hidden">
+               <DrawdownChart data={data?.drawdownData} />
+            </div>
         </div>
 
-        <div key="expectancy" data-grid={{ x: 0, y: 34, w: 12, h: 6, minW: 6, minH: 4 }} className="flex flex-col bg-[#0b0e14] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="expectancy-curve" data-grid={{ x: 30, y: 31, w: 30, h: 9, minW: 15, minH: 6 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                 <ExpectancyCurve data={data?.expectancyData} />
             </div>
         </div>
 
-        <div key="market-analysis" data-grid={{ x: 0, y: 40, w: 12, h: 6, minW: 6, minH: 4 }} className="flex flex-col h-full relative">
+        <div key="recent-trades" data-grid={{ x: 0, y: 40, w: 60, h: 10, minW: 20, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
-            <div className="flex-1 overflow-hidden">
-                <MarketAnalysisModule assetPerformance={data?.assetPerformance || []} sideSplit={data?.sideSplit || { longs: { count: 0, winRate: 0, netProfit: 0 }, shorts: { count: 0, winRate: 0, netProfit: 0 } }} />
-            </div>
-        </div>
-
-        <div key="performance-matrix" data-grid={{ x: 0, y: 46, w: 12, h: 10, minW: 6, minH: 6 }} className="flex flex-col bg-[#0b0e14] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
-            <DragHandle />
-            <div className="flex-1 overflow-y-auto p-4 pt-2 flex flex-col gap-6">
-                <TimeExtremesCards kpis={data?.kpis} />
-                <div className="w-full h-px bg-white/5 hidden md:block"></div>
-                <MonthlyHeatmap kpis={data?.kpis} />
-            </div>
-        </div>
-
-        <div key="psychology" data-grid={{ x: 0, y: 2, w: 12, h: 4, minW: 6, minH: 3 }} className="flex flex-col bg-[#0b0e14] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
-            <DragHandle />
-            <div className="flex-1 overflow-y-auto w-full">
-                <PsychologyGrid kpis={data?.kpis} />
+            <div className="flex-1 overflow-hidden flex flex-col">
+               <TradeHistoryTable trades={data?.rawTrades} />
             </div>
         </div>
       </ResponsiveGridLayout>
