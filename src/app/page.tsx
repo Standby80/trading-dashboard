@@ -4,7 +4,6 @@ import { ConnectLiveSyncButton } from "@/components/dashboard/connect-live-sync-
 import { ClearDataButton } from "@/components/dashboard/clear-data-button";
 import { ResetLayoutButton } from "@/components/dashboard/reset-layout-button";
 import { DashboardFilters } from "@/components/dashboard/dashboard-filters";
-import { LanguageSwitcher } from "@/components/dashboard/language-switcher";
 import { getDashboardData } from "@/lib/data-service";
 import { createClient } from '@/lib/supabase/server';
 import { logout } from '@/app/login/actions';
@@ -46,7 +45,6 @@ export default async function DashboardPage({
           </div>
           <div className="flex items-center gap-3">
             <span className="text-xs text-slate-500 mr-2 hidden sm:inline-block">{user?.email}</span>
-            <LanguageSwitcher />
             <DashboardFilters />
             <ConnectLiveSyncButton profile={data?.profile} />
             <ReportUploadForm />
