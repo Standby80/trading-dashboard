@@ -8,7 +8,6 @@ import { ChevronLeft, ChevronRight, Percent, DollarSign } from "lucide-react";
 export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record<string, { pnl: number, trades: number, wins: number, balanceAtStartOfDay?: number, grossProfit?: number, grossLoss?: number }>, availableSymbols?: string[] }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [mounted, setMounted] = useState(false);
-  const [viewMode, setViewMode] = useState<'Month' | 'Week'>('Month');
   const [displayMode, setDisplayMode] = useState<'$' | '%'>('$');
   
   useEffect(() => {
@@ -90,21 +89,6 @@ export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
-        
-        <div className="flex bg-[#0b0e14] rounded p-1 border border-[#1e2330]">
-           <button 
-             onClick={() => setViewMode('Month')}
-             className={`text-[10px] px-3 py-1 rounded transition-colors ${viewMode === 'Month' ? 'bg-[#1e2330] text-white' : 'text-slate-500 hover:text-white'}`}
-           >
-             Month
-           </button>
-           <button 
-             onClick={() => setViewMode('Week')}
-             className={`text-[10px] px-3 py-1 rounded transition-colors ${viewMode === 'Week' ? 'bg-[#1e2330] text-white' : 'text-slate-500 hover:text-white'}`}
-           >
-             Week
-           </button>
-        </div>
       </div>
 
       <div className="flex-1 flex flex-col min-h-0">
@@ -177,21 +161,6 @@ export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record
                </div>
              );
            })}
-        </div>
-      </div>
-
-      <div className="flex items-center gap-6 mt-4 pt-4 border-t border-white/5">
-        <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 bg-emerald-500 rounded-sm"></div>
-          <span className="text-[10px] text-slate-400">{">"} {displayMode === '$' ? '$50' : '1%'}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 bg-emerald-700 rounded-sm"></div>
-          <span className="text-[10px] text-slate-400">{displayMode === '$' ? '$0 to $50' : '0% to 1%'}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 bg-rose-500 rounded-sm"></div>
-          <span className="text-[10px] text-slate-400">{"<"} {displayMode === '$' ? '$0' : '0%'}</span>
         </div>
       </div>
     </div>
