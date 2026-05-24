@@ -28,9 +28,8 @@ export function ClearDataButton({ currentAccount }: { currentAccount?: string })
         throw new Error(data.error || 'Failed to clear data');
       }
 
-      // Force a full refresh to clear the UI
-      router.push('/?account=Default');
-      router.refresh();
+      // Force a full hard refresh to clear the UI and server cache completely
+      window.location.href = '/?account=Default';
     } catch (err) {
       console.error('Error clearing data:', err);
       alert('Failed to clear data');
