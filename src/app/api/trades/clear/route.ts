@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { redis } from '@/lib/redis';
 
-export async function DELETE() {
+export async function DELETE(request: Request) {
   try {
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -11,16 +11,31 @@ export async function DELETE() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Delete all trades for this user
-    const { error: deleteError } = await supabase
+    const { searchParams } = new URL(request.url);
+    const accountName = searchParams.get('account');
+
+    if (!accountName) {
+      return NextResponse.json({ error: 'Account name is required' }, { status: 400 });
+    }
+
+    // Delete trades for this specific account
+    const { error: deleteTradesError } = await supabase
       .from('trades')
       .delete()
-      .eq('user_id', user.id);
+      .eq('user_id', user.id)
+      .eq('account_name', accountName);
 
-    if (deleteError) {
-      console.error('Failed to clear trades:', deleteError);
+    if (deleteTradesError) {
+      console.error('Failed to clear trades:', deleteTradesError);
       return NextResponse.json({ error: 'Failed to clear trades' }, { status: 500 });
     }
+
+    // Also delete the report for this account so it completely disappears
+    await supabase
+      .from('reports')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('account_name', accountName);
 
     // Clear the cache
     if (redis) {

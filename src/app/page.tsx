@@ -8,7 +8,7 @@ import { AccountSwitcher } from "@/components/dashboard/account-switcher";
 import { getDashboardData, getUserAccounts } from "@/lib/data-service";
 import { createClient } from '@/lib/supabase/server';
 import { logout } from '@/app/login/actions';
-import { LineChart, Menu, ShieldCheck } from "lucide-react";
+import { LineChart, Menu, ShieldCheck, LogOut } from "lucide-react";
 import Link from "next/link";
 import {
   Sheet,
@@ -83,10 +83,10 @@ export default async function DashboardPage({
                   <div className="text-xs text-slate-500">{user?.email}</div>
                 </SheetHeader>
                 
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1 mt-4">
                   {!isPremium && (
-                    <Link href="/upgrade" className="w-full text-center text-sm font-medium bg-gradient-to-r from-indigo-500 to-cyan-500 text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
-                      <ShieldCheck className="w-4 h-4" />
+                    <Link href="/upgrade" className="w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-sm font-medium bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 hover:from-indigo-500/20 hover:to-cyan-500/20 text-indigo-300 transition-colors">
+                      <ShieldCheck className="w-4 h-4 shrink-0" />
                       Upgrade to Premium
                     </Link>
                   )}
@@ -94,10 +94,11 @@ export default async function DashboardPage({
                   <ReportUploadForm />
                   <div className="h-px bg-white/5 my-2" />
                   <ResetLayoutButton />
-                  <ClearDataButton />
+                  <ClearDataButton currentAccount={currentAccount} />
                   <div className="h-px bg-white/5 my-2" />
                   <form action={logout}>
-                    <button type="submit" className="w-full text-left text-sm text-slate-400 hover:text-white transition-colors">
+                    <button type="submit" className="w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                      <LogOut className="w-4 h-4 shrink-0" />
                       Logout
                     </button>
                   </form>

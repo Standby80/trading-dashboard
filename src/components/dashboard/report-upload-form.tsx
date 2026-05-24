@@ -107,8 +107,8 @@ export function ReportUploadForm() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger 
         render={
-          <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded-md text-sm font-medium flex items-center gap-2 transition-colors">
-            <UploadCloud className="w-4 h-4" />
+          <button className="w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+            <UploadCloud className="w-4 h-4 shrink-0" />
             Upload Report
           </button>
         }

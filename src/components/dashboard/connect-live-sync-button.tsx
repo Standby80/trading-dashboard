@@ -20,7 +20,7 @@ export function ConnectLiveSyncButton({ profile }: { profile?: any }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger 
-        className="flex items-center gap-2 px-4 py-2 bg-transparent hover:bg-zinc-800/60 text-indigo-400 border border-indigo-500/30 rounded-lg text-sm font-medium transition duration-150"
+        className="w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
       >
         {isPremium ? (
           <span className="relative flex h-2 w-2">
@@ -28,7 +28,7 @@ export function ConnectLiveSyncButton({ profile }: { profile?: any }) {
             <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
           </span>
         ) : (
-          <Lock className="w-3.5 h-3.5" />
+          <Lock className="w-4 h-4 shrink-0" />
         )}
         Connect Live Sync
       </DialogTrigger>
