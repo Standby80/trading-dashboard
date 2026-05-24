@@ -3,12 +3,13 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Card } from "@/components/ui/card";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Percent, DollarSign } from "lucide-react";
 
 export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record<string, { pnl: number, trades: number, wins: number, balanceAtStartOfDay?: number, grossProfit?: number, grossLoss?: number }>, availableSymbols?: string[] }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [mounted, setMounted] = useState(false);
   const [viewMode, setViewMode] = useState<'Month' | 'Week'>('Month');
+  const [displayMode, setDisplayMode] = useState<'$' | '%'>('$');
   
   useEffect(() => {
     setMounted(true);
@@ -28,7 +29,7 @@ export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record
   
   for (let i = 0; i < firstDayOfWeek; i++) {
     const prevMonthDays = new Date(year, month, 0).getDate();
-    calendarDays.push({ day: prevMonthDays - firstDayOfWeek + i + 1, isCurrentMonth: false, pnl: null, trades: 0 });
+    calendarDays.push({ day: prevMonthDays - firstDayOfWeek + i + 1, isCurrentMonth: false, pnl: null, trades: 0, balanceAtStartOfDay: null });
   }
 
   for (let day = 1; day <= daysInMonth; day++) {
@@ -38,14 +39,15 @@ export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record
       day,
       isCurrentMonth: true,
       pnl: dayData?.pnl !== undefined ? dayData.pnl : null,
-      trades: dayData?.trades || 0
+      trades: dayData?.trades || 0,
+      balanceAtStartOfDay: dayData?.balanceAtStartOfDay || null
     });
   }
 
   const totalSlots = Math.ceil(calendarDays.length / 7) * 7;
   let nextMonthDay = 1;
   for (let i = calendarDays.length; i < totalSlots; i++) {
-    calendarDays.push({ day: nextMonthDay++, isCurrentMonth: false, pnl: null, trades: 0 });
+    calendarDays.push({ day: nextMonthDay++, isCurrentMonth: false, pnl: null, trades: 0, balanceAtStartOfDay: null });
   }
 
   const weeks = [];
@@ -57,6 +59,23 @@ export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record
     <div className="flex flex-col h-full bg-[#131823] rounded-xl overflow-hidden p-4">
       <div className="flex items-center justify-between mb-4">
         <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Performance Calendar (P&L)</span>
+        
+        <div className="flex bg-[#0b0e14] rounded p-1 border border-[#1e2330]">
+           <button 
+             onClick={() => setDisplayMode('$')}
+             className={`flex items-center justify-center p-1 rounded transition-colors ${displayMode === '$' ? 'bg-[#1e2330] text-emerald-400' : 'text-slate-500 hover:text-white'}`}
+             title="Show in Dollars"
+           >
+             <DollarSign className="w-3.5 h-3.5" />
+           </button>
+           <button 
+             onClick={() => setDisplayMode('%')}
+             className={`flex items-center justify-center p-1 rounded transition-colors ${displayMode === '%' ? 'bg-[#1e2330] text-emerald-400' : 'text-slate-500 hover:text-white'}`}
+             title="Show in Percent"
+           >
+             <Percent className="w-3.5 h-3.5" />
+           </button>
+        </div>
       </div>
 
       <div className="flex items-center justify-between mb-4">
@@ -101,6 +120,14 @@ export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record
            {weeks.map((week, wIdx) => {
              const weekPnl = week.reduce((sum, d) => sum + (d.pnl || 0), 0);
              const weekTrades = week.reduce((sum, d) => sum + (d.trades || 0), 0);
+             
+             // Find the first balance of the week to calculate weekly %
+             const firstDayWithBalance = week.find(d => d.balanceAtStartOfDay !== null);
+             const weekStartBalance = firstDayWithBalance ? firstDayWithBalance.balanceAtStartOfDay : null;
+             
+             const weekPercent = weekStartBalance ? (weekPnl / weekStartBalance) * 100 : 0;
+             const weekDisplayVal = displayMode === '$' ? weekPnl : weekPercent;
+             
              const isWeekWin = weekPnl >= 0;
              const isWeekLoss = weekPnl < 0;
 
@@ -115,17 +142,20 @@ export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record
                    if (isBigWin) bgClass = "bg-[#10b981]/20";
                    else if (isWin) bgClass = "bg-[#059669]/20";
                    else if (isLoss) bgClass = "bg-[#f43f5e]/20";
+                   
+                   const percent = (d.pnl !== null && d.balanceAtStartOfDay) ? (d.pnl / d.balanceAtStartOfDay) * 100 : 0;
+                   const displayVal = displayMode === '$' ? d.pnl : percent;
 
                    return (
                      <div key={i} className={`flex flex-col items-center justify-center rounded-md ${bgClass} ${d.isCurrentMonth ? '' : 'opacity-30'}`}>
                        <span className={`text-sm ${d.isCurrentMonth ? 'text-slate-200' : 'text-slate-600'}`}>{d.day}</span>
                        {d.pnl !== null && (
-                         <span className={`text-[10px] font-medium ${isWin ? 'text-emerald-500' : 'text-rose-500'}`}>
-                           {isWin ? '+' : '-'}${Math.abs(d.pnl).toFixed(2)}
+                         <span className={`text-xs font-bold ${isWin ? 'text-emerald-500' : 'text-rose-500'}`}>
+                           {isWin ? '+' : '-'}{displayMode === '$' ? '$' : ''}{Math.abs(displayVal).toFixed(2)}{displayMode === '%' ? '%' : ''}
                          </span>
                        )}
                        {d.trades > 0 && (
-                         <span className="text-[8px] text-slate-400/60 mt-0.5">{d.trades} {d.trades === 1 ? 'trade' : 'trades'}</span>
+                         <span className="text-[10px] text-slate-400/80 mt-0.5">{d.trades} {d.trades === 1 ? 'trade' : 'trades'}</span>
                        )}
                      </div>
                    )
@@ -135,13 +165,13 @@ export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record
                  <div className="flex flex-col items-center justify-center rounded-md bg-[#1e2330]/30 border-l border-white/5 ml-1">
                    {weekTrades > 0 ? (
                      <>
-                       <span className={`text-[11px] font-bold ${isWeekWin ? 'text-emerald-500' : 'text-rose-500'}`}>
-                          {isWeekWin ? '+' : '-'}${Math.abs(weekPnl).toFixed(0)}
+                       <span className={`text-[13px] font-bold ${isWeekWin ? 'text-emerald-500' : 'text-rose-500'}`}>
+                          {isWeekWin ? '+' : '-'}{displayMode === '$' ? '$' : ''}{Math.abs(weekDisplayVal).toFixed(displayMode === '$' ? 0 : 2)}{displayMode === '%' ? '%' : ''}
                        </span>
-                       <span className="text-[8px] text-slate-400/80 mt-0.5">{weekTrades} trades</span>
+                       <span className="text-[10px] text-slate-400/80 mt-0.5">{weekTrades} trades</span>
                      </>
                    ) : (
-                     <span className="text-[10px] text-slate-600">-</span>
+                     <span className="text-[11px] text-slate-600">-</span>
                    )}
                  </div>
                </div>
@@ -153,15 +183,15 @@ export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record
       <div className="flex items-center gap-6 mt-4 pt-4 border-t border-white/5">
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 bg-emerald-500 rounded-sm"></div>
-          <span className="text-[10px] text-slate-400">{">"} $50</span>
+          <span className="text-[10px] text-slate-400">{">"} {displayMode === '$' ? '$50' : '1%'}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 bg-emerald-700 rounded-sm"></div>
-          <span className="text-[10px] text-slate-400">$0 to $50</span>
+          <span className="text-[10px] text-slate-400">{displayMode === '$' ? '$0 to $50' : '0% to 1%'}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 bg-rose-500 rounded-sm"></div>
-          <span className="text-[10px] text-slate-400">{"<"} $0</span>
+          <span className="text-[10px] text-slate-400">{"<"} {displayMode === '$' ? '$0' : '0%'}</span>
         </div>
       </div>
     </div>
