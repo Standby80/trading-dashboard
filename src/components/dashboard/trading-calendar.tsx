@@ -28,7 +28,7 @@ export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record
   
   for (let i = 0; i < firstDayOfWeek; i++) {
     const prevMonthDays = new Date(year, month, 0).getDate();
-    calendarDays.push({ day: prevMonthDays - firstDayOfWeek + i + 1, isCurrentMonth: false, pnl: null });
+    calendarDays.push({ day: prevMonthDays - firstDayOfWeek + i + 1, isCurrentMonth: false, pnl: null, trades: 0 });
   }
 
   for (let day = 1; day <= daysInMonth; day++) {
@@ -37,14 +37,20 @@ export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record
     calendarDays.push({
       day,
       isCurrentMonth: true,
-      pnl: dayData?.pnl !== undefined ? dayData.pnl : null
+      pnl: dayData?.pnl !== undefined ? dayData.pnl : null,
+      trades: dayData?.trades || 0
     });
   }
 
   const totalSlots = Math.ceil(calendarDays.length / 7) * 7;
   let nextMonthDay = 1;
   for (let i = calendarDays.length; i < totalSlots; i++) {
-    calendarDays.push({ day: nextMonthDay++, isCurrentMonth: false, pnl: null });
+    calendarDays.push({ day: nextMonthDay++, isCurrentMonth: false, pnl: null, trades: 0 });
+  }
+
+  const weeks = [];
+  for (let i = 0; i < calendarDays.length; i += 7) {
+    weeks.push(calendarDays.slice(i, i + 7));
   }
 
   return (
@@ -83,35 +89,63 @@ export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record
       </div>
 
       <div className="flex-1 flex flex-col min-h-0">
-        <div className="grid grid-cols-7 mb-2">
-          {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => (
-            <div key={d} className="text-center text-xs font-medium text-slate-400 py-1">
+        <div className="grid grid-cols-8 mb-2">
+          {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Week'].map(d => (
+            <div key={d} className={`text-center text-xs font-medium ${d === 'Week' ? 'text-slate-500' : 'text-slate-400'} py-1`}>
               {d}
             </div>
           ))}
         </div>
         
-        <div className="flex-1 grid grid-cols-7 gap-1">
-           {calendarDays.map((d, i) => {
-             const isWin = d.pnl !== null && d.pnl >= 0;
-             const isLoss = d.pnl !== null && d.pnl < 0;
-             const isBigWin = isWin && d.pnl !== null && d.pnl > 50;
-             
-             let bgClass = "bg-[#0b0e14]";
-             if (isBigWin) bgClass = "bg-[#10b981]/20";
-             else if (isWin) bgClass = "bg-[#059669]/20";
-             else if (isLoss) bgClass = "bg-[#f43f5e]/20";
+        <div className="flex-1 grid grid-cols-8 gap-1">
+           {weeks.map((week, wIdx) => {
+             const weekPnl = week.reduce((sum, d) => sum + (d.pnl || 0), 0);
+             const weekTrades = week.reduce((sum, d) => sum + (d.trades || 0), 0);
+             const isWeekWin = weekPnl >= 0;
+             const isWeekLoss = weekPnl < 0;
 
              return (
-               <div key={i} className={`flex flex-col items-center justify-center rounded-md ${bgClass} ${d.isCurrentMonth ? '' : 'opacity-30'}`}>
-                 <span className={`text-sm ${d.isCurrentMonth ? 'text-slate-200' : 'text-slate-600'}`}>{d.day}</span>
-                 {d.pnl !== null && (
-                   <span className={`text-[10px] font-medium ${isWin ? 'text-emerald-500' : 'text-rose-500'}`}>
-                     {isWin ? '+' : '-'}${Math.abs(d.pnl).toFixed(2)}
-                   </span>
-                 )}
+               <div key={wIdx} className="contents">
+                 {week.map((d, i) => {
+                   const isWin = d.pnl !== null && d.pnl >= 0;
+                   const isLoss = d.pnl !== null && d.pnl < 0;
+                   const isBigWin = isWin && d.pnl !== null && d.pnl > 50;
+                   
+                   let bgClass = "bg-[#0b0e14]";
+                   if (isBigWin) bgClass = "bg-[#10b981]/20";
+                   else if (isWin) bgClass = "bg-[#059669]/20";
+                   else if (isLoss) bgClass = "bg-[#f43f5e]/20";
+
+                   return (
+                     <div key={i} className={`flex flex-col items-center justify-center rounded-md ${bgClass} ${d.isCurrentMonth ? '' : 'opacity-30'}`}>
+                       <span className={`text-sm ${d.isCurrentMonth ? 'text-slate-200' : 'text-slate-600'}`}>{d.day}</span>
+                       {d.pnl !== null && (
+                         <span className={`text-[10px] font-medium ${isWin ? 'text-emerald-500' : 'text-rose-500'}`}>
+                           {isWin ? '+' : '-'}${Math.abs(d.pnl).toFixed(2)}
+                         </span>
+                       )}
+                       {d.trades > 0 && (
+                         <span className="text-[8px] text-slate-400/60 mt-0.5">{d.trades} {d.trades === 1 ? 'trade' : 'trades'}</span>
+                       )}
+                     </div>
+                   )
+                 })}
+                 
+                 {/* Week Summary Cell */}
+                 <div className="flex flex-col items-center justify-center rounded-md bg-[#1e2330]/30 border-l border-white/5 ml-1">
+                   {weekTrades > 0 ? (
+                     <>
+                       <span className={`text-[11px] font-bold ${isWeekWin ? 'text-emerald-500' : 'text-rose-500'}`}>
+                          {isWeekWin ? '+' : '-'}${Math.abs(weekPnl).toFixed(0)}
+                       </span>
+                       <span className="text-[8px] text-slate-400/80 mt-0.5">{weekTrades} trades</span>
+                     </>
+                   ) : (
+                     <span className="text-[10px] text-slate-600">-</span>
+                   )}
+                 </div>
                </div>
-             )
+             );
            })}
         </div>
       </div>
