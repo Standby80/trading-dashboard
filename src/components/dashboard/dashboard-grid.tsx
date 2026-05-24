@@ -50,23 +50,30 @@ export function DashboardGrid({ data }: { data: any }) {
       { i: 'metric-maxdd', x: 36, y: 2, w: 12, h: 2, minW: 3, minH: 2 },
       { i: 'metric-expectancy', x: 48, y: 2, w: 12, h: 2, minW: 3, minH: 2 },
       
-      // Row 3: Calendar & MetaMetrics
-      { i: 'calendar', x: 0, y: 4, w: 40, h: 10, minW: 5, minH: 5 },
-      { i: 'asset-performance', x: 40, y: 4, w: 20, h: 10, minW: 5, minH: 5 },
+      // Row 3: Additional KPIs
+      { i: 'metric-winning', x: 0, y: 4, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-losing', x: 12, y: 4, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-best', x: 24, y: 4, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-worst', x: 36, y: 4, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-growth', x: 48, y: 4, w: 12, h: 2, minW: 3, minH: 2 },
       
-      // Row 4: Monthly P/L & Long vs Short
-      { i: 'performance-matrix', x: 0, y: 14, w: 40, h: 10, minW: 5, minH: 5 },
-      { i: 'long-short', x: 40, y: 14, w: 20, h: 10, minW: 5, minH: 5 },
+      // Row 4: Calendar & MetaMetrics
+      { i: 'calendar', x: 0, y: 6, w: 40, h: 10, minW: 5, minH: 5 },
+      { i: 'asset-performance', x: 40, y: 6, w: 20, h: 10, minW: 5, minH: 5 },
       
-      // Row 5: Trade Execution & Time Analytics
-      { i: 'trade-execution', x: 0, y: 24, w: 30, h: 8, minW: 5, minH: 5 },
-      { i: 'trades-analysis', x: 30, y: 24, w: 30, h: 8, minW: 5, minH: 5 },
+      // Row 5: Monthly P/L & Long vs Short
+      { i: 'performance-matrix', x: 0, y: 16, w: 40, h: 10, minW: 5, minH: 5 },
+      { i: 'long-short', x: 40, y: 16, w: 20, h: 10, minW: 5, minH: 5 },
       
-      // Row 6: Expectancy Curve
-      { i: 'expectancy-curve', x: 0, y: 32, w: 60, h: 9, minW: 5, minH: 5 },
+      // Row 6: Trade Execution & Time Analytics
+      { i: 'trade-execution', x: 0, y: 26, w: 30, h: 8, minW: 5, minH: 5 },
+      { i: 'trades-analysis', x: 30, y: 26, w: 30, h: 8, minW: 5, minH: 5 },
       
-      // Row 7: Recent Trades
-      { i: 'recent-trades', x: 0, y: 41, w: 60, h: 10, minW: 5, minH: 5 },
+      // Row 7: Expectancy Curve
+      { i: 'expectancy-curve', x: 0, y: 34, w: 60, h: 9, minW: 5, minH: 5 },
+      
+      // Row 8: Recent Trades
+      { i: 'recent-trades', x: 0, y: 43, w: 60, h: 10, minW: 5, minH: 5 },
     ]
   };
 
@@ -196,46 +203,93 @@ export function DashboardGrid({ data }: { data: any }) {
             />
         </div>
 
+        {/* Metric Cards Row 3 */}
+        <div key="metric-winning" data-grid={{ x: 0, y: 4, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+            <DragHandle />
+            <MetricCard 
+                title="Winning Trades" 
+                value={data?.kpis?.winningTrades || 0}
+                trend="positive"
+                tooltip="Total number of trades that resulted in a profit."
+            />
+        </div>
+        <div key="metric-losing" data-grid={{ x: 12, y: 4, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+            <DragHandle />
+            <MetricCard 
+                title="Losing Trades" 
+                value={data?.kpis?.losingTrades || 0}
+                trend="negative"
+                tooltip="Total number of trades that resulted in a loss."
+            />
+        </div>
+        <div key="metric-best" data-grid={{ x: 24, y: 4, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+            <DragHandle />
+            <MetricCard 
+                title="Best Trade" 
+                value={`$${(data?.kpis?.bestTrade || 0).toFixed(2)}`}
+                trend="positive"
+                tooltip="The single trade with the highest profit."
+            />
+        </div>
+        <div key="metric-worst" data-grid={{ x: 36, y: 4, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+            <DragHandle />
+            <MetricCard 
+                title="Worst Trade" 
+                value={`-$${Math.abs(data?.kpis?.worstTrade || 0).toFixed(2)}`}
+                trend="negative"
+                tooltip="The single trade with the largest loss."
+            />
+        </div>
+        <div key="metric-growth" data-grid={{ x: 48, y: 4, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+            <DragHandle />
+            <MetricCard 
+                title="Total Growth" 
+                value={`${((data?.kpis?.netProfit || 0) / (data?.kpis?.initialBalance || 1) * 100).toFixed(2)}%`}
+                trend={(data?.kpis?.netProfit || 0) >= 0 ? 'positive' : 'negative'}
+                tooltip="Total percentage return on initial account balance."
+            />
+        </div>
+
         {/* Larger Modules (Excluded from splitting) */}
-        <div key="calendar" data-grid={{ x: 0, y: 4, w: 40, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="calendar" data-grid={{ x: 0, y: 6, w: 40, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                <TradingCalendar data={data?.dailyData} availableSymbols={data?.availableSymbols} />
             </div>
         </div>
 
-        <div key="asset-performance" data-grid={{ x: 40, y: 4, w: 20, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="asset-performance" data-grid={{ x: 40, y: 6, w: 20, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                <AnalyticsSidebar cumulativeData={data?.cumulativeData} kpis={data?.kpis} />
             </div>
         </div>
 
-        <div key="trade-execution" data-grid={{ x: 0, y: 14, w: 30, h: 8, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="trade-execution" data-grid={{ x: 0, y: 26, w: 30, h: 8, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <TradeExecutionWidget kpis={data?.kpis} isPremium={data?.profile?.subscription_tier === 'premium'} />
         </div>
 
-        <div key="trades-analysis" data-grid={{ x: 30, y: 14, w: 30, h: 8, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="trades-analysis" data-grid={{ x: 30, y: 26, w: 30, h: 8, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <TimeAnalyticsWidget hourlyData={data?.hourlyData} weekdayData={data?.weekdayData} />
         </div>
 
-        <div key="long-short" data-grid={{ x: 0, y: 22, w: 20, h: 7, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="long-short" data-grid={{ x: 40, y: 16, w: 20, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                <LongShortCharts kpis={data?.kpis} />
             </div>
         </div>
 
-        <div key="expectancy-curve" data-grid={{ x: 20, y: 22, w: 40, h: 7, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="expectancy-curve" data-grid={{ x: 0, y: 34, w: 60, h: 9, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                 <ExpectancyCurve data={data?.expectancyData} />
             </div>
         </div>
 
-        <div key="performance-matrix" data-grid={{ x: 0, y: 29, w: 60, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="performance-matrix" data-grid={{ x: 0, y: 16, w: 40, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-6">
                 <TimeExtremesCards kpis={data?.kpis} />
@@ -244,7 +298,7 @@ export function DashboardGrid({ data }: { data: any }) {
             </div>
         </div>
 
-        <div key="recent-trades" data-grid={{ x: 0, y: 39, w: 60, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="recent-trades" data-grid={{ x: 0, y: 43, w: 60, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden flex flex-col">
                <TradeHistoryTable trades={data?.rawTrades} />
