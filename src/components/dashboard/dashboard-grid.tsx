@@ -91,14 +91,14 @@ export function DashboardGrid({ data }: { data: any }) {
         className="layout"
         layouts={layoutState || defaultLayouts}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+        cols={{ lg: 60, md: 40, sm: 20, xs: 10, xxs: 5 }}
         rowHeight={60}
         onLayoutChange={handleLayoutChange}
         draggableHandle=".drag-handle"
         margin={[24, 24]}
       >
         {/* Metric Cards Row 1 */}
-        <div key="metric-netpnl" data-grid={{ x: 0, y: 0, w: 12, h: 2, minW: 5, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-netpnl" data-grid={{ x: 0, y: 0, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Net P&L" 
@@ -106,7 +106,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 trend={(data?.kpis?.netProfit || 0) >= 0 ? 'positive' : 'negative'}
             />
         </div>
-        <div key="metric-pf" data-grid={{ x: 12, y: 0, w: 12, h: 2, minW: 5, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-pf" data-grid={{ x: 12, y: 0, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Profit Factor" 
@@ -114,7 +114,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 trend={(data?.kpis?.profitFactor || 0) >= 1 ? 'positive' : 'negative'}
             />
         </div>
-        <div key="metric-winrate" data-grid={{ x: 24, y: 0, w: 12, h: 2, minW: 5, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-winrate" data-grid={{ x: 24, y: 0, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Win Rate" 
@@ -122,7 +122,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 trend="positive"
             />
         </div>
-        <div key="metric-expectancy" data-grid={{ x: 36, y: 0, w: 12, h: 2, minW: 5, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-expectancy" data-grid={{ x: 36, y: 0, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Expectancy (R)" 
@@ -130,7 +130,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 trend={(data?.kpis?.expectancy || 0) > 0 ? 'positive' : 'negative'}
             />
         </div>
-        <div key="metric-trades" data-grid={{ x: 48, y: 0, w: 12, h: 2, minW: 5, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-trades" data-grid={{ x: 48, y: 0, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Total Trades" 
@@ -140,7 +140,7 @@ export function DashboardGrid({ data }: { data: any }) {
         </div>
 
         {/* Metric Cards Row 2 */}
-        <div key="metric-equity" data-grid={{ x: 0, y: 2, w: 12, h: 2, minW: 5, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-equity" data-grid={{ x: 0, y: 2, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Account Value" 
@@ -148,7 +148,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 trend="neutral"
             />
         </div>
-        <div key="metric-maxdd" data-grid={{ x: 12, y: 2, w: 12, h: 2, minW: 5, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-maxdd" data-grid={{ x: 12, y: 2, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Max Drawdown" 
@@ -156,7 +156,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 trend="negative"
             />
         </div>
-        <div key="metric-avgwin" data-grid={{ x: 24, y: 2, w: 12, h: 2, minW: 5, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-avgwin" data-grid={{ x: 24, y: 2, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Average Win" 
@@ -164,7 +164,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 trend="positive"
             />
         </div>
-        <div key="metric-avgloss" data-grid={{ x: 36, y: 2, w: 12, h: 2, minW: 5, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-avgloss" data-grid={{ x: 36, y: 2, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Average Loss" 
@@ -172,7 +172,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 trend="negative"
             />
         </div>
-        <div key="metric-sharpe" data-grid={{ x: 48, y: 2, w: 12, h: 2, minW: 5, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-sharpe" data-grid={{ x: 48, y: 2, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Sharpe Ratio" 
