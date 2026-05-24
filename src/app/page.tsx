@@ -8,7 +8,8 @@ import { AccountSwitcher } from "@/components/dashboard/account-switcher";
 import { getDashboardData, getUserAccounts } from "@/lib/data-service";
 import { createClient } from '@/lib/supabase/server';
 import { logout } from '@/app/login/actions';
-import { LineChart, Menu } from "lucide-react";
+import { LineChart, Menu, ShieldCheck } from "lucide-react";
+import Link from "next/link";
 import {
   Sheet,
   SheetContent,
@@ -25,6 +26,12 @@ export default async function DashboardPage({
   const params = await searchParams;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
+
+  let isPremium = false;
+  if (user) {
+    const { data: profile } = await supabase.from('users').select('subscription_tier').eq('id', user.id).single();
+    isPremium = profile?.subscription_tier === 'Premium';
+  }
 
   const currentAccount = params?.account || 'Default';
   const accounts = await getUserAccounts();
@@ -63,6 +70,12 @@ export default async function DashboardPage({
           {/* Desktop Actions */}
           <div className="hidden lg:flex items-center gap-3">
             <span className="text-xs text-slate-500 mr-2">{user?.email}</span>
+            {!isPremium && (
+              <Link href="/upgrade" className="text-xs font-medium bg-gradient-to-r from-indigo-500 to-cyan-500 text-white px-3 py-1.5 rounded-md hover:opacity-90 transition-opacity mr-2 flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                Upgrade to Premium
+              </Link>
+            )}
             <DashboardFilters />
             <ConnectLiveSyncButton profile={data?.profile} />
             <ReportUploadForm />
@@ -90,6 +103,12 @@ export default async function DashboardPage({
                 </SheetHeader>
                 
                 <div className="flex flex-col gap-4">
+                  {!isPremium && (
+                    <Link href="/upgrade" className="w-full text-center text-sm font-medium bg-gradient-to-r from-indigo-500 to-cyan-500 text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                      <ShieldCheck className="w-4 h-4" />
+                      Upgrade to Premium
+                    </Link>
+                  )}
                   <ConnectLiveSyncButton profile={data?.profile} />
                   <ReportUploadForm />
                   <div className="h-px bg-white/5 my-2" />
