@@ -63,7 +63,7 @@ export function DashboardGrid({ data }: { data: any }) {
     ]
   };
 
-  const handleLayoutChange = (layout: Layout[], layouts: { [key: string]: Layout[] }) => {
+  const handleLayoutChange = (layout: any, layouts: any) => {
     setLayoutState(layouts);
     localStorage.setItem('metametrics-layout', JSON.stringify(layouts));
   };

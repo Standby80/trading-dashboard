@@ -55,7 +55,7 @@ export function ExpectancyCurve({ data }: { data?: any[] }) {
               contentStyle={{ backgroundColor: '#1e293b', borderColor: 'rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
               itemStyle={{ color: '#818cf8' }}
               labelStyle={{ color: '#94a3b8', marginBottom: '4px' }}
-              formatter={(value: number) => [`$${value.toLocaleString()}`, 'Förväntad utveckling']}
+              formatter={(value: any) => [`$${value.toLocaleString()}`, 'Förväntad utveckling']}
               labelFormatter={(label) => `Trade #${label}`}
             />
             <Area 

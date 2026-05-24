@@ -178,7 +178,7 @@ export function MonthlyHeatmap({ kpis }: { kpis: any }) {
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#1e293b', borderColor: 'rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
                   cursor={{fill: 'rgba(255,255,255,0.05)'}}
-                  formatter={(val: number) => [valueMode === 'pct' ? formatPct(val) : formatDol(val), 'P/L']}
+                  formatter={(val: any) => [valueMode === 'pct' ? formatPct(val) : formatDol(val), 'P/L']}
                 />
                 <Bar dataKey="value" radius={[2, 2, 2, 2]}>
                   {chartData.map((entry, index) => (

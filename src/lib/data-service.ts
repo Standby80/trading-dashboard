@@ -76,7 +76,7 @@ export async function getDashboardData(period?: string, symbolsStr?: string) {
   let currentBalance = 0;
   let peakBalance = 0; // Global peak
 
-  const dailyPnl: Record<string, { pnl: number, trades: number, wins: number, balanceAtStartOfDay: number }> = {};
+  const dailyPnl: Record<string, { pnl: number, trades: number, wins: number, balanceAtStartOfDay: number, grossProfit: number, grossLoss: number }> = {};
   const cumulativeData: { date: string, value: number }[] = [];
   const drawdownData: { date: string, balance: number, drawdown: number, drawdownPct: number }[] = [];
   let cumulative = 0;

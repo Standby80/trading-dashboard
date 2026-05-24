@@ -44,7 +44,7 @@ export function TimeAnalysisCharts({ hourlyData, weekdayData }: TimeAnalysisProp
               <YAxis stroke="#4b5563" fontSize={11} />
               <Tooltip 
                 contentStyle={{ backgroundColor: '#0f131a', borderColor: '#1e2330', borderRadius: '8px' }}
-                formatter={(value: any, name: string, props: any) => {
+                formatter={(value: any, name: any, props: any) => {
                   if (name === "netProfit") return [`$${Number(value).toFixed(2)}`, 'Net Profit'];
                   return [`${Number(value).toFixed(1)}%`, 'Win Rate'];
                 }}

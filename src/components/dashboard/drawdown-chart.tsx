@@ -91,7 +91,7 @@ export function DrawdownChart({ data }: { data: any[] }) {
               contentStyle={{ backgroundColor: '#1a2130', borderColor: 'rgba(255,255,255,0.1)', color: '#fff' }} 
               itemStyle={{ color: '#fff' }}
               labelStyle={{ color: '#94a3b8' }}
-              formatter={(value: number, name: string) => {
+              formatter={(value: any, name: any) => {
                  if (name === 'drawdownPct') return [`${value}%`, 'Drawdown'];
                  return [`$${value.toLocaleString()}`, name];
               }}
