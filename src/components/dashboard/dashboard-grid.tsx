@@ -109,6 +109,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 title="Net P&L" 
                 value={`$${Math.abs(data?.kpis?.netProfit || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
                 trend={(data?.kpis?.netProfit || 0) >= 0 ? 'positive' : 'negative'}
+                tooltip="Total realized profit or loss across all trades."
             />
         </div>
         <div key="metric-pf" data-grid={{ x: 12, y: 0, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
@@ -117,6 +118,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 title="Profit Factor" 
                 value={(data?.kpis?.profitFactor || 0).toFixed(2)}
                 trend={(data?.kpis?.profitFactor || 0) >= 1 ? 'positive' : 'negative'}
+                tooltip="Gross profit divided by gross loss. A value above 1 indicates profitability."
             />
         </div>
         <div key="metric-winrate" data-grid={{ x: 24, y: 0, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
@@ -125,6 +127,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 title="Win Rate" 
                 value={`${(data?.kpis?.totalTrades > 0 ? (data?.kpis?.winningTrades / data?.kpis?.totalTrades * 100) : 0).toFixed(2)}%`}
                 trend="positive"
+                tooltip="Percentage of winning trades out of total trades."
             />
         </div>
         <div key="metric-expectancy" data-grid={{ x: 36, y: 0, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
@@ -133,6 +136,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 title="Expectancy (R)" 
                 value={(data?.kpis?.expectancy || 0).toFixed(2)}
                 trend={(data?.kpis?.expectancy || 0) > 0 ? 'positive' : 'negative'}
+                tooltip="Average R-multiple returned per trade."
             />
         </div>
         <div key="metric-trades" data-grid={{ x: 48, y: 0, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
@@ -141,6 +145,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 title="Total Trades" 
                 value={data?.kpis?.totalTrades || 0}
                 trend="neutral"
+                tooltip="Total number of completed trades."
             />
         </div>
 
@@ -151,6 +156,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 title="Account Value" 
                 value={`$${Math.abs(data?.kpis?.currentBalance || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
                 trend="neutral"
+                tooltip="Current total balance of your account."
             />
         </div>
         <div key="metric-maxdd" data-grid={{ x: 12, y: 2, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
@@ -159,6 +165,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 title="Max Drawdown" 
                 value={`${((data?.kpis?.maxDrawdownDol || 0) / (data?.kpis?.peakBalance || 1) * 100).toFixed(2)}%`}
                 trend="negative"
+                tooltip="Largest percentage drop from a peak to a trough in equity."
             />
         </div>
         <div key="metric-avgwin" data-grid={{ x: 24, y: 2, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
@@ -167,6 +174,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 title="Average Win" 
                 value={`$${(data?.kpis?.avgWin || 0).toFixed(2)}`}
                 trend="positive"
+                tooltip="Average profit amount per winning trade."
             />
         </div>
         <div key="metric-avgloss" data-grid={{ x: 36, y: 2, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
@@ -175,6 +183,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 title="Average Loss" 
                 value={`-$${(data?.kpis?.avgLoss || 0).toFixed(2)}`}
                 trend="negative"
+                tooltip="Average loss amount per losing trade."
             />
         </div>
         <div key="metric-sharpe" data-grid={{ x: 48, y: 2, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
@@ -183,6 +192,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 title="Sharpe Ratio" 
                 value={(data?.kpis?.sharpeRatio || 0).toFixed(2)}
                 trend="positive"
+                tooltip="Measures risk-adjusted return. Higher is better."
             />
         </div>
 
