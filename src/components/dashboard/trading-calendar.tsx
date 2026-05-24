@@ -151,7 +151,7 @@ export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record
                        <span className={`text-sm ${d.isCurrentMonth ? 'text-slate-200' : 'text-slate-600'}`}>{d.day}</span>
                        {d.pnl !== null && (
                          <span className={`text-xs font-bold ${isWin ? 'text-emerald-500' : 'text-rose-500'}`}>
-                           {isWin ? '+' : '-'}{displayMode === '$' ? '$' : ''}{Math.abs(displayVal).toFixed(2)}{displayMode === '%' ? '%' : ''}
+                           {isWin ? '+' : '-'}{displayMode === '$' ? '$' : ''}{Math.abs(displayVal || 0).toFixed(2)}{displayMode === '%' ? '%' : ''}
                          </span>
                        )}
                        {d.trades > 0 && (
