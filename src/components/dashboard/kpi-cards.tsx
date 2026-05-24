@@ -39,10 +39,17 @@ export function KPICards({ data }: { data?: any }) {
               <TooltipTrigger className="outline-none"><Info className="w-4 h-4 cursor-pointer" /></TooltipTrigger>
               <TooltipContent className="bg-[#1e293b] text-white border-white/10"><p>{t('netPnlTooltip')}</p></TooltipContent>
             </Tooltip>
-            <span className="ml-2 text-indigo-400 text-xs font-medium">{kpi.totalTrades}</span>
           </div>
-          <div className={`text-3xl font-bold ${isProfit ? 'text-emerald-400' : 'text-rose-400'}`}>
-            ${Math.abs(totalNetProfit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          <div className="flex flex-col gap-1 mt-auto">
+            <div className={`text-3xl font-bold ${isProfit ? 'text-emerald-400' : 'text-rose-400'}`}>
+              {isProfit ? '+' : '-'}${Math.abs(totalNetProfit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </div>
+            {kpi.initialBalance > 0 && (
+              <div className="text-xs text-slate-500 font-medium border-t border-white/5 pt-2 mt-1 flex justify-between items-center">
+                <span>Starting Capital</span>
+                <span className="text-slate-300">${kpi.initialBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

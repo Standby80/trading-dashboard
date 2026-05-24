@@ -38,16 +38,6 @@ export default async function DashboardPage({
               {isConnected ? "Live Sync Active" : "Not Connected"}
             </span></span>
             {isConnected && (
-              <div className="hidden md:flex items-center gap-4 border-l border-white/10 pl-4 ml-2">
-                <span className="text-xs text-slate-400">
-                  Server: <span className="text-white font-medium">MetaTrader 5</span>
-                </span>
-                <span className="text-xs text-slate-400">
-                  Capital: <span className="text-white font-medium">${data?.kpis?.initialBalance?.toLocaleString() || '10,000'}</span>
-                </span>
-              </div>
-            )}
-            {isConnected && (
               <button className="text-indigo-400 hover:text-indigo-300 flex items-center gap-1 text-xs font-medium transition-colors ml-2">
                 Resync
               </button>
