@@ -13,9 +13,9 @@ export async function getCheckoutURL(plan: 'monthly' | 'annually') {
     }
 
     // If API fails or we want a simpler direct redirect, we use the fallback method:
-    // User provided these specific variant IDs and the store name:
-    const monthlyVariantId = '1702733';
-    const annualVariantId = '1702767';
+    // User provided these specific variant UUIDs:
+    const monthlyVariantId = '0c2db059-c0f7-4ced-acdd-8b3d963c6390';
+    const annualVariantId = 'b707dcbb-06d8-4119-82f4-16c260a0eb42';
     const storeName = 'metametrics';
 
     const variantId = plan === 'monthly' ? monthlyVariantId : annualVariantId;
