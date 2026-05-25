@@ -46,7 +46,7 @@ export default async function DashboardPage({
       
       {/* Sidebar - Hidden on mobile, handled by AppSidebar component */}
       <div className="hidden md:block">
-        <AppSidebar userEmail={user?.email} />
+        <AppSidebar userEmail={user?.email} profile={{ is_premium: isPremium }} />
       </div>
 
       {/* Main Content Area */}
