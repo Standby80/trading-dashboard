@@ -4,12 +4,17 @@ import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Card } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight, Percent, DollarSign } from "lucide-react";
+import { DayDetailsModal } from './day-details-modal';
 
-export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record<string, { pnl: number, trades: number, wins: number, balanceAtStartOfDay?: number, grossProfit?: number, grossLoss?: number }>, availableSymbols?: string[] }) {
+export function TradingCalendar({ data, availableSymbols = [], rawTrades = [] }: { data?: Record<string, { pnl: number, trades: number, wins: number, balanceAtStartOfDay?: number, grossProfit?: number, grossLoss?: number }>, availableSymbols?: string[], rawTrades?: any[] }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [mounted, setMounted] = useState(false);
   const [displayMode, setDisplayMode] = useState<'$' | '%'>('$');
   
+  // Modal State
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [dayTrades, setDayTrades] = useState<any[]>([]);
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -36,6 +41,7 @@ export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record
     const dayData = data?.[dateStr];
     calendarDays.push({
       day,
+      dateStr,
       isCurrentMonth: true,
       pnl: dayData?.pnl !== undefined ? dayData.pnl : null,
       trades: dayData?.trades || 0,
@@ -131,7 +137,17 @@ export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record
                    const displayVal = displayMode === '$' ? d.pnl : percent;
 
                    return (
-                     <div key={i} className={`flex flex-col items-center justify-center rounded-md ${bgClass} ${d.isCurrentMonth ? '' : 'opacity-30'}`}>
+                     <div 
+                        key={i} 
+                        className={`flex flex-col items-center justify-center rounded-md ${bgClass} ${d.isCurrentMonth ? '' : 'opacity-30'} ${d.isCurrentMonth && d.trades > 0 ? 'cursor-pointer hover:brightness-125' : ''}`}
+                        onClick={() => {
+                          if (d.isCurrentMonth && d.trades > 0 && d.dateStr) {
+                            const tradesForDay = rawTrades.filter(t => t.close_time.startsWith(d.dateStr));
+                            setDayTrades(tradesForDay);
+                            setSelectedDate(d.dateStr);
+                          }
+                        }}
+                      >
                        <span className={`text-sm ${d.isCurrentMonth ? 'text-slate-200' : 'text-slate-600'}`}>{d.day}</span>
                        {d.pnl !== null && (
                          <span className={`text-xs font-bold ${isWin ? 'text-emerald-500' : 'text-rose-500'}`}>
@@ -163,6 +179,13 @@ export function TradingCalendar({ data, availableSymbols = [] }: { data?: Record
            })}
         </div>
       </div>
+
+      <DayDetailsModal 
+        isOpen={!!selectedDate} 
+        onClose={() => setSelectedDate(null)} 
+        date={selectedDate || ''} 
+        trades={dayTrades} 
+      />
     </div>
   );
 }

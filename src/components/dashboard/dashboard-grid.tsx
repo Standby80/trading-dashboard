@@ -254,7 +254,7 @@ export function DashboardGrid({ data }: { data: any }) {
         <div key="calendar" data-grid={{ x: 0, y: 6, w: 40, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
-               <TradingCalendar data={data?.dailyData} availableSymbols={data?.availableSymbols} />
+               <TradingCalendar data={data?.dailyData} availableSymbols={data?.availableSymbols} rawTrades={data?.rawTrades} />
             </div>
         </div>
 
