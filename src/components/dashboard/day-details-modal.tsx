@@ -74,7 +74,7 @@ export function DayDetailsModal({ isOpen, onClose, date, trades }: DayDetailsMod
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-4xl bg-[#0b0e14] border-white/10 text-slate-50 p-0 overflow-hidden shadow-2xl">
+      <DialogContent className="max-w-5xl bg-[#0b0e14] border-white/10 text-slate-50 p-0 overflow-hidden shadow-2xl">
         <div className="p-6 pb-2 border-b border-white/5">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold flex items-center gap-3">
@@ -83,7 +83,7 @@ export function DayDetailsModal({ isOpen, onClose, date, trades }: DayDetailsMod
           </DialogHeader>
         </div>
 
-        <div className="p-6 max-h-[80vh] overflow-y-auto space-y-6">
+        <div className="p-6 max-h-[80vh] overflow-y-auto space-y-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {/* Top Section: Chart & Metrics */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             
