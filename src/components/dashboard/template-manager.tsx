@@ -112,7 +112,7 @@ export function TemplateManager() {
       </DropdownMenuTrigger>
       
       <DropdownMenuContent align="end" className="w-64 bg-[#131823] border-white/10 text-slate-200">
-        <DropdownMenuLabel>Dashboard Templates</DropdownMenuLabel>
+        <div className="px-2 py-1.5 text-xs font-semibold text-slate-400">Dashboard Templates</div>
         
         {templates.length > 0 && (
           <>
