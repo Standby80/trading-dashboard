@@ -216,13 +216,17 @@ export async function POST(request: Request) {
         const openData = openTradesMap.get(positionId);
         const openPrice = openData ? openData.openPrice : parseCleanNumber(cells[6]);
         const closePrice = parseCleanNumber(cells[6]);
+        
+        // I Deals tabellen är 'out' dealen alltid Motsatt till originalpositionen!
+        // Så om out-dealen är 'sell' så var originalpositionen en 'buy'.
+        const tradeType = openData ? openData.type : (cells[3].toUpperCase().includes('BUY') ? 'SELL' : 'BUY');
 
         trades.push({
           ticket_id: cells[1], // Deal ticket
           user_id: user.id,
           account_name: accountName,
           symbol: symbol.replace('.', ''),
-          type: cells[3].toUpperCase().includes('BUY') ? 'BUY' : 'SELL',
+          type: tradeType,
           open_time: trueOpenTime,
           close_time: trueCloseTime,
           commission,
@@ -235,10 +239,11 @@ export async function POST(request: Request) {
         });
       } else if (direction === 'in') {
         symbolOpenMap.set(symbol, cells[0]);
-        // Spara openPrice mappat mot Position ID
+        // Spara openPrice och original typ mappat mot Position ID
         openTradesMap.set(positionId, { 
           openTime: cells[0],
-          openPrice: parseCleanNumber(cells[6])
+          openPrice: parseCleanNumber(cells[6]),
+          type: cells[3].toUpperCase().includes('BUY') ? 'BUY' : 'SELL'
         });
       }
     }
