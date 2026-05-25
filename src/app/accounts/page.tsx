@@ -40,15 +40,6 @@ export default async function AccountsPage() {
     })
   );
 
-  const formatMoneyDynamic = (val: number, isEur: boolean) => {
-    const symbol = isEur ? '€' : '$';
-    const formatted = new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(Math.abs(val));
-    return `${val < 0 ? '-' : ''}${symbol}${formatted}`;
-  };
-
   return (
     <div className="flex h-screen bg-[#0b0e14] text-slate-50 overflow-hidden font-sans">
       
@@ -88,7 +79,6 @@ export default async function AccountsPage() {
                   acc={acc} 
                   isEur={isEur} 
                   colorClass={colorClass} 
-                  formatMoneyDynamic={formatMoneyDynamic} 
                 />
               );
             })}

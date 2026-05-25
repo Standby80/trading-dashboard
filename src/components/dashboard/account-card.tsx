@@ -15,10 +15,18 @@ interface AccountCardProps {
   };
   isEur: boolean;
   colorClass: string;
-  formatMoneyDynamic: (val: number, isEur: boolean) => string;
 }
 
-export function AccountCard({ acc, isEur, colorClass, formatMoneyDynamic }: AccountCardProps) {
+const formatMoneyDynamic = (val: number, isEur: boolean) => {
+  const symbol = isEur ? '€' : '$';
+  const formatted = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(Math.abs(val));
+  return `${val < 0 ? '-' : ''}${symbol}${formatted}`;
+};
+
+export function AccountCard({ acc, isEur, colorClass }: AccountCardProps) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
 
