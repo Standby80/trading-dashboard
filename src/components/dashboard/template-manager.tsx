@@ -106,14 +106,10 @@ export function TemplateManager() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger 
-        render={
-          <button className="flex items-center gap-2 bg-[#131823] border border-white/5 hover:bg-white/5 text-slate-300 px-3 py-2 rounded-lg text-sm transition-colors">
-            <LayoutTemplate size={16} />
-            <span>Templates</span>
-          </button>
-        }
-      />
+      <DropdownMenuTrigger className="flex items-center gap-2 bg-[#131823] border border-white/5 hover:bg-white/5 text-slate-300 px-3 py-2 rounded-lg text-sm transition-colors outline-none">
+        <LayoutTemplate size={16} />
+        <span>Templates</span>
+      </DropdownMenuTrigger>
       
       <DropdownMenuContent align="end" className="w-64 bg-[#131823] border-white/10 text-slate-200">
         <DropdownMenuLabel>Dashboard Templates</DropdownMenuLabel>
