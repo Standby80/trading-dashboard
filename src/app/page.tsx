@@ -18,6 +18,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 
+import { AppSidebar } from "@/components/dashboard/app-sidebar";
+
 export default async function DashboardPage({ 
   searchParams 
 }: { 
@@ -40,16 +42,22 @@ export default async function DashboardPage({
 
   return (
     <div className="flex h-screen bg-[#0b0e14] text-slate-50 overflow-hidden font-sans">
+      
+      {/* Sidebar - Hidden on mobile, handled by AppSidebar component */}
+      <div className="hidden md:block">
+        <AppSidebar userEmail={user?.email} />
+      </div>
+
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Navbar */}
-        <header className="h-14 border-b border-white/5 flex items-center justify-between px-4 sm:px-6 shrink-0 bg-[#0b0e14]/80 backdrop-blur-md sticky top-0 z-50">
+        <header className="h-20 border-b border-white/5 flex items-center justify-between px-4 sm:px-6 shrink-0 bg-[#0b0e14]/80 backdrop-blur-md sticky top-0 z-40">
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 mr-2 sm:mr-4 text-white font-bold tracking-wide">
+            {/* Mobile Logo */}
+            <div className="md:hidden flex items-center gap-2 mr-2 text-white font-bold tracking-wide">
               <div className="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30 shrink-0">
                 <LineChart className="w-5 h-5 text-indigo-400" />
               </div>
-              <span className="hidden sm:inline-block">MetaMetrics</span>
             </div>
             
             {/* Account Switcher - Visible on all screens */}
@@ -67,44 +75,54 @@ export default async function DashboardPage({
             </div>
           </div>
 
-
-
-          {/* Actions (Hamburger Menu on all screens) */}
+          {/* Actions */}
           <div className="flex items-center gap-2">
             <DashboardFilters />
             
-            <Sheet>
-              <SheetTrigger className="p-2 text-slate-400 hover:text-white transition-colors">
-                <Menu className="w-5 h-5" />
-              </SheetTrigger>
-              <SheetContent side="right" className="bg-[#0b0e14] border-l border-white/5 text-slate-200">
-                <SheetHeader className="text-left mb-6">
-                  <SheetTitle className="text-slate-200">Menu</SheetTitle>
-                  <div className="text-xs text-slate-500">{user?.email}</div>
-                </SheetHeader>
-                
-                <div className="flex flex-col gap-1 mt-4">
-                  {!isPremium && (
-                    <Link href="/upgrade" className="w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-sm font-medium bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 hover:from-indigo-500/20 hover:to-cyan-500/20 text-indigo-300 transition-colors">
-                      <ShieldCheck className="w-4 h-4 shrink-0" />
-                      Upgrade to Premium
-                    </Link>
-                  )}
-                  <ConnectLiveSyncButton profile={data?.profile} />
-                  <ReportUploadForm />
-                  <div className="h-px bg-white/5 my-2" />
-                  <ResetLayoutButton />
-                  <ClearDataButton currentAccount={currentAccount} />
-                  <div className="h-px bg-white/5 my-2" />
-                  <form action={logout}>
-                    <button type="submit" className="w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
-                      <LogOut className="w-4 h-4 shrink-0" />
-                      Logout
-                    </button>
-                  </form>
-                </div>
-              </SheetContent>
-            </Sheet>
+            {/* Mobile Hamburger Menu */}
+            <div className="md:hidden">
+              <Sheet>
+                <SheetTrigger className="p-2 text-slate-400 hover:text-white transition-colors">
+                  <Menu className="w-5 h-5" />
+                </SheetTrigger>
+                <SheetContent side="right" className="bg-[#0b0e14] border-l border-white/5 text-slate-200">
+                  <SheetHeader className="text-left mb-6">
+                    <SheetTitle className="text-slate-200">Menu</SheetTitle>
+                    <div className="text-xs text-slate-500">{user?.email}</div>
+                  </SheetHeader>
+                  
+                  <div className="flex flex-col gap-1 mt-4">
+                    {!isPremium && (
+                      <Link href="/upgrade" className="w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-sm font-medium bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 hover:from-indigo-500/20 hover:to-cyan-500/20 text-indigo-300 transition-colors">
+                        <ShieldCheck className="w-4 h-4 shrink-0" />
+                        Upgrade to Premium
+                      </Link>
+                    )}
+                    <ConnectLiveSyncButton profile={data?.profile} />
+                    <ReportUploadForm />
+                    <div className="h-px bg-white/5 my-2" />
+                    <ResetLayoutButton />
+                    <ClearDataButton currentAccount={currentAccount} />
+                    <div className="h-px bg-white/5 my-2" />
+                    <form action={logout}>
+                      <button type="submit" className="w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                        <LogOut className="w-4 h-4 shrink-0" />
+                        Logout
+                      </button>
+                    </form>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
+
+            {/* Desktop Actions (since sidebar replaces some menu items) */}
+            <div className="hidden md:flex items-center gap-2 border-l border-white/5 pl-4 ml-2">
+               <ConnectLiveSyncButton profile={data?.profile} />
+               <ReportUploadForm />
+               <ClearDataButton currentAccount={currentAccount} />
+               <ResetLayoutButton />
+            </div>
+
           </div>
         </header>
 
