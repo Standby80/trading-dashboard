@@ -33,7 +33,7 @@ export default async function DashboardPage({
   let isPremium = false;
   if (user) {
     const { data: profile } = await supabase.from('users').select('subscription_tier').eq('id', user.id).single();
-    isPremium = profile?.subscription_tier === 'Premium';
+    isPremium = profile?.subscription_tier === 'premium';
   }
 
   const currentAccount = params?.account || 'Default';
