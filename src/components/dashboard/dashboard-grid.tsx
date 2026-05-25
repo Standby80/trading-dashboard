@@ -12,6 +12,7 @@ import { AnalyticsSidebar } from "@/components/dashboard/analytics-sidebar";
 import { TradeHistoryTable } from "@/components/dashboard/trade-history-table";
 import { LongShortCharts } from "@/components/dashboard/long-short-charts";
 import { DrawdownChart } from "@/components/dashboard/drawdown-chart";
+import { EquityCurveChart } from "@/components/dashboard/equity-curve-chart";
 import { TradeExecutionWidget, TimeAnalyticsWidget } from "@/components/dashboard/advanced-metrics";
 import { ExpectancyCurve } from "@/components/dashboard/expectancy-curve";
 import { TimeExtremesCards } from "@/components/dashboard/time-extremes-cards";
@@ -26,7 +27,7 @@ export function DashboardGrid({ data }: { data: any }) {
 
   useEffect(() => {
     setMounted(true);
-    const savedLayouts = localStorage.getItem('metametrics-layout-v2');
+    const savedLayouts = localStorage.getItem('metametrics-layout-v3');
     if (savedLayouts) {
       try {
         setLayoutState(JSON.parse(savedLayouts));
@@ -72,18 +73,22 @@ export function DashboardGrid({ data }: { data: any }) {
       // Row 7: Expectancy Curve
       { i: 'expectancy-curve', x: 0, y: 34, w: 60, h: 9, minW: 5, minH: 5 },
       
-      // Row 8: Recent Trades
-      { i: 'recent-trades', x: 0, y: 43, w: 60, h: 10, minW: 5, minH: 5 },
+      // Row 8: Equity & Drawdown Charts
+      { i: 'equity-curve', x: 0, y: 43, w: 30, h: 10, minW: 5, minH: 5 },
+      { i: 'drawdown-chart', x: 30, y: 43, w: 30, h: 10, minW: 5, minH: 5 },
+
+      // Row 9: Recent Trades
+      { i: 'recent-trades', x: 0, y: 53, w: 60, h: 10, minW: 5, minH: 5 },
     ]
   };
 
   const handleLayoutChange = (layout: any, layouts: any) => {
     setLayoutState(layouts);
-    localStorage.setItem('metametrics-layout-v2', JSON.stringify(layouts));
+    localStorage.setItem('metametrics-layout-v3', JSON.stringify(layouts));
   };
 
   const resetLayout = () => {
-    localStorage.removeItem('metametrics-layout-v2');
+    localStorage.removeItem('metametrics-layout-v3');
     setLayoutState(null); // Force it to use defaultLayouts on next render
   };
 
@@ -298,7 +303,21 @@ export function DashboardGrid({ data }: { data: any }) {
             </div>
         </div>
 
-        <div key="recent-trades" data-grid={{ x: 0, y: 43, w: 60, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="equity-curve" data-grid={{ x: 0, y: 43, w: 30, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+            <DragHandle />
+            <div className="flex-1 overflow-hidden">
+                <EquityCurveChart data={data?.drawdownData} />
+            </div>
+        </div>
+
+        <div key="drawdown-chart" data-grid={{ x: 30, y: 43, w: 30, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+            <DragHandle />
+            <div className="flex-1 overflow-hidden">
+                <DrawdownChart data={data?.drawdownData} />
+            </div>
+        </div>
+
+        <div key="recent-trades" data-grid={{ x: 0, y: 53, w: 60, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-[#131823] border border-[#1e2330] rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden flex flex-col">
                <TradeHistoryTable trades={data?.rawTrades} />
