@@ -5,6 +5,7 @@ import { ClearDataButton } from "@/components/dashboard/clear-data-button";
 import { ResetLayoutButton } from "@/components/dashboard/reset-layout-button";
 import { DashboardFilters } from "@/components/dashboard/dashboard-filters";
 import { AccountSwitcher } from "@/components/dashboard/account-switcher";
+import { TemplateManager } from "@/components/dashboard/template-manager";
 import { getDashboardData, getUserAccounts } from "@/lib/data-service";
 import { createClient } from '@/lib/supabase/server';
 import { logout } from '@/app/login/actions';
@@ -59,6 +60,7 @@ export default async function DashboardPage({
 
           {/* Actions */}
           <div className="flex items-center gap-2">
+            <TemplateManager />
             <DashboardFilters />
           </div>
         </header>
