@@ -74,7 +74,7 @@ export default function LiveSyncGuide() {
                 <li>Go to <span className="text-white">Tools</span> -&gt; <span className="text-white">Options</span>.</li>
                 <li>Select the <span className="text-white">Expert Advisors</span> tab.</li>
                 <li>Check the box <span className="text-white">"Allow WebRequest for listed URL"</span>.</li>
-                <li>Add the following address: <span className="font-mono text-indigo-400">https://metametrics.vercel.app</span></li>
+                <li>Add the following address: <span className="font-mono text-indigo-400">https://metametrics.app</span></li>
               </ol>
             </div>
           )}
