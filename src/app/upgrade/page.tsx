@@ -82,12 +82,12 @@ export default function UpgradePage() {
 
           <div className="bg-gradient-to-b from-indigo-600/20 to-[#131823] border border-indigo-500/30 rounded-2xl p-8 relative overflow-hidden group hover:border-indigo-400/50 transition-colors flex flex-col">
             <div className="absolute top-4 right-4 bg-indigo-500 text-white text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
-              Save 8%
+              Save 17%
             </div>
             <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500/20 blur-3xl rounded-full group-hover:bg-indigo-500/30 transition-colors"></div>
             <h3 className="text-xl font-semibold text-white mb-2">Annually</h3>
             <div className="flex items-baseline gap-1 mb-6">
-              <span className="text-4xl font-bold text-white">$99</span>
+              <span className="text-4xl font-bold text-white">$89</span>
               <span className="text-indigo-200/70">/ year</span>
             </div>
             <ul className="space-y-3 mb-8 text-sm text-indigo-100/80 flex-1">
