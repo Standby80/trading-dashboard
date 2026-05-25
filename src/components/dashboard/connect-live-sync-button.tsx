@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import ApiKeySettings from './api-key-settings';
 
-export function ConnectLiveSyncButton({ profile }: { profile?: any }) {
+export function ConnectLiveSyncButton({ profile, trigger }: { profile?: any, trigger?: React.ReactElement }) {
   const [isOpen, setIsOpen] = useState(false);
   
   // Note: ApiKeySettings component checks the backend for profile,
@@ -20,18 +20,20 @@ export function ConnectLiveSyncButton({ profile }: { profile?: any }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger 
-        className="w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
-      >
-        {isPremium ? (
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-          </span>
-        ) : (
-          <Lock className="w-4 h-4 shrink-0" />
+        render={trigger || (
+          <button className="w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+            {isPremium ? (
+              <span className="relative flex h-2 w-2 shrink-0">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+              </span>
+            ) : (
+              <Lock className="w-4 h-4 shrink-0" />
+            )}
+            Connect Live Sync
+          </button>
         )}
-        Connect Live Sync
-      </DialogTrigger>
+      />
       
       <DialogContent className="sm:max-w-2xl bg-transparent border-none p-0 shadow-none">
         <ApiKeySettings />

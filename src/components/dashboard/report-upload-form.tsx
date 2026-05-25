@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog'
 import { UploadCloud, FileType, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react'
 
-export function ReportUploadForm() {
+export function ReportUploadForm({ trigger }: { trigger?: React.ReactElement }) {
   const [open, setOpen] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [file, setFile] = useState<File | null>(null)
@@ -106,12 +106,12 @@ export function ReportUploadForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger 
-        render={
+        render={trigger || (
           <button className="w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
             <UploadCloud className="w-4 h-4 shrink-0" />
             Upload Report
           </button>
-        }
+        )}
       />
       
       <DialogContent className="sm:max-w-md bg-[#0b0e14] border-white/5 text-slate-50">

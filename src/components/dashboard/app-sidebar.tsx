@@ -16,19 +16,22 @@ import {
   Wallet
 } from 'lucide-react';
 
+import { ReportUploadForm } from "./report-upload-form";
+import { ConnectLiveSyncButton } from "./connect-live-sync-button";
+
 interface SidebarProps {
   userEmail?: string;
 }
 
-export function AppSidebar({ userEmail }: SidebarProps) {
+export function AppSidebar({ userEmail, profile }: SidebarProps & { profile?: any }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
 
   const navItems = [
     { name: 'Dashboard', icon: LayoutDashboard, href: '/' },
     { name: 'Accounts', icon: Wallet, href: '/accounts' },
-    { name: 'Upload Report', icon: Upload, href: '#' }, // These can be modals or other pages
-    { name: 'Live Sync', icon: Activity, href: '#' },
+    { name: 'Upload Report', icon: Upload, isAction: true, component: ReportUploadForm },
+    { name: 'Live Sync', icon: Activity, isAction: true, component: ConnectLiveSyncButton },
     { name: 'Settings', icon: Settings, href: '#' },
   ];
 
@@ -72,17 +75,35 @@ export function AppSidebar({ userEmail }: SidebarProps) {
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto py-6 flex flex-col gap-2 px-3">
         {navItems.map((item) => {
-          const isActive = pathname === item.href || (item.name === 'Dashboard' && pathname === '/');
+          const isActive = !item.isAction && (pathname === item.href || (item.name === 'Dashboard' && pathname === '/'));
+          
+          const buttonClass = `flex items-center rounded-lg h-12 transition-all relative w-full ${
+            isActive 
+              ? 'bg-indigo-500/10 text-white' 
+              : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
+          } ${isCollapsed ? 'justify-center px-0' : 'px-4 gap-3'}`;
+
+          if (item.isAction && item.component) {
+            const ActionComponent = item.component;
+            return (
+              <ActionComponent 
+                key={item.name}
+                profile={profile}
+                trigger={
+                  <button className={buttonClass}>
+                    <item.icon className="w-5 h-5 shrink-0" />
+                    {!isCollapsed && <span className="font-medium text-sm">{item.name}</span>}
+                  </button>
+                }
+              />
+            );
+          }
           
           return (
             <Link 
               key={item.name} 
-              href={item.href}
-              className={`flex items-center rounded-lg h-12 transition-all relative ${
-                isActive 
-                  ? 'bg-indigo-500/10 text-white' 
-                  : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
-              } ${isCollapsed ? 'justify-center px-0' : 'px-4 gap-3'}`}
+              href={item.href!}
+              className={buttonClass}
             >
               {isActive && (
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-indigo-500 rounded-r-full" />

@@ -2,7 +2,8 @@ import React from 'react';
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
 import { getUserAccounts, getDashboardData } from "@/lib/data-service";
 import { createClient } from '@/lib/supabase/server';
-import { Plus, MoreVertical, GripVertical, ChevronRight, GripHorizontal } from "lucide-react";
+import { Plus } from "lucide-react";
+import { AccountCard } from "@/components/dashboard/account-card";
 
 const COLORS = [
   'bg-gradient-to-br from-emerald-900 to-teal-950',
@@ -38,15 +39,6 @@ export default async function AccountsPage() {
       };
     })
   );
-
-  const formatMoney = (val: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(val).replace('$', '€'); // Using EUR symbol as in image, or keep $ depending on preference. The image shows € for IC Markets and $ for others. We'll stick to $ standard for now.
-  };
 
   const formatMoneyDynamic = (val: number, isEur: boolean) => {
     const symbol = isEur ? '€' : '$';
@@ -91,65 +83,13 @@ export default async function AccountsPage() {
               const colorClass = COLORS[acc.colorIndex];
 
               return (
-                <div key={acc.name} className="rounded-3xl overflow-hidden bg-[#1e2128] border border-white/5 shadow-2xl flex flex-col h-[240px] transition-transform hover:-translate-y-1 duration-300">
-                  
-                  {/* Top Half (Colored) */}
-                  <div className={`flex-1 p-6 relative flex flex-col ${colorClass}`}>
-                    {/* Decorative circles */}
-                    <div className="absolute right-[-10%] top-[-10%] w-40 h-40 rounded-full border-[20px] border-white/5 pointer-events-none" />
-                    
-                    {/* Header */}
-                    <div className="relative z-10 flex justify-between items-start">
-                      <div>
-                        <h3 className="text-white font-bold text-xl italic tracking-tight">{acc.name}</h3>
-                        <p className="text-white/60 text-xs mt-1 font-mono tracking-wider">#*********</p>
-                      </div>
-                      <div className="flex items-center gap-1 text-white/50 cursor-pointer hover:text-white transition-colors">
-                        <div className="w-1 h-1 bg-current rounded-full" />
-                        <div className="w-1 h-1 bg-current rounded-full" />
-                        <div className="w-1 h-1 bg-current rounded-full" />
-                      </div>
-                    </div>
-                    
-                    {/* Balance */}
-                    <div className="relative z-10 mt-3">
-                      <div className="text-white text-3xl font-bold tracking-tight">
-                        {formatMoneyDynamic(acc.balance, isEur)}
-                      </div>
-                    </div>
-                    
-                    {/* Bottom Stats */}
-                    <div className="relative z-10 mt-auto flex justify-between items-end w-full">
-                      <div className="text-white/80 text-xs font-bold">{isEur ? 'EUR' : 'USD'}</div>
-                      <div className="flex gap-6 text-right">
-                        <div>
-                          <div className="text-white/60 text-[10px] uppercase font-bold mb-1 tracking-widest">Deposits</div>
-                          <div className="text-emerald-400 text-sm font-bold tracking-wide">
-                            {formatMoneyDynamic(acc.deposits, isEur)}
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-white/60 text-[10px] uppercase font-bold mb-1 tracking-widest">Withdrawals</div>
-                          <div className="text-rose-400 text-sm font-bold tracking-wide">
-                            {formatMoneyDynamic(acc.withdrawals, isEur)}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Bottom Half (Footer) */}
-                  <div className="bg-[#1e2128] px-6 py-5 flex justify-between items-center shrink-0 border-t border-white/5">
-                    <div>
-                      <div className="text-white/40 text-[10px] uppercase font-bold mb-1 tracking-widest">Sync Options</div>
-                      <div className="text-white/70 text-sm font-medium">None</div>
-                    </div>
-                    <button className="text-white/50 text-xs font-bold hover:text-white transition-colors flex items-center gap-1 uppercase tracking-widest">
-                      Connect <ChevronRight size={14} className="ml-1" />
-                    </button>
-                  </div>
-
-                </div>
+                <AccountCard 
+                  key={acc.name} 
+                  acc={acc} 
+                  isEur={isEur} 
+                  colorClass={colorClass} 
+                  formatMoneyDynamic={formatMoneyDynamic} 
+                />
               );
             })}
           </div>
