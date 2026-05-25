@@ -13,7 +13,8 @@ import {
   ChevronLeft,
   ChevronRight,
   UserCircle,
-  Wallet
+  Wallet,
+  Crown
 } from 'lucide-react';
 
 import { ReportUploadForm } from "./report-upload-form";
@@ -65,8 +66,15 @@ export function AppSidebar({ userEmail, profile }: SidebarProps & { profile?: an
           <UserCircle className="w-10 h-10 text-indigo-400/50" strokeWidth={1} />
         </div>
         {!isCollapsed && (
-          <div className="text-center w-full overflow-hidden">
-            <h3 className="text-slate-200 font-medium text-sm truncate w-full">Trader</h3>
+          <div className="text-center w-full overflow-hidden flex flex-col items-center">
+            <div className="flex items-center gap-2 justify-center w-full">
+              <h3 className="text-slate-200 font-medium text-sm truncate">Trader</h3>
+              {profile?.is_premium ? (
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 shrink-0">PRO</span>
+              ) : (
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-500/20 text-slate-400 border border-slate-500/30 shrink-0">FREE</span>
+              )}
+            </div>
             <p className="text-slate-500 text-xs truncate w-full mt-1">{userEmail || 'demo@user.com'}</p>
           </div>
         )}
@@ -116,7 +124,16 @@ export function AppSidebar({ userEmail, profile }: SidebarProps & { profile?: an
       </div>
 
       {/* Footer */}
-      <div className="p-3 border-t border-white/5 shrink-0">
+      <div className="p-3 border-t border-white/5 shrink-0 flex flex-col gap-2">
+        {!profile?.is_premium && (
+          <Link 
+            href="/upgrade"
+            className={`w-full flex items-center rounded-lg h-12 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 text-amber-400 hover:from-amber-500/20 hover:to-orange-500/20 transition-all ${isCollapsed ? 'justify-center px-0' : 'px-4 gap-3'}`}
+          >
+            <Crown className="w-5 h-5 shrink-0" />
+            {!isCollapsed && <span className="font-semibold text-sm">Upgrade to Pro</span>}
+          </Link>
+        )}
         <button 
           onClick={async () => {
              const { createClient } = await import('@/lib/supabase/client');
