@@ -21,14 +21,17 @@ export async function getCheckoutURL(plan: 'monthly' | 'annually') {
     lemonSqueezySetup({ apiKey });
 
     // Store ID
-    const storeId = process.env.LEMON_SQUEEZY_STORE_ID || '12345'; // Replace with real Store ID in .env
+    const storeIdStr = process.env.LEMON_SQUEEZY_STORE_ID || '12345'; // Replace with real Store ID in .env
 
     // Map plans to their respective Variant IDs
-    const variantId = plan === 'monthly' 
+    const variantIdStr = plan === 'monthly' 
       ? process.env.LEMON_SQUEEZY_MONTHLY_VARIANT_ID || '111111' 
       : process.env.LEMON_SQUEEZY_ANNUAL_VARIANT_ID || '222222';
 
-    // Create a checkout session
+    // Create a checkout session (must pass as numbers)
+    const storeId = Number(storeIdStr);
+    const variantId = Number(variantIdStr);
+
     const checkoutResult = await createCheckout(storeId, variantId, {
       checkoutData: {
         email: user.email,
