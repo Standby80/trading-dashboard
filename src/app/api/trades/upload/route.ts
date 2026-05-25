@@ -144,6 +144,8 @@ export async function POST(request: Request) {
     // ANVÄND REGEX DIREKT I LOOPEN ISTÄLLET FÖR ATT DEKLARERA EN VARIABEL HÖGRE UPP
     const rowRegexPattern = /<tr[^>]*>([\s\S]*?)<\/tr>/g;
 
+    const validDealsRows: { cells: string[], timestamp: number }[] = [];
+
     while ((rowMatch = rowRegexPattern.exec(htmlContent)) !== null) {
       const rowContent = rowMatch[1];
       
@@ -156,69 +158,88 @@ export async function POST(request: Request) {
         cells.push(cleanText);
       }
 
-      // Ta bort eventuella tomma "spök-kolumner" på slutet av raden (t.ex. osynliga <td> i vissa MT5-versioner)
+      // Ta bort eventuella tomma "spök-kolumner" på slutet av raden
       while (cells.length > 0 && cells[cells.length - 1] === "") {
           cells.pop();
       }
 
       if (cells.length >= 13) {
-        const symbol = cells[2];
         const direction = cells[4]?.toLowerCase();
         
-        // Hoppa över rader som saknar symbol (t.ex. tabellhuvud eller tomma rader)
-        if (!symbol || symbol.length < 2) continue;
-
-        // Om det är startinsättningen, spara den som DEPOSIT
+        // Om det är startinsättningen, spara den som DEPOSIT, ignorera
         if (direction === 'balance' || cells[3]?.toLowerCase() === 'balance') {
-          // Spara insättningen separat eller hoppa över den för KPI-matten
           continue;
         }
 
-        if (direction === 'out') {
-          const commission = parseCleanNumber(cells[9]);   // Index 9: Provision
-          const swap = parseCleanNumber(cells[11]);         // Index 11: Byt
-          const grossProfit = parseCleanNumber(cells[12]);  // Index 12: Vinst
-          const netProfit = parseFloat((grossProfit + commission + swap).toFixed(2));
-
-          const trueCloseTime = cells[0]; // Stängningstiden är ALLTID index 0 på utgångsraden
-          const trueOpenTime = symbolOpenMap.get(symbol) || cells[0]; // Hämta sparad öppningstid, eller använd stängningstid som fallback så det ALDRIG blir en tom sträng
-
-          let holdTimeMins = 0;
-          if (trueOpenTime && trueCloseTime) {
-            const start = new Date(trueOpenTime.replace(/\./g, '/'));
-            const end = new Date(trueCloseTime.replace(/\./g, '/'));
-            holdTimeMins = Math.max(0, Math.floor((end.getTime() - start.getTime()) / 1000 / 60));
+        if (direction === 'in' || direction === 'out' || direction === 'ut' || direction === 'in/out') {
+          const timeStr = cells[0];
+          let timestamp = 0;
+          if (timeStr) {
+            timestamp = new Date(timeStr.replace(/\./g, '/')).getTime();
           }
-
-          const openData = openTradesMap.get(cells[7]);
-          const openPrice = openData ? openData.openPrice : parseCleanNumber(cells[6]);
-          const closePrice = parseCleanNumber(cells[6]);
-
-          trades.push({
-            ticket_id: cells[1],
-            user_id: user.id, // needed for db insert
-            account_name: accountName,
-            symbol: symbol.replace('.', ''), // Ta bort eventuella punkter i slutet (t.ex. XAUUSD.)
-            type: cells[3].toUpperCase().includes('BUY') ? 'BUY' : 'SELL',
-            open_time: trueOpenTime, // Skickar garanterat en giltig tidsstämpel till databasen
-            close_time: trueCloseTime,
-            commission,
-            swap,
-            profit: netProfit, // Spara den RENA nettovinsten direkt här
-            volume: parseCleanNumber(cells[5]),
-            hold_time_mins: holdTimeMins,
-            open_price: openPrice || 0,
-            close_price: closePrice || 0
-          });
-        } else if (direction === 'in') {
-          // Spara öppningstiden (index 0) för denna symbol
-          symbolOpenMap.set(symbol, cells[0]);
-          
-          openTradesMap.set(cells[7], { 
-            openTime: cells[0],
-            openPrice: parseCleanNumber(cells[6])
-          });
+          validDealsRows.push({ cells, timestamp });
         }
+      }
+    }
+
+    // Sortera alla rader kronologiskt så vi är garanterade att se 'in' FÖRE 'out'
+    validDealsRows.sort((a, b) => a.timestamp - b.timestamp);
+
+    // Pass 2: Processa deals i rätt tidsordning
+    for (const row of validDealsRows) {
+      const { cells } = row;
+      const symbol = cells[2];
+      const direction = cells[4]?.toLowerCase();
+
+      if (!symbol || symbol.length < 2) continue;
+
+      // Använd Position ID (index 8) för att para ihop in och ut! I Deals tabellen har en in och ut deal samma Position ID.
+      const positionId = cells[8];
+
+      if (direction === 'out' || direction === 'ut' || direction === 'in/out') {
+        const commission = parseCleanNumber(cells[9]);   // Index 9: Provision
+        const swap = parseCleanNumber(cells[11]);         // Index 11: Byt
+        const grossProfit = parseCleanNumber(cells[12]);  // Index 12: Vinst
+        const netProfit = parseFloat((grossProfit + commission + swap).toFixed(2));
+
+        const trueCloseTime = cells[0]; 
+        const trueOpenTime = symbolOpenMap.get(symbol) || cells[0]; 
+
+        let holdTimeMins = 0;
+        if (trueOpenTime && trueCloseTime) {
+          const start = new Date(trueOpenTime.replace(/\./g, '/'));
+          const end = new Date(trueCloseTime.replace(/\./g, '/'));
+          holdTimeMins = Math.max(0, Math.floor((end.getTime() - start.getTime()) / 1000 / 60));
+        }
+
+        // Hämta openPrice m.h.a. Position ID
+        const openData = openTradesMap.get(positionId);
+        const openPrice = openData ? openData.openPrice : parseCleanNumber(cells[6]);
+        const closePrice = parseCleanNumber(cells[6]);
+
+        trades.push({
+          ticket_id: cells[1], // Deal ticket
+          user_id: user.id,
+          account_name: accountName,
+          symbol: symbol.replace('.', ''),
+          type: cells[3].toUpperCase().includes('BUY') ? 'BUY' : 'SELL',
+          open_time: trueOpenTime,
+          close_time: trueCloseTime,
+          commission,
+          swap,
+          profit: netProfit,
+          volume: parseCleanNumber(cells[5]),
+          hold_time_mins: holdTimeMins,
+          open_price: openPrice || 0,
+          close_price: closePrice || 0
+        });
+      } else if (direction === 'in') {
+        symbolOpenMap.set(symbol, cells[0]);
+        // Spara openPrice mappat mot Position ID
+        openTradesMap.set(positionId, { 
+          openTime: cells[0],
+          openPrice: parseCleanNumber(cells[6])
+        });
       }
     }
 
