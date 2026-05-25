@@ -12,7 +12,8 @@ import {
   LineChart, 
   ChevronLeft,
   ChevronRight,
-  UserCircle
+  UserCircle,
+  Wallet
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -25,6 +26,7 @@ export function AppSidebar({ userEmail }: SidebarProps) {
 
   const navItems = [
     { name: 'Dashboard', icon: LayoutDashboard, href: '/' },
+    { name: 'Accounts', icon: Wallet, href: '/accounts' },
     { name: 'Upload Report', icon: Upload, href: '#' }, // These can be modals or other pages
     { name: 'Live Sync', icon: Activity, href: '#' },
     { name: 'Settings', icon: Settings, href: '#' },
