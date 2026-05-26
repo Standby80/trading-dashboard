@@ -38,16 +38,52 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { trades } = body;
+    const { trades, account_number, broker_name } = body;
 
     if (!trades || !Array.isArray(trades)) {
       return NextResponse.json({ error: 'Invalid payload format. Expected { "trades": [...] }' }, { status: 400 });
     }
 
-    // Attach user_id to all trades
+    let mt5_account_id = null;
+    let account_name = "Default";
+
+    if (account_number) {
+       account_name = `MT5 - ${account_number}`;
+       
+       // Try to find existing mt5_account
+       const { data: accountData } = await supabaseAdmin
+         .from('mt5_accounts')
+         .select('id')
+         .eq('user_id', userProfile.id)
+         .eq('account_number', String(account_number))
+         .maybeSingle();
+
+       if (accountData) {
+         mt5_account_id = accountData.id;
+       } else {
+         // Create new mt5_account if it doesn't exist
+         const { data: newAccount } = await supabaseAdmin
+           .from('mt5_accounts')
+           .insert({
+             user_id: userProfile.id,
+             account_number: String(account_number),
+             broker_server: broker_name || 'Unknown Broker'
+           })
+           .select('id')
+           .single();
+         
+         if (newAccount) {
+           mt5_account_id = newAccount.id;
+         }
+       }
+    }
+
+    // Attach user_id and mt5_account_id to all trades
     const tradesToInsert = trades.map((t: any) => ({
       ...t,
       user_id: userProfile.id,
+      mt5_account_id: mt5_account_id || t.mt5_account_id,
+      account_name: account_name
     }));
 
     // Insert to database (upsert by ticket_id and user_id to avoid duplicates)

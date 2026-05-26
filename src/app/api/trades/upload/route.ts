@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       const body = await request.json();
       console.log("Inkommande trade:", body);
       
-      const { apiKey, positionId, symbol, type, volume, openTime, closeTime, commission, swap, grossProfit } = body;
+      const { apiKey, positionId, symbol, type, volume, openTime, closeTime, commission, swap, grossProfit, account_number, broker_name } = body;
 
       const { data: profile, error: authError } = await supabase
           .from('users')
@@ -49,10 +49,44 @@ export async function POST(request: Request) {
 
       const netProfit = parseFloat((grossProfit + commission + swap).toFixed(2));
 
+      let mt5_account_id = null;
+      let account_name = "Default";
+
+      if (account_number) {
+         account_name = `MT5 - ${account_number}`;
+         
+         const { data: accountData } = await supabase
+           .from('mt5_accounts')
+           .select('id')
+           .eq('user_id', profile.id)
+           .eq('account_number', String(account_number))
+           .maybeSingle();
+
+         if (accountData) {
+           mt5_account_id = accountData.id;
+         } else {
+           const { data: newAccount } = await supabase
+             .from('mt5_accounts')
+             .insert({
+               user_id: profile.id,
+               account_number: String(account_number),
+               broker_server: broker_name || 'Unknown Broker'
+             })
+             .select('id')
+             .single();
+           
+           if (newAccount) {
+             mt5_account_id = newAccount.id;
+           }
+         }
+      }
+
       const { error: dbError } = await supabase
           .from('trades')
           .insert([{
               user_id: profile.id,
+              mt5_account_id: mt5_account_id,
+              account_name: account_name,
               ticket_id: positionId.toString(),
               symbol,
               type: type.toUpperCase(),
