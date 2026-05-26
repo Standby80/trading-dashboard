@@ -41,9 +41,12 @@ void OnTradeTransaction(const MqlTradeTransaction& trans, const MqlTradeOrder& o
                open_time_str = TimeToString(open_time, TIME_DATE|TIME_MINUTES|TIME_SECONDS);
             }
 
+            long account_number = AccountInfoInteger(ACCOUNT_LOGIN);
+            string broker_name = AccountInfoString(ACCOUNT_COMPANY);
+
             string json = StringFormat(
-               "{\\"apiKey\\":\\"%s\\",\\"positionId\\":\\"%d\\",\\"symbol\\":\\"%s\\",\\"type\\":\\"%s\\",\\"volume\\":%.2f,\\"openTime\\":\\"%s\\",\\"closeTime\\":\\"%s\\",\\"commission\\":%.2f,\\"swap\\":%.2f,\\"grossProfit\\":%.2f}",
-               InpApiKey, position_id, symbol, type_str, volume, open_time_str, close_time_str, commission, swap, profit
+               "{\\"apiKey\\":\\"%s\\",\\"account_number\\":\\"%d\\",\\"broker_name\\":\\"%s\\",\\"positionId\\":\\"%d\\",\\"symbol\\":\\"%s\\",\\"type\\":\\"%s\\",\\"volume\\":%.2f,\\"openTime\\":\\"%s\\",\\"closeTime\\":\\"%s\\",\\"commission\\":%.2f,\\"swap\\":%.2f,\\"grossProfit\\":%.2f}",
+               InpApiKey, account_number, broker_name, position_id, symbol, type_str, volume, open_time_str, close_time_str, commission, swap, profit
             );
 
             string headers = "Content-Type: application/json\\r\\n";
