@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function GET() {
     // Vår kompletta MQL5-kod som en sträng
     const mql5Code = `#property copyright   "MetaMetrics"
-#property version     "1.00"
+#property version     "1.02"
 #property description "Real-time Live Sync for MetaMetrics Dashboard"
 #property strict
 
@@ -12,18 +12,16 @@ input string InpServerUrl = "https://metametrics.app/api/trades/upload";
 
 int OnInit()
 {
+   Print("MetaMetrics EA: Startar och är vaken! WebRequest testas...");
    return(INIT_SUCCEEDED);
 }
 
-void OnDeinit(const int reason)
-{
-}
+void OnDeinit(const int reason) {}
+void OnTick() {}
 
-void OnTick()
-{
-}
-
-void OnTradeTransaction(const MqlTradeTransaction& trans, const MqlTradeRequest& request, const MqlTradeResult& result)
+void OnTradeTransaction(const MqlTradeTransaction& trans,
+                        const MqlTradeRequest& request,
+                        const MqlTradeResult& mql_result)
 {
    if(trans.type == TRADE_TRANSACTION_DEAL_ADD)
    {
@@ -34,6 +32,8 @@ void OnTradeTransaction(const MqlTradeTransaction& trans, const MqlTradeRequest&
          
          if(entry == DEAL_ENTRY_OUT)
          {
+            Print("MetaMetrics EA: Stängd trade upptäckt! Bygger JSON...");
+            
             ulong position_id = (ulong)HistoryDealGetInteger(deal_ticket, DEAL_POSITION_ID);
             string symbol     = HistoryDealGetString(deal_ticket, DEAL_SYMBOL);
             double profit     = HistoryDealGetDouble(deal_ticket, DEAL_PROFIT);
@@ -48,8 +48,8 @@ void OnTradeTransaction(const MqlTradeTransaction& trans, const MqlTradeRequest&
             
             datetime close_time   = (datetime)HistoryDealGetInteger(deal_ticket, DEAL_TIME);
             string close_time_str = TimeToString(close_time, TIME_DATE|TIME_MINUTES|TIME_SECONDS);
+            
             string open_time_str  = close_time_str;
-
             if(HistorySelectByPosition(position_id))
             {
                ulong first_deal = HistoryDealGetTicket(0);
@@ -73,7 +73,10 @@ void OnTradeTransaction(const MqlTradeTransaction& trans, const MqlTradeRequest&
             StringToCharArray(json, post_data, 0, StringLen(json), CP_UTF8);
             ResetLastError();
             
+            Print("MetaMetrics EA: Skickar data till servern...");
             int res = WebRequest("POST", InpServerUrl, headers, 1000, post_data, res_data, res_headers);
+            
+            Print("MetaMetrics EA: Server Svar-kod = ", res);
          }
       }
    }
