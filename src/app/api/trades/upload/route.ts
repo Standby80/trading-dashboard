@@ -27,16 +27,32 @@ export async function POST(request: Request) {
       const body = await request.json();
       console.log("Inkommande trade:", body);
       
-      const { apiKey, positionId, symbol, type, volume, openTime, closeTime, commission, swap, grossProfit, account_number, broker_name } = body;
+      let { apiKey, positionId, symbol, type, volume, openTime, closeTime, commission, swap, grossProfit, account_number, broker_name } = body;
+
+      // Fallback till Authorization-header om den saknas i JSON (som standard-Auth)
+      if (!apiKey) {
+          const authHeader = request.headers.get('Authorization');
+          if (authHeader && authHeader.startsWith('Bearer ')) {
+              apiKey = authHeader.substring(7).trim();
+          }
+      }
+
+      if (!apiKey) {
+          console.error("Auth error: Ingen API-nyckel skickades med.");
+          return NextResponse.json({ error: 'Ingen API-nyckel angavs.' }, { status: 401, headers: corsHeaders });
+      }
 
       const { data: profile, error: authError } = await supabase
           .from('users')
           .select('id, subscription_tier')
-          .eq('api_key', apiKey)
+          .eq('api_key', apiKey.trim())
           .single();
 
-      if (authError || !profile || profile.subscription_tier !== 'premium') {
-          console.error("Auth error:", authError);
+      const isPremium = profile && profile.subscription_tier && profile.subscription_tier.toLowerCase() === 'premium';
+
+      if (authError || !profile || !isPremium) {
+          console.error("Auth error:", authError || "Användaren hittades inte eller är inte Premium.");
+          console.error("Angiven nyckel:", apiKey, "| DB-profil:", profile);
           return NextResponse.json({ error: 'Obehörig eller ogiltig API-nyckel för Live Sync.' }, { status: 401, headers: corsHeaders });
       }
 
