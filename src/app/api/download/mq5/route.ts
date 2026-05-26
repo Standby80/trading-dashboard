@@ -7,10 +7,23 @@ export async function GET() {
 #property description "Real-time Live Sync for MetaMetrics Dashboard"
 #property strict
 
-input string InpApiKey = "DIN_API_NYCKEL_HÄR";
+input string InpApiKey    = "DIN_API_NYCKEL_HÄR";
 input string InpServerUrl = "https://metametrics.app/api/trades/upload";
 
-void OnTradeTransaction(const MqlTradeTransaction& trans, const MqlTradeOrder& order, const MqlTradeProperties& props)
+int OnInit()
+{
+   return(INIT_SUCCEEDED);
+}
+
+void OnDeinit(const int reason)
+{
+}
+
+void OnTick()
+{
+}
+
+void OnTradeTransaction(const MqlTradeTransaction& trans, const MqlTradeRequest& request, const MqlTradeResult& result)
 {
    if(trans.type == TRADE_TRANSACTION_DEAL_ADD)
    {
@@ -22,22 +35,21 @@ void OnTradeTransaction(const MqlTradeTransaction& trans, const MqlTradeOrder& o
          if(entry == DEAL_ENTRY_OUT)
          {
             ulong position_id = (ulong)HistoryDealGetInteger(deal_ticket, DEAL_POSITION_ID);
-            string symbol = HistoryDealGetString(deal_ticket, DEAL_SYMBOL);
-            double profit = HistoryDealGetDouble(deal_ticket, DEAL_PROFIT);
+            string symbol     = HistoryDealGetString(deal_ticket, DEAL_SYMBOL);
+            double profit     = HistoryDealGetDouble(deal_ticket, DEAL_PROFIT);
             double commission = HistoryDealGetDouble(deal_ticket, DEAL_COMMISSION);
-            double swap = HistoryDealGetDouble(deal_ticket, DEAL_SWAP);
-            double volume = HistoryDealGetDouble(deal_ticket, DEAL_VOLUME);
+            double swap       = HistoryDealGetDouble(deal_ticket, DEAL_SWAP);
+            double volume     = HistoryDealGetDouble(deal_ticket, DEAL_VOLUME);
             
-            long deal_type = HistoryDealGetInteger(deal_ticket, DEAL_TYPE);
+            long deal_type  = HistoryDealGetInteger(deal_ticket, DEAL_TYPE);
             string type_str = "BUY";
-            
-            if(deal_type == DEAL_TYPE_BUY) type_str = "SELL"; 
+            if(deal_type == DEAL_TYPE_BUY)  type_str = "SELL";
             if(deal_type == DEAL_TYPE_SELL) type_str = "BUY";
             
-            datetime close_time = (datetime)HistoryDealGetInteger(deal_ticket, DEAL_TIME);
+            datetime close_time   = (datetime)HistoryDealGetInteger(deal_ticket, DEAL_TIME);
             string close_time_str = TimeToString(close_time, TIME_DATE|TIME_MINUTES|TIME_SECONDS);
-            
-            string open_time_str = close_time_str;
+            string open_time_str  = close_time_str;
+
             if(HistorySelectByPosition(position_id))
             {
                ulong first_deal = HistoryDealGetTicket(0);
@@ -48,21 +60,20 @@ void OnTradeTransaction(const MqlTradeTransaction& trans, const MqlTradeOrder& o
                }
             }
 
-            long account_number = AccountInfoInteger(ACCOUNT_LOGIN);
-            string broker_name = AccountInfoString(ACCOUNT_COMPANY);
+            long   account_number = AccountInfoInteger(ACCOUNT_LOGIN);
+            string broker_name    = AccountInfoString(ACCOUNT_COMPANY);
 
-            // FIX: Ändrat %d till %I64d och %I64u för att matcha 64-bitars integers (long/ulong) i MQL5
             string json = StringFormat(
                "{\\"apiKey\\":\\"%s\\",\\"account_number\\":\\"%I64d\\",\\"broker_name\\":\\"%s\\",\\"positionId\\":\\"%I64u\\",\\"symbol\\":\\"%s\\",\\"type\\":\\"%s\\",\\"volume\\":%.2f,\\"openTime\\":\\"%s\\",\\"closeTime\\":\\"%s\\",\\"commission\\":%.2f,\\"swap\\":%.2f,\\"grossProfit\\":%.2f}",
                InpApiKey, account_number, broker_name, position_id, symbol, type_str, volume, open_time_str, close_time_str, commission, swap, profit
             );
 
             string headers = "Content-Type: application/json\\r\\nAuthorization: Bearer " + InpApiKey + "\\r\\n";
-            char data[]; char result[]; string result_headers;
-            StringToCharArray(json, data, 0, StringLen(json), CP_UTF8);
+            char post_data[]; char res_data[]; string res_headers;
+            StringToCharArray(json, post_data, 0, StringLen(json), CP_UTF8);
             ResetLastError();
             
-            int res = WebRequest("POST", InpServerUrl, headers, 1000, data, result, result_headers);
+            int res = WebRequest("POST", InpServerUrl, headers, 1000, post_data, res_data, res_headers);
          }
       }
    }
