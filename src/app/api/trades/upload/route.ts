@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { redis } from '@/lib/redis'
 import * as cheerio from 'cheerio'
 
@@ -42,7 +43,9 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: 'Ingen API-nyckel angavs.' }, { status: 401, headers: corsHeaders });
       }
 
-      const { data: profile, error: authError } = await supabase
+      const supabaseAdmin = createAdminClient();
+
+      const { data: profile, error: authError } = await supabaseAdmin
           .from('users')
           .select('id, subscription_tier')
           .eq('api_key', apiKey.trim())
@@ -71,7 +74,7 @@ export async function POST(request: Request) {
       if (account_number) {
          account_name = `MT5 - ${account_number}`;
          
-         const { data: accountData } = await supabase
+         const { data: accountData } = await supabaseAdmin
            .from('mt5_accounts')
            .select('id')
            .eq('user_id', profile.id)
@@ -81,7 +84,7 @@ export async function POST(request: Request) {
          if (accountData) {
            mt5_account_id = accountData.id;
          } else {
-           const { data: newAccount } = await supabase
+           const { data: newAccount } = await supabaseAdmin
              .from('mt5_accounts')
              .insert({
                user_id: profile.id,
@@ -97,7 +100,7 @@ export async function POST(request: Request) {
          }
       }
 
-      const { error: dbError } = await supabase
+      const { error: dbError } = await supabaseAdmin
           .from('trades')
           .insert([{
               user_id: profile.id,
