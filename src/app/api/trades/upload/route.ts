@@ -26,9 +26,8 @@ export async function POST(request: Request) {
     // ==========================================
     if (contentType.includes('application/json')) {
       const body = await request.json();
-      console.log("Inkommande trade:", body);
       
-      let { apiKey, positionId, symbol, type, volume, openTime, closeTime, commission, swap, grossProfit, account_number, broker_name } = body;
+      let apiKey = body.apiKey;
 
       // Fallback till Authorization-header om den saknas i JSON (som standard-Auth)
       if (!apiKey) {
@@ -55,19 +54,12 @@ export async function POST(request: Request) {
 
       if (authError || !profile || !isPremium) {
           console.error("Auth error:", authError || "Användaren hittades inte eller är inte Premium.");
-          console.error("Angiven nyckel:", apiKey, "| DB-profil:", profile);
           return NextResponse.json({ error: 'Obehörig eller ogiltig API-nyckel för Live Sync.' }, { status: 401, headers: corsHeaders });
       }
 
-      const openTimestamp = new Date(openTime.replace(/\./g, '-')).getTime();
-      const closeTimestamp = new Date(closeTime.replace(/\./g, '-')).getTime();
-      let holdTimeMins = 0;
-      if (!isNaN(openTimestamp) && !isNaN(closeTimestamp)) {
-          holdTimeMins = Math.round((closeTimestamp - openTimestamp) / 1000 / 60);
-      }
-
-      const netProfit = parseFloat((grossProfit + commission + swap).toFixed(2));
-
+      const account_number = body.account_number;
+      const broker_name = body.broker_name;
+      
       let mt5_account_id = null;
       let account_name = "Default";
 
@@ -100,31 +92,71 @@ export async function POST(request: Request) {
          }
       }
 
-      const { error: dbError } = await supabaseAdmin
-          .from('trades')
-          .insert([{
+      // Normalisera datan till en array
+      let rawTrades = body.trades;
+      if (!rawTrades && body.positionId) {
+          // Bakåtkompatibilitet för EA v1.02 som skickar en enda trade i rooten
+          rawTrades = [body];
+      }
+      
+      if (!rawTrades || !Array.isArray(rawTrades) || rawTrades.length === 0) {
+          return NextResponse.json({ success: true, message: 'Inga trades att synka.' }, { headers: corsHeaders });
+      }
+
+      // Format trades
+      const parsedTrades = rawTrades.map((t: any) => {
+          const openTimestamp = new Date(t.openTime.replace(/\./g, '-')).getTime();
+          const closeTimestamp = new Date(t.closeTime.replace(/\./g, '-')).getTime();
+          let holdTimeMins = 0;
+          if (!isNaN(openTimestamp) && !isNaN(closeTimestamp)) {
+              holdTimeMins = Math.max(0, Math.round((closeTimestamp - openTimestamp) / 1000 / 60));
+          }
+
+          const netProfit = parseFloat(((t.grossProfit || 0) + (t.commission || 0) + (t.swap || 0)).toFixed(2));
+
+          return {
               user_id: profile.id,
               mt5_account_id: mt5_account_id,
               account_name: account_name,
-              ticket_id: positionId.toString(),
-              symbol,
-              type: type.toUpperCase(),
-              volume,
-              open_time: openTime.replace(/\./g, '-'),
-              close_time: closeTime.replace(/\./g, '-'),
+              ticket_id: t.positionId.toString(),
+              symbol: t.symbol,
+              type: t.type.toUpperCase(),
+              volume: t.volume,
+              open_time: t.openTime.replace(/\./g, '-'),
+              close_time: t.closeTime.replace(/\./g, '-'),
               hold_time_mins: holdTimeMins,
-              commission,
-              swap,
+              commission: t.commission || 0,
+              swap: t.swap || 0,
               profit: netProfit,
               open_price: 0,
               close_price: 0
-          }]);
+          };
+      });
 
-      if (dbError) {
-         console.error("DB Error:", dbError);
-         return NextResponse.json({ error: 'Kunde inte spara live-trade.', details: dbError }, { status: 500, headers: corsHeaders });
+      // Filter against existing trades to prevent duplicates
+      const { data: existingTrades, error: fetchError } = await supabaseAdmin
+          .from('trades')
+          .select('ticket_id')
+          .eq('user_id', profile.id)
+          .eq('account_name', account_name);
+
+      const existingTicketIds = new Set(existingTrades?.map(t => t.ticket_id) || []);
+      const newTradesToInsert = parsedTrades.filter((t: any) => !existingTicketIds.has(t.ticket_id));
+
+      if (newTradesToInsert.length > 0) {
+          const { error: dbError } = await supabaseAdmin
+              .from('trades')
+              .insert(newTradesToInsert);
+
+          if (dbError) {
+             console.error("DB Error:", dbError);
+             return NextResponse.json({ error: 'Kunde inte spara live-trades.', details: dbError }, { status: 500, headers: corsHeaders });
+          }
       }
-      return NextResponse.json({ success: true, message: 'Live trade synkad direkt!' }, { headers: corsHeaders });
+      
+      console.log(`Live Sync: Mottog ${parsedTrades.length} st trades, sparade ${newTradesToInsert.length} st nya trades.`);
+
+      return NextResponse.json({ success: true, message: `Live trade(s) synkad(e)! (${newTradesToInsert.length} nya sparade)` }, { headers: corsHeaders });
     }
 
     // ==========================================
