@@ -5,6 +5,7 @@ import { ClearDataButton } from "@/components/dashboard/clear-data-button";
 import { ResetLayoutButton } from "@/components/dashboard/reset-layout-button";
 import { DashboardFilters } from "@/components/dashboard/dashboard-filters";
 import { AccountSwitcher } from "@/components/dashboard/account-switcher";
+import { LiveSyncIndicator } from "@/components/dashboard/live-sync-indicator";
 import { TemplateManager } from "@/components/dashboard/template-manager";
 import { getDashboardData, getUserAccounts } from "@/lib/data-service";
 import { createClient } from '@/lib/supabase/server';
@@ -54,8 +55,9 @@ export default async function DashboardPage({
         {/* Top Navbar */}
         <header className="h-20 border-b border-white/5 flex items-center justify-between px-4 sm:px-6 shrink-0 bg-[#0b0e14]/80 backdrop-blur-md sticky top-0 z-40">
           <div className="flex items-center gap-4">
-            {/* Account Switcher */}
+            {/* Account Switcher & Live Sync Indicator */}
             <AccountSwitcher accounts={accounts} currentAccount={currentAccount} />
+            <LiveSyncIndicator currentAccount={currentAccount} />
           </div>
 
           {/* Actions */}
