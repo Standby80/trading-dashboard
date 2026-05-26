@@ -7,7 +7,7 @@ export async function GET() {
 #property description "Real-time Live Sync för MetaMetrics Dashboard"
 
 input string InpApiKey = "DIN_API_NYCKEL_HÄR";
-input string InpServerUrl = "${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/trades/upload";
+input string InpServerUrl = "https://metametrics.app/api/trades/upload";
 
 void OnTradeTransaction(const MqlTradeTransaction& trans, const MqlTradeOrder& order, const MqlTradeProperties& props)
 {
@@ -49,7 +49,7 @@ void OnTradeTransaction(const MqlTradeTransaction& trans, const MqlTradeOrder& o
                InpApiKey, account_number, broker_name, position_id, symbol, type_str, volume, open_time_str, close_time_str, commission, swap, profit
             );
 
-            string headers = "Content-Type: application/json\\r\\n";
+            string headers = "Content-Type: application/json\\r\\nAuthorization: Bearer " + InpApiKey + "\\r\\n";
             char data[]; char result[]; string result_headers;
             StringToCharArray(json, data, 0, StringLen(json), CP_UTF8);
             ResetLastError();
