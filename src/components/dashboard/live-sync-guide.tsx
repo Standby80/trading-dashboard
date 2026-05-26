@@ -46,10 +46,10 @@ export default function LiveSyncGuide() {
               <p className="text-sm text-slate-300">
                 Start by downloading our custom sync script (Expert Advisor) to your computer.
               </p>
-              <a href="/api/download/mq5" download>
+              <a href="/api/download/ex5" download>
                 <Button className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white gap-2">
                   <Download className="w-4 h-4" />
-                  Download MetaMetricsSync.mq5
+                  Download MetaMetricsSync.ex5
                 </Button>
               </a>
             </div>
@@ -61,7 +61,7 @@ export default function LiveSyncGuide() {
                 <li>Open MetaTrader 5 on your computer.</li>
                 <li>Click on <span className="text-white">File</span> and select <span className="text-white">Open Data Folder</span>.</li>
                 <li>Navigate to <span className="font-mono text-indigo-400">MQL5 \ Experts</span>.</li>
-                <li>Paste the downloaded <span className="font-mono text-indigo-400">.mq5</span> file there.</li>
+                <li>Paste the downloaded <span className="font-mono text-indigo-400">.ex5</span> file there.</li>
                 <li>Right-click "Expert Advisors" in your Navigator in MT5 and select <span className="text-white">Refresh</span>.</li>
               </ol>
             </div>
