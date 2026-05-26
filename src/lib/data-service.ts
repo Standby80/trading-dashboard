@@ -667,16 +667,28 @@ export async function getUserAccounts() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return ['Default'];
 
-  const { data, error } = await supabase
+  // Hämta manuellt uppladdade konton
+  const { data: reportsData, error: reportsError } = await supabase
     .from('reports')
     .select('account_name')
     .eq('user_id', user.id);
 
-  if (error || !data || data.length === 0) {
+  // Hämta inkopplade live-konton
+  const { data: mt5Data, error: mt5Error } = await supabase
+    .from('mt5_accounts')
+    .select('account_number')
+    .eq('user_id', user.id);
+
+  const reportAccounts = reportsData ? reportsData.map(r => r.account_name || 'Default') : [];
+  const mt5Accounts = mt5Data ? mt5Data.map(r => `MT5 - ${r.account_number}`) : [];
+
+  const allAccounts = [...reportAccounts, ...mt5Accounts];
+
+  if (allAccounts.length === 0) {
     return ['Default'];
   }
 
   // Extract unique account names
-  const accounts = Array.from(new Set(data.map(r => r.account_name || 'Default')));
+  const accounts = Array.from(new Set(allAccounts));
   return accounts;
 }
