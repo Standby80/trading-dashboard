@@ -106,12 +106,12 @@ export function TemplateManager() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-2 bg-[#131823] border border-white/5 hover:bg-white/5 text-slate-300 px-3 py-2 rounded-lg text-sm transition-colors outline-none">
+      <DropdownMenuTrigger className="flex items-center gap-2 bg-card border border-border hover:bg-white/5 text-slate-300 px-3 py-2 rounded-lg text-sm transition-colors outline-none">
         <LayoutTemplate size={16} />
         <span>Templates</span>
       </DropdownMenuTrigger>
       
-      <DropdownMenuContent align="end" className="w-64 bg-[#131823] border-white/10 text-slate-200">
+      <DropdownMenuContent align="end" className="w-64 bg-card border-border text-slate-200">
         <div className="px-2 py-1.5 text-xs font-semibold text-slate-400">Dashboard Templates</div>
         
         {templates.length > 0 && (

@@ -16,19 +16,19 @@ export default function LiveSyncGuide() {
   ];
 
   return (
-    <Card className="bg-[#0b0e14] border-[#1e2330]">
+    <Card className="bg-background border-border">
       <CardContent className="p-6">
         <div className="mb-6">
           <h3 className="text-lg font-medium text-white mb-4">How to enable Live Sync in MT5</h3>
           
           <div className="flex items-center justify-between relative mb-8">
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-0.5 bg-[#1e2330] -z-10"></div>
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-0.5 bg-muted -z-10"></div>
             {steps.map((s) => (
-              <div key={s.id} className="flex flex-col items-center gap-2 bg-[#0b0e14] px-2">
+              <div key={s.id} className="flex flex-col items-center gap-2 bg-background px-2">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-colors ${
                   step >= s.id 
                     ? 'border-indigo-500 bg-indigo-500/20 text-indigo-400' 
-                    : 'border-[#1e2330] bg-[#131823] text-slate-500'
+                    : 'border-border bg-card text-slate-500'
                 }`}>
                   <s.icon className="w-5 h-5" />
                 </div>
@@ -93,7 +93,7 @@ export default function LiveSyncGuide() {
           )}
         </div>
 
-        <div className="flex items-center justify-between pt-6 mt-2 border-t border-[#1e2330]">
+        <div className="flex items-center justify-between pt-6 mt-2 border-t border-border">
           <Button
             variant="ghost"
             onClick={() => setStep(Math.max(1, step - 1))}
@@ -106,7 +106,7 @@ export default function LiveSyncGuide() {
           <Button
             onClick={() => setStep(Math.min(4, step + 1))}
             disabled={step === 4}
-            className="bg-[#131823] hover:bg-[#1a2130] text-indigo-400 border border-[#1e2330]"
+            className="bg-card hover:bg-muted text-indigo-400 border border-border"
           >
             Next Step
             <ChevronRight className="w-4 h-4 ml-1" />

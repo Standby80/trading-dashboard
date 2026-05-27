@@ -75,7 +75,7 @@ export function MonthlyHeatmap({ kpis }: { kpis: any }) {
           <HelpCircle className="w-3.5 h-3.5 text-slate-500 cursor-help" />
         </h3>
         <div className="flex gap-2">
-          <div className="flex bg-[#1e2330] rounded-md overflow-hidden border border-white/5 text-xs">
+          <div className="flex bg-muted rounded-md overflow-hidden border border-border text-xs">
             <button 
               onClick={() => setViewMode('chart')}
               className={`px-3 py-1.5 transition-colors ${viewMode === 'chart' ? 'bg-[#2c3344] text-white font-medium' : 'text-slate-400 hover:text-slate-200'}`}
@@ -89,7 +89,7 @@ export function MonthlyHeatmap({ kpis }: { kpis: any }) {
               Heatmap
             </button>
           </div>
-          <div className="flex bg-[#1e2330] rounded-md overflow-hidden border border-white/5 text-xs">
+          <div className="flex bg-muted rounded-md overflow-hidden border border-border text-xs">
             <button 
               onClick={() => setValueMode('dol')}
               className={`px-2 py-1.5 transition-colors ${valueMode === 'dol' ? 'bg-[#2c3344] text-white font-medium' : 'text-slate-400 hover:text-slate-200'}`}
@@ -119,7 +119,7 @@ export function MonthlyHeatmap({ kpis }: { kpis: any }) {
             </thead>
             <tbody>
               {years.map(year => (
-                <tr key={year} className="border-t border-white/5">
+                <tr key={year} className="border-t border-border">
                   <td className="py-3 px-3 text-sm font-medium text-slate-400 font-mono">{year}</td>
                   {months.map(month => {
                     const val = data[year][month];
@@ -192,7 +192,7 @@ export function MonthlyHeatmap({ kpis }: { kpis: any }) {
       </div>
 
       {/* Footer Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-auto pt-4 border-t border-white/5 shrink-0">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-auto pt-4 border-t border-border shrink-0">
         <div className="bg-transparent rounded-lg p-3">
           <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Best Month</span>
           <div className="text-sm font-bold text-slate-200">

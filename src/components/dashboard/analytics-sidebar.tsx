@@ -54,7 +54,7 @@ export function AnalyticsSidebar({ cumulativeData, kpis }: { cumulativeData?: an
             {t('metaMetricsScore')}
             <UITooltip>
               <TooltipTrigger className="outline-none"><Info className="w-4 h-4 text-slate-500 cursor-pointer" /></TooltipTrigger>
-              <TooltipContent className="bg-[#1e293b] text-white border-white/10"><p>{t('metaMetricsTooltip')}</p></TooltipContent>
+              <TooltipContent className="bg-[#1e293b] text-white border-border"><p>{t('metaMetricsTooltip')}</p></TooltipContent>
             </UITooltip>
           </CardTitle>
         </CardHeader>

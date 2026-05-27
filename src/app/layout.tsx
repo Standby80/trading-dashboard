@@ -4,6 +4,7 @@ import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getLocale } from 'next-intl/server';
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,17 +30,20 @@ export default async function RootLayout({
   const locale = await getLocale();
 
   return (
-    <html
-      lang={locale}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
-    >
-      <body className="min-h-full flex flex-col bg-slate-950 text-slate-50 selection:bg-indigo-500/30">
-        <NextIntlClientProvider messages={messages}>
-          <TooltipProvider>
-            {children}
-          </TooltipProvider>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+      <html
+        lang={locale}
+        className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+        suppressHydrationWarning
+      >
+        <body className="min-h-full flex flex-col selection:bg-indigo-500/30">
+          <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
+            <NextIntlClientProvider messages={messages}>
+              <TooltipProvider>
+                {children}
+              </TooltipProvider>
+            </NextIntlClientProvider>
+          </ThemeProvider>
+        </body>
+      </html>
   );
 }

@@ -18,7 +18,7 @@ export function LongShortCharts({ kpis }: { kpis: any }) {
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-[#0f131a] border border-[#1e2330] p-3 rounded-lg shadow-xl text-sm font-mono">
+        <div className="bg-[#0f131a] border border-border p-3 rounded-lg shadow-xl text-sm font-mono">
           <p className="font-semibold text-white mb-1">{payload[0].name}</p>
           <p className="text-slate-400">Total: {payload[0].value} trades</p>
           {payload[0].name === 'Longs' && (
@@ -78,7 +78,7 @@ export function LongShortCharts({ kpis }: { kpis: any }) {
           {/* Stats Section matching the mono aesthetic */}
           <div className="w-full flex flex-col gap-3 justify-end mt-auto font-mono text-[11px]">
              
-             <div className="flex justify-between items-center pb-2 border-b border-white/5">
+             <div className="flex justify-between items-center pb-2 border-b border-border">
                 <span className="text-slate-500 uppercase tracking-wider">Total Trades</span>
                 <span className="text-sm font-bold text-slate-200">{kpis.totalTrades}</span>
              </div>

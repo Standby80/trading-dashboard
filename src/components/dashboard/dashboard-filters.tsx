@@ -32,22 +32,22 @@ export function DashboardFilters() {
   return (
     <div className="flex items-center gap-2">
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center gap-2 bg-[#131823] hover:bg-[#1a2130] border border-white/5 px-3 py-1.5 rounded-md text-sm font-medium text-slate-300 transition-colors outline-none">
+        <DropdownMenuTrigger className="flex items-center gap-2 bg-card hover:bg-muted border border-border px-3 py-1.5 rounded-md text-sm font-medium text-slate-300 transition-colors outline-none">
           <CalendarIcon className="w-4 h-4 text-indigo-400" />
           {getPeriodLabel()}
           <ChevronDown className="w-4 h-4 opacity-50" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="bg-[#131823] border border-white/10 text-slate-300">
-          <DropdownMenuItem onClick={() => handlePeriodChange('allTime')} className="hover:bg-[#1a2130] cursor-pointer">
+        <DropdownMenuContent align="end" className="bg-card border border-border text-slate-300">
+          <DropdownMenuItem onClick={() => handlePeriodChange('allTime')} className="hover:bg-muted cursor-pointer">
             All Time
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handlePeriodChange('thisMonth')} className="hover:bg-[#1a2130] cursor-pointer">
+          <DropdownMenuItem onClick={() => handlePeriodChange('thisMonth')} className="hover:bg-muted cursor-pointer">
             This Month
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handlePeriodChange('30d')} className="hover:bg-[#1a2130] cursor-pointer">
+          <DropdownMenuItem onClick={() => handlePeriodChange('30d')} className="hover:bg-muted cursor-pointer">
             30 Days
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handlePeriodChange('7d')} className="hover:bg-[#1a2130] cursor-pointer">
+          <DropdownMenuItem onClick={() => handlePeriodChange('7d')} className="hover:bg-muted cursor-pointer">
             7 Days
           </DropdownMenuItem>
         </DropdownMenuContent>

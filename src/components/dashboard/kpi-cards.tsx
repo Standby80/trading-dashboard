@@ -48,7 +48,7 @@ export function KPICards({ data }: { data?: any }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 h-full">
       {/* Net P&L */}
-      <Card className="bg-[#131823] border-[#1e2330] rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
+      <Card className="bg-card border-border rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
         <CardContent className="p-4 flex flex-col h-full z-10">
           <span className="text-xs text-slate-400 mb-2 font-medium">Net P&L</span>
           <div className={`text-2xl font-bold ${isProfit ? 'text-emerald-500' : 'text-rose-500'}`}>
@@ -62,7 +62,7 @@ export function KPICards({ data }: { data?: any }) {
       </Card>
 
       {/* Profit Factor */}
-      <Card className="bg-[#131823] border-[#1e2330] rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
+      <Card className="bg-card border-border rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
         <CardContent className="p-4 flex flex-col h-full z-10">
           <span className="text-xs text-slate-400 mb-2 font-medium">Profit Factor</span>
           <div className="text-2xl font-bold text-white">
@@ -76,7 +76,7 @@ export function KPICards({ data }: { data?: any }) {
       </Card>
 
       {/* Win Rate */}
-      <Card className="bg-[#131823] border-[#1e2330] rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
+      <Card className="bg-card border-border rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
         <CardContent className="p-4 flex flex-col h-full z-10">
           <span className="text-xs text-slate-400 mb-2 font-medium">Win Rate</span>
           <div className="text-2xl font-bold text-white">
@@ -90,7 +90,7 @@ export function KPICards({ data }: { data?: any }) {
       </Card>
 
       {/* Expectancy (R) */}
-      <Card className="bg-[#131823] border-[#1e2330] rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
+      <Card className="bg-card border-border rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
         <CardContent className="p-4 flex flex-col h-full z-10">
           <span className="text-xs text-slate-400 mb-2 font-medium">Expectancy (R)</span>
           <div className="text-2xl font-bold text-white">
@@ -104,14 +104,14 @@ export function KPICards({ data }: { data?: any }) {
       </Card>
 
       {/* Wins vs Losses */}
-      <Card className="bg-[#131823] border-[#1e2330] rounded-xl shadow-none overflow-hidden flex flex-col justify-between">
+      <Card className="bg-card border-border rounded-xl shadow-none overflow-hidden flex flex-col justify-between">
         <CardContent className="p-4 flex flex-col h-full justify-between">
           <span className="text-xs text-slate-400 font-medium">Wins vs Losses</span>
           <div className="flex justify-between items-end mt-2">
             <span className="text-xl font-bold text-emerald-500">{winRateVal.toFixed(0)}%</span>
             <span className="text-xl font-bold text-rose-500">{(100 - winRateVal).toFixed(0)}%</span>
           </div>
-          <div className="w-full flex h-3 rounded-full overflow-hidden bg-[#1e2330] mt-1 mb-2">
+          <div className="w-full flex h-3 rounded-full overflow-hidden bg-muted mt-1 mb-2">
             <div className="bg-emerald-500 h-full" style={{ width: `${winRateVal}%` }}></div>
             <div className="bg-rose-500 h-full" style={{ width: `${100 - winRateVal}%` }}></div>
           </div>

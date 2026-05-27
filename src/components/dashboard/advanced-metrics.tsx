@@ -50,13 +50,13 @@ export function TradeExecutionWidget({ kpis, isPremium = false }: { kpis: any, i
   return (
     <>
       <Card className="bg-transparent border-transparent rounded-xl shadow-none h-full overflow-hidden flex flex-col relative">
-        <CardHeader className="pb-2 pt-4 px-4 flex flex-row items-center justify-between border-b border-white/5">
+        <CardHeader className="pb-2 pt-4 px-4 flex flex-row items-center justify-between border-b border-border">
           <CardTitle className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2">
             <Target className="w-4 h-4 text-indigo-400" />
             {t('tradeExecution')}
             <UITooltip>
               <TooltipTrigger className="outline-none"><Info className="w-4 h-4 text-slate-500 cursor-pointer" /></TooltipTrigger>
-              <TooltipContent className="bg-[#1e293b] text-white border-white/10 w-64">
+              <TooltipContent className="bg-[#1e293b] text-white border-border w-64">
                  <p><strong>Risk to Reward:</strong> Avg Loss (Risk) vs Avg Win (Reward).<br/><strong>Hold Times:</strong> Time you stay in winning vs losing trades.</p>
               </TooltipContent>
             </UITooltip>
@@ -65,7 +65,7 @@ export function TradeExecutionWidget({ kpis, isPremium = false }: { kpis: any, i
 
         <CardContent className="p-0 flex-1 flex flex-col relative">
           {!isPremium && (
-            <div className="absolute inset-0 z-10 backdrop-blur-md bg-[#131823]/60 flex flex-col items-center justify-center p-4">
+            <div className="absolute inset-0 z-10 backdrop-blur-md bg-card/60 flex flex-col items-center justify-center p-4">
               <Lock className="w-8 h-8 text-indigo-400 mb-3" />
               <p className="text-sm font-medium text-slate-200 text-center mb-4 max-w-[200px]">
                 {t('upgradePremium')}
@@ -129,7 +129,7 @@ export function TradeExecutionWidget({ kpis, isPremium = false }: { kpis: any, i
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 mt-6 pt-4 border-t border-white/5">
+              <div className="grid grid-cols-2 gap-4 mt-6 pt-4 border-t border-border">
                 <div>
                   <span className="block text-[10px] text-slate-500 uppercase tracking-wider mb-1">Longest Trade</span>
                   <span className="text-sm font-semibold text-white">{formatDuration(kpis.longestTradeMs)}</span>
@@ -145,7 +145,7 @@ export function TradeExecutionWidget({ kpis, isPremium = false }: { kpis: any, i
       </Card>
 
       <Dialog open={showUpgradeModal} onOpenChange={setShowUpgradeModal}>
-        <DialogContent className="sm:max-w-md bg-[#0b0e14] border-white/5 text-slate-50">
+        <DialogContent className="sm:max-w-md bg-background border-border text-slate-50">
           <DialogHeader>
             <DialogTitle className="text-xl">Upgrade to Premium</DialogTitle>
             <DialogDescription className="text-slate-400">
@@ -214,7 +214,7 @@ export function TimeAnalyticsWidget({ hourlyData = [], weekdayData = [] }: { hou
     if (active && payload && payload.length) {
       const val = payload[0].value;
       return (
-        <div className="bg-[#1e293b] border border-white/10 rounded-lg p-3 shadow-xl">
+        <div className="bg-[#1e293b] border border-border rounded-lg p-3 shadow-xl">
           <p className="text-slate-300 text-xs mb-1">{label}</p>
           <p className={`text-sm font-bold ${val >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
             {val >= 0 ? '+' : '-'}${Math.abs(val).toFixed(2)}
@@ -233,12 +233,12 @@ export function TimeAnalyticsWidget({ hourlyData = [], weekdayData = [] }: { hou
             Time Analytics
             <UITooltip>
               <TooltipTrigger className="outline-none"><Info className="w-4 h-4 text-slate-500 cursor-pointer" /></TooltipTrigger>
-              <TooltipContent className="bg-[#1e293b] text-white border-white/10 w-64">
+              <TooltipContent className="bg-[#1e293b] text-white border-border w-64">
                  <p>Net P&L based on the weekday or hour the trade was opened. All times are converted to Swedish time (CET/CEST).</p>
               </TooltipContent>
             </UITooltip>
           </CardTitle>
-          <div className="flex items-center gap-1 bg-[#1a2130] p-1 rounded-md border border-white/5">
+          <div className="flex items-center gap-1 bg-muted p-1 rounded-md border border-border">
             <button 
               onClick={() => setTab('weekday')} 
               className={`text-[10px] font-medium px-2 py-1 rounded transition-colors ${tab === 'weekday' ? 'bg-[#2e364f] text-white' : 'text-slate-400 hover:text-slate-200'}`}
@@ -296,7 +296,7 @@ export function SecondaryStats({ data }: { data: any }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-full">
       {/* Trades */}
-      <div className="bg-[#131823] border border-[#1e2330] rounded-xl p-4 flex justify-between items-center h-full">
+      <div className="bg-card border border-border rounded-xl p-4 flex justify-between items-center h-full">
         <div className="flex flex-col">
           <span className="text-xs text-slate-400 uppercase tracking-wider mb-2 font-semibold">Trades</span>
           <span className="text-3xl font-bold text-white mb-1">{kpis.totalTrades}</span>
@@ -313,7 +313,7 @@ export function SecondaryStats({ data }: { data: any }) {
           </div>
         </div>
         {/* Simple CSS Donut */}
-        <div className="relative w-16 h-16 rounded-full border-4 border-[#1e2330] mr-2 flex items-center justify-center">
+        <div className="relative w-16 h-16 rounded-full border-4 border-border mr-2 flex items-center justify-center">
             {kpis.totalTrades > 0 && (
                 <svg className="absolute inset-[-4px] w-[72px] h-[72px] -rotate-90">
                     <circle cx="36" cy="36" r="34" fill="none" stroke="#f43f5e" strokeWidth="4" />
@@ -324,7 +324,7 @@ export function SecondaryStats({ data }: { data: any }) {
       </div>
 
       {/* Equity */}
-      <div className="bg-[#131823] border border-[#1e2330] rounded-xl p-4 flex flex-col justify-between h-full relative overflow-hidden">
+      <div className="bg-card border border-border rounded-xl p-4 flex flex-col justify-between h-full relative overflow-hidden">
         <div className="flex flex-col relative z-10">
           <span className="text-xs text-slate-400 uppercase tracking-wider mb-1 font-semibold">Equity</span>
           <span className="text-2xl font-bold text-white">${kpis.currentBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}</span>
@@ -336,7 +336,7 @@ export function SecondaryStats({ data }: { data: any }) {
       </div>
 
       {/* Risk */}
-      <div className="bg-[#131823] border border-[#1e2330] rounded-xl p-4 flex flex-col justify-between h-full">
+      <div className="bg-card border border-border rounded-xl p-4 flex flex-col justify-between h-full">
         <span className="text-xs text-slate-400 uppercase tracking-wider mb-2 font-semibold">Risk</span>
         <div className="flex flex-col gap-3">
           <div className="flex flex-col">
@@ -351,7 +351,7 @@ export function SecondaryStats({ data }: { data: any }) {
       </div>
 
       {/* Key Stats */}
-      <div className="bg-[#131823] border border-[#1e2330] rounded-xl p-4 flex flex-col justify-between h-full">
+      <div className="bg-card border border-border rounded-xl p-4 flex flex-col justify-between h-full">
         <span className="text-xs text-slate-400 uppercase tracking-wider mb-2 font-semibold">Key Stats</span>
         <div className="flex flex-col gap-2 mt-1">
           <div className="flex justify-between items-center text-xs">
@@ -384,18 +384,18 @@ export function TradeDistribution({ data }: { data: any }) {
   
   return (
     <Card className="bg-transparent border-transparent rounded-xl shadow-none h-full overflow-hidden flex flex-col">
-      <CardHeader className="pb-2 pt-4 px-4 flex flex-row items-center justify-between border-b border-white/5">
+      <CardHeader className="pb-2 pt-4 px-4 flex flex-row items-center justify-between border-b border-border">
         <CardTitle className="text-sm font-semibold text-slate-400 uppercase tracking-wider">
           Trade Distribution
         </CardTitle>
-        <div className="flex bg-[#0b0e14] rounded p-1 border border-white/5">
-           <button className="text-[10px] px-2 py-0.5 rounded bg-[#1e2330] text-white">By Asset</button>
+        <div className="flex bg-background rounded p-1 border border-border">
+           <button className="text-[10px] px-2 py-0.5 rounded bg-muted text-white">By Asset</button>
            <button className="text-[10px] px-2 py-0.5 rounded text-slate-500 hover:text-white">By Direction</button>
         </div>
       </CardHeader>
       <CardContent className="p-4 flex-1 flex flex-col items-center justify-center relative">
         <div className="relative w-32 h-32 flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full border-[8px] border-[#1e2330]"></div>
+            <div className="absolute inset-0 rounded-full border-[8px] border-border"></div>
             {kpis.totalTrades > 0 && (
                 <svg className="absolute inset-[-8px] w-[144px] h-[144px] -rotate-90">
                     <circle cx="72" cy="72" r="64" fill="none" stroke="#f43f5e" strokeWidth="8" />
@@ -432,14 +432,14 @@ export function DrawdownAnalysis({ kpis }: { kpis: any }) {
   
   return (
     <Card className="bg-transparent border-transparent rounded-xl shadow-none h-full overflow-hidden flex flex-col">
-      <CardHeader className="pb-2 pt-4 px-4 border-b border-white/5">
+      <CardHeader className="pb-2 pt-4 px-4 border-b border-border">
         <CardTitle className="text-sm font-semibold text-slate-400 uppercase tracking-wider">
           Drawdown Analysis
         </CardTitle>
       </CardHeader>
       <CardContent className="p-4 flex-1 flex flex-col items-center justify-center relative">
         <div className="relative w-32 h-32 flex items-center justify-center mb-4">
-            <div className="absolute inset-0 rounded-full border-[8px] border-[#1e2330]"></div>
+            <div className="absolute inset-0 rounded-full border-[8px] border-border"></div>
             <svg className="absolute inset-[-8px] w-[144px] h-[144px] -rotate-90">
                 <circle cx="72" cy="72" r="64" fill="none" stroke="#8b5cf6" strokeWidth="8" strokeDasharray="100 402" />
             </svg>
@@ -459,7 +459,7 @@ export function DrawdownAnalysis({ kpis }: { kpis: any }) {
             </div>
             <div className="flex justify-between items-center w-full">
                 <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#1e2330]"></div>
+                    <div className="w-2 h-2 rounded-full bg-muted"></div>
                     <span className="text-xs text-slate-400">Previous Max</span>
                 </div>
                 <span className="text-xs text-white font-medium">-</span>

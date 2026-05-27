@@ -19,6 +19,7 @@ import {
 
 import { ReportUploadForm } from "./report-upload-form";
 import { ConnectLiveSyncButton } from "./connect-live-sync-button";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface SidebarProps {
   userEmail?: string;
@@ -38,14 +39,14 @@ export function AppSidebar({ userEmail, profile }: SidebarProps & { profile?: an
 
   return (
     <div 
-      className={`relative flex flex-col h-screen bg-[#0b0e14] border-r border-white/5 transition-all duration-300 ease-in-out ${
+      className={`relative flex flex-col h-screen bg-background border-r border-border transition-all duration-300 ease-in-out ${
         isCollapsed ? 'w-[80px]' : 'w-[260px]'
       }`}
     >
       {/* Collapse Toggle */}
       <button 
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-3 top-6 bg-[#131823] border border-white/10 rounded-full p-1 text-slate-400 hover:text-white hover:bg-white/5 transition-colors z-50"
+        className="absolute -right-3 top-6 bg-card border border-border rounded-full p-1 text-slate-400 hover:text-white hover:bg-white/5 transition-colors z-50"
       >
         {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
       </button>
@@ -61,7 +62,7 @@ export function AppSidebar({ userEmail, profile }: SidebarProps & { profile?: an
       </div>
 
       {/* User Profile */}
-      <div className={`px-6 py-6 border-b border-white/5 shrink-0 flex flex-col ${isCollapsed ? 'items-center px-0' : 'items-center'}`}>
+      <div className={`px-6 py-6 border-b border-border shrink-0 flex flex-col ${isCollapsed ? 'items-center px-0' : 'items-center'}`}>
         <div className="w-16 h-16 rounded-full bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20 overflow-hidden mb-3">
           <UserCircle className="w-10 h-10 text-indigo-400/50" strokeWidth={1} />
         </div>
@@ -124,7 +125,7 @@ export function AppSidebar({ userEmail, profile }: SidebarProps & { profile?: an
       </div>
 
       {/* Footer */}
-      <div className="p-3 border-t border-white/5 shrink-0 flex flex-col gap-2">
+      <div className="p-3 border-t border-border shrink-0 flex flex-col gap-2">
         {!profile?.is_premium && (
           <Link 
             href="/upgrade"
@@ -134,6 +135,7 @@ export function AppSidebar({ userEmail, profile }: SidebarProps & { profile?: an
             {!isCollapsed && <span className="font-semibold text-sm">Upgrade to Pro</span>}
           </Link>
         )}
+        <ThemeToggle isCollapsed={isCollapsed} />
         <button 
           onClick={async () => {
              const { createClient } = await import('@/lib/supabase/client');

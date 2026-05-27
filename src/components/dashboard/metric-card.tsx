@@ -74,7 +74,7 @@ export function MetricCard({
   const subtextColor = trend === 'positive' ? 'text-emerald-500' : trend === 'negative' ? 'text-rose-500' : 'text-slate-400';
 
   return (
-    <Card className="bg-[#131823] border-[#1e2330] rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between h-full">
+    <Card className="bg-card border-border rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between h-full">
       <CardContent className="p-4 flex flex-col h-full z-10">
         <div className="flex items-center gap-1.5 mb-2">
           <span className="text-xs text-slate-400 font-medium">{title}</span>
@@ -83,7 +83,7 @@ export function MetricCard({
               <TooltipTrigger className="outline-none">
                 <HelpCircle className="w-3.5 h-3.5 text-slate-500 hover:text-slate-300 transition-colors cursor-help" />
               </TooltipTrigger>
-              <TooltipContent className="bg-[#1e293b] text-white border-white/10 max-w-xs">
+              <TooltipContent className="bg-[#1e293b] text-white border-border max-w-xs">
                 <p className="text-xs">{tooltip}</p>
               </TooltipContent>
             </UITooltip>

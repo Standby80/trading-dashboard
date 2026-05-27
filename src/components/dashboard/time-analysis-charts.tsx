@@ -9,7 +9,7 @@ export function TimeAnalysisCharts({ hourlyData, weekdayData }: TimeAnalysisProp
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full col-span-full">
       {/* Timdistribution */}
-      <div className="bg-[#0b0e14] border border-[#1e2330] p-5 rounded-xl">
+      <div className="bg-background border border-border p-5 rounded-xl">
         <h3 className="text-gray-400 text-sm font-medium mb-4">Net Profit per Hour (Closing Time)</h3>
         <div className="h-[250px] w-full min-w-0">
           <ResponsiveContainer width="100%" height="100%" minWidth={0}>
@@ -34,7 +34,7 @@ export function TimeAnalysisCharts({ hourlyData, weekdayData }: TimeAnalysisProp
       </div>
 
       {/* Veckodagsdistribution */}
-      <div className="bg-[#0b0e14] border border-[#1e2330] p-5 rounded-xl">
+      <div className="bg-background border border-border p-5 rounded-xl">
         <h3 className="text-gray-400 text-sm font-medium mb-4">Performance by Weekday</h3>
         <div className="h-[250px] w-full min-w-0">
           <ResponsiveContainer width="100%" height="100%" minWidth={0}>

@@ -61,21 +61,21 @@ export function TradingCalendar({ data, availableSymbols = [], rawTrades = [] }:
   }
 
   return (
-    <div className="flex flex-col h-full bg-[#131823] rounded-xl overflow-hidden p-4">
+    <div className="flex flex-col h-full bg-card rounded-xl overflow-hidden p-4">
       <div className="flex items-center justify-between mb-4">
         <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Performance Calendar (P&L)</span>
         
-        <div className="flex bg-[#0b0e14] rounded p-1 border border-[#1e2330]">
+        <div className="flex bg-background rounded p-1 border border-border">
            <button 
              onClick={() => setDisplayMode('$')}
-             className={`flex items-center justify-center p-1 rounded transition-colors ${displayMode === '$' ? 'bg-[#1e2330] text-emerald-400' : 'text-slate-500 hover:text-white'}`}
+             className={`flex items-center justify-center p-1 rounded transition-colors ${displayMode === '$' ? 'bg-muted text-emerald-400' : 'text-slate-500 hover:text-white'}`}
              title="Show in Dollars"
            >
              <DollarSign className="w-3.5 h-3.5" />
            </button>
            <button 
              onClick={() => setDisplayMode('%')}
-             className={`flex items-center justify-center p-1 rounded transition-colors ${displayMode === '%' ? 'bg-[#1e2330] text-emerald-400' : 'text-slate-500 hover:text-white'}`}
+             className={`flex items-center justify-center p-1 rounded transition-colors ${displayMode === '%' ? 'bg-muted text-emerald-400' : 'text-slate-500 hover:text-white'}`}
              title="Show in Percent"
            >
              <Percent className="w-3.5 h-3.5" />
@@ -128,7 +128,7 @@ export function TradingCalendar({ data, availableSymbols = [], rawTrades = [] }:
                    const isLoss = d.pnl !== null && d.pnl < 0;
                    const isBigWin = isWin && d.pnl !== null && d.pnl > 50;
                    
-                   let bgClass = "bg-[#0b0e14]";
+                   let bgClass = "bg-background";
                    if (isBigWin) bgClass = "bg-[#10b981]/20";
                    else if (isWin) bgClass = "bg-[#059669]/20";
                    else if (isLoss) bgClass = "bg-[#f43f5e]/20";
@@ -162,7 +162,7 @@ export function TradingCalendar({ data, availableSymbols = [], rawTrades = [] }:
                  })}
                  
                  {/* Week Summary Cell */}
-                 <div className="flex flex-col items-center justify-center rounded-md bg-[#1e2330]/30 border-l border-white/5 ml-1">
+                 <div className="flex flex-col items-center justify-center rounded-md bg-muted/30 border-l border-border ml-1">
                    {weekTrades > 0 ? (
                      <>
                        <span className={`text-[13px] font-bold ${isWeekWin ? 'text-emerald-500' : 'text-rose-500'}`}>

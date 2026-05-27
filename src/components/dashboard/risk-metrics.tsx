@@ -17,7 +17,7 @@ export function RiskMetrics({ kpis }: { kpis: any }) {
         <div className="flex justify-between text-xs text-slate-400 mb-1">
           <span>{label}</span>
         </div>
-        <div className="h-2 bg-[#1a2130] rounded-full overflow-hidden flex">
+        <div className="h-2 bg-muted rounded-full overflow-hidden flex">
           <div className={`h-full ${colorClass}`} style={{ width: `${pct}%` }} />
         </div>
         <div className="flex justify-between text-sm sm:text-base text-slate-200 mt-1 font-semibold">
@@ -35,7 +35,7 @@ export function RiskMetrics({ kpis }: { kpis: any }) {
           {t('riskMetrics')}
           <Tooltip>
             <TooltipTrigger className="outline-none"><Info className="w-4 h-4 text-slate-500 cursor-pointer" /></TooltipTrigger>
-            <TooltipContent className="bg-[#1e293b] text-white border-white/10 w-64">
+            <TooltipContent className="bg-[#1e293b] text-white border-border w-64">
                <p><strong>Max Drawdown:</strong> The largest peak-to-trough decline in account value.<br/><strong>Sharpe Ratio:</strong> Measures risk-adjusted return.</p>
             </TooltipContent>
           </Tooltip>
@@ -66,7 +66,7 @@ export function RiskMetrics({ kpis }: { kpis: any }) {
             <div className="flex justify-between text-xs text-slate-400 mb-1">
                <span>{t('maxConsecutiveWins')}</span>
             </div>
-            <div className="flex h-2 w-full rounded-full overflow-hidden bg-[#1a2130]">
+            <div className="flex h-2 w-full rounded-full overflow-hidden bg-muted">
                <div className="bg-emerald-500" style={{ width: `${(kpis.maxWinStreak / Math.max(1, kpis.maxWinStreak + kpis.maxLoseStreak)) * 100}%` }}></div>
                <div className="bg-rose-500" style={{ width: `${(kpis.maxLoseStreak / Math.max(1, kpis.maxWinStreak + kpis.maxLoseStreak)) * 100}%` }}></div>
             </div>
@@ -80,7 +80,7 @@ export function RiskMetrics({ kpis }: { kpis: any }) {
             <div className="flex justify-between text-xs text-slate-400 mb-1">
                <span>{t('maxConsecutiveProfit')}</span>
             </div>
-            <div className="flex h-2 w-full rounded-full overflow-hidden bg-[#1a2130]">
+            <div className="flex h-2 w-full rounded-full overflow-hidden bg-muted">
                <div className="bg-emerald-500/70" style={{ width: `${(kpis.maxWinStreakDol / Math.max(1, kpis.maxWinStreakDol + kpis.maxLoseStreakDol)) * 100}%` }}></div>
                <div className="bg-rose-500/70" style={{ width: `${(kpis.maxLoseStreakDol / Math.max(1, kpis.maxWinStreakDol + kpis.maxLoseStreakDol)) * 100}%` }}></div>
             </div>

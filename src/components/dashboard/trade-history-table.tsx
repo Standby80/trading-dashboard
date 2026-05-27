@@ -9,13 +9,13 @@ export function TradeHistoryTable({ trades = [] }: { trades?: any[] }) {
 
   return (
     <div className="bg-transparent border-transparent rounded-2xl overflow-hidden h-full flex flex-col">
-      <div className="p-4 border-b border-white/5 shrink-0">
+      <div className="p-4 border-b border-border shrink-0">
         <h3 className="font-medium text-slate-200">Recent Trades</h3>
       </div>
       <div className="overflow-x-auto overflow-y-auto flex-1 h-full">
         <table className="w-full caption-bottom text-sm">
-          <thead className="bg-[#0b0e14] sticky top-0 [&_tr]:border-b [&_tr]:border-white/5">
-            <tr className="border-b border-white/5 hover:bg-transparent data-[state=selected]:bg-muted">
+          <thead className="bg-background sticky top-0 [&_tr]:border-b [&_tr]:border-border">
+            <tr className="border-b border-border hover:bg-transparent data-[state=selected]:bg-muted">
               <th className="h-10 px-4 text-left align-middle font-medium text-slate-400">Time</th>
               <th className="h-10 px-4 text-left align-middle font-medium text-slate-400">Symbol</th>
               <th className="h-10 px-4 text-left align-middle font-medium text-slate-400">Type</th>
@@ -31,7 +31,7 @@ export function TradeHistoryTable({ trades = [] }: { trades?: any[] }) {
               const isWin = profit > 0;
               
               return (
-                <tr key={trade.id || `trade-${index}`} className="border-b border-white/5 transition-colors hover:bg-white/5 data-[state=selected]:bg-muted">
+                <tr key={trade.id || `trade-${index}`} className="border-b border-border transition-colors hover:bg-white/5 data-[state=selected]:bg-muted">
                   <td className="p-4 align-middle text-slate-300 font-mono text-xs whitespace-nowrap">
                     {new Date(trade.close_time).toLocaleString()}
                   </td>
@@ -66,7 +66,7 @@ export function TradeHistoryTable({ trades = [] }: { trades?: any[] }) {
         </table>
       </div>
       {trades.length > 100 && (
-        <div className="p-3 text-center text-xs text-slate-500 border-t border-white/5">
+        <div className="p-3 text-center text-xs text-slate-500 border-t border-border">
           Showing 100 most recent trades
         </div>
       )}

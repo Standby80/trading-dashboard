@@ -36,12 +36,12 @@ export function MarketAnalysisModule({ assetPerformance, sideSplit }: MarketAnal
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 w-full h-full">
       
       {/* Tillgångar / Symbol-tabell (Tar upp 2/3 av bredden på stora skärmar) */}
-      <div className="xl:col-span-2 bg-[#0b0e14] border border-[#1e2330] p-5 rounded-xl min-w-0 flex flex-col h-full">
+      <div className="xl:col-span-2 bg-background border border-border p-5 rounded-xl min-w-0 flex flex-col h-full">
         <h3 className="text-gray-400 text-sm font-medium mb-4 shrink-0">Asset Performance Matrix</h3>
         <div className="overflow-x-auto flex-1">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b border-[#1e2330] text-gray-500 font-mono uppercase tracking-wider">
+              <tr className="border-b border-border text-gray-500 font-mono uppercase tracking-wider">
                 <th className="pb-3 pl-2">Symbol</th>
                 <th className="pb-3 text-right">Trades</th>
                 <th className="pb-3 text-right">Win Rate</th>
@@ -71,7 +71,7 @@ export function MarketAnalysisModule({ assetPerformance, sideSplit }: MarketAnal
       </div>
 
       {/* Riktning / Long vs Short Pajdiagram (Tar upp 1/3 av bredden) */}
-      <div className="bg-[#0b0e14] border border-[#1e2330] p-5 rounded-xl flex flex-col justify-between h-full">
+      <div className="bg-background border border-border p-5 rounded-xl flex flex-col justify-between h-full">
         <div className="shrink-0">
           <h3 className="text-gray-400 text-sm font-medium mb-1">Directional Bias Analysis</h3>
           <p className="text-[11px] text-gray-500 mb-4 font-mono">Volume Distribution and Profitability per Order Type</p>

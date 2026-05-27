@@ -33,9 +33,9 @@ export default function UpgradePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b0e14] text-slate-50 font-sans selection:bg-indigo-500/30 overflow-y-auto">
+    <div className="min-h-screen bg-background text-slate-50 font-sans selection:bg-indigo-500/30 overflow-y-auto">
       {/* Navbar */}
-      <header className="h-14 border-b border-white/5 flex items-center px-6 sticky top-0 bg-[#0b0e14]/80 backdrop-blur-md z-50">
+      <header className="h-14 border-b border-border flex items-center px-6 sticky top-0 bg-background/80 backdrop-blur-md z-50">
         <Link href="/" className="text-slate-400 hover:text-white flex items-center gap-2 text-sm transition-colors">
           <ChevronLeft className="w-4 h-4" />
           Back to Dashboard
@@ -58,7 +58,7 @@ export default function UpgradePage() {
 
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-16">
-          <div className="bg-[#131823] border border-white/10 rounded-2xl p-8 relative overflow-hidden group hover:border-indigo-500/30 transition-colors flex flex-col">
+          <div className="bg-card border border-border rounded-2xl p-8 relative overflow-hidden group hover:border-indigo-500/30 transition-colors flex flex-col">
             <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 blur-3xl rounded-full group-hover:bg-indigo-500/20 transition-colors"></div>
             <h3 className="text-xl font-semibold text-slate-200 mb-2">Monthly</h3>
             <div className="flex items-baseline gap-1 mb-6">
@@ -74,7 +74,7 @@ export default function UpgradePage() {
             <button 
               onClick={() => handleCheckout('monthly')}
               disabled={isLoadingMonthly || isLoadingAnnually}
-              className="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium py-3 rounded-xl transition-colors disabled:opacity-50 flex items-center justify-center gap-2 mt-auto"
+              className="w-full bg-white/5 hover:bg-white/10 border border-border text-white font-medium py-3 rounded-xl transition-colors disabled:opacity-50 flex items-center justify-center gap-2 mt-auto"
             >
               {isLoadingMonthly ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Subscribe Monthly'}
             </button>

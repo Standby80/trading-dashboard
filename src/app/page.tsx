@@ -43,7 +43,7 @@ export default async function DashboardPage({
   const isConnected = !!data;
 
   return (
-    <div className="flex h-screen bg-[#0b0e14] text-slate-50 overflow-hidden font-sans">
+    <div className="flex h-screen bg-background text-slate-50 overflow-hidden font-sans">
       
       {/* Sidebar - Hidden on mobile, handled by AppSidebar component */}
       <div className="hidden md:block">
@@ -53,7 +53,7 @@ export default async function DashboardPage({
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Navbar */}
-        <header className="h-20 border-b border-white/5 flex items-center justify-between px-4 sm:px-6 shrink-0 bg-[#0b0e14]/80 backdrop-blur-md sticky top-0 z-40">
+        <header className="h-20 border-b border-border flex items-center justify-between px-4 sm:px-6 shrink-0 bg-background/80 backdrop-blur-md sticky top-0 z-40">
           <div className="flex items-center gap-4">
             {/* Account Switcher & Live Sync Indicator */}
             <AccountSwitcher accounts={accounts} currentAccount={currentAccount} />

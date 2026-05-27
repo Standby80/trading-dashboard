@@ -86,7 +86,7 @@ export function PsychologyGrid({ kpis }: { kpis: any }) {
             <span className="text-xs text-slate-400">Max Wins (PNL)</span>
             <span className="text-sm font-bold text-emerald-400">{formatCurrency(kpis.highestPnlWinStreak?.pnl || 0)} <span className="text-[11px] font-medium text-emerald-400/60 ml-1">({kpis.highestPnlWinStreak?.count || 0})</span></span>
           </div>
-          <div className="flex items-center justify-between pb-3 border-b border-white/5">
+          <div className="flex items-center justify-between pb-3 border-b border-border">
             <span className="text-xs text-slate-400">Avg Win Streak</span>
             <span className="text-sm font-bold text-slate-200">{kpis.avgWinStreakCount || 0}</span>
           </div>
@@ -113,7 +113,7 @@ export function PsychologyGrid({ kpis }: { kpis: any }) {
           Extremes & Averages
         </div>
         <div className="flex flex-col gap-4 mt-auto">
-          <div className="flex flex-col gap-3 pb-4 border-b border-white/5">
+          <div className="flex flex-col gap-3 pb-4 border-b border-border">
             <div className="flex items-center justify-between">
               <span className="text-xs text-slate-400">Largest Win</span>
               <div className="text-right">

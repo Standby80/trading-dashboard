@@ -25,7 +25,7 @@ export function RiskOverview({ kpis }: { kpis: any }) {
 
   return (
     <Card className="bg-transparent border-transparent rounded-xl shadow-none h-full overflow-hidden flex flex-col">
-      <CardHeader className="pb-2 pt-4 px-4 border-b border-white/5">
+      <CardHeader className="pb-2 pt-4 px-4 border-b border-border">
         <CardTitle className="text-sm font-semibold text-slate-400 uppercase tracking-wider">
           Risk Overview
         </CardTitle>
@@ -35,7 +35,7 @@ export function RiskOverview({ kpis }: { kpis: any }) {
         {/* Max Drawdown */}
         <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-slate-400 w-24">Max Drawdown</span>
-            <div className="flex-1 mx-4 h-2 bg-[#1e2330] rounded-full overflow-hidden">
+            <div className="flex-1 mx-4 h-2 bg-muted rounded-full overflow-hidden">
                 <div className="h-full bg-violet-500 rounded-full" style={{ width: `${ddWidth}%` }}></div>
             </div>
             <span className="text-xs font-medium text-white w-12 text-right">{ddPct.toFixed(2)}%</span>
@@ -44,7 +44,7 @@ export function RiskOverview({ kpis }: { kpis: any }) {
         {/* Sharpe Ratio */}
         <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-slate-400 w-24">Sharpe Ratio</span>
-            <div className="flex-1 mx-4 h-2 bg-[#1e2330] rounded-full overflow-hidden">
+            <div className="flex-1 mx-4 h-2 bg-muted rounded-full overflow-hidden">
                 <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${sharpeWidth}%` }}></div>
             </div>
             <span className="text-xs font-medium text-white w-12 text-right">{sharpe.toFixed(2)}</span>
@@ -53,7 +53,7 @@ export function RiskOverview({ kpis }: { kpis: any }) {
         {/* Profit Factor */}
         <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-slate-400 w-24">Profit Factor</span>
-            <div className="flex-1 mx-4 h-2 bg-[#1e2330] rounded-full overflow-hidden">
+            <div className="flex-1 mx-4 h-2 bg-muted rounded-full overflow-hidden">
                 <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${pfWidth}%` }}></div>
             </div>
             <span className="text-xs font-medium text-white w-12 text-right">{pf.toFixed(2)}</span>
@@ -62,7 +62,7 @@ export function RiskOverview({ kpis }: { kpis: any }) {
         {/* Expectancy */}
         <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-slate-400 w-24">Expectancy (R)</span>
-            <div className="flex-1 mx-4 h-2 bg-[#1e2330] rounded-full overflow-hidden">
+            <div className="flex-1 mx-4 h-2 bg-muted rounded-full overflow-hidden">
                 <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${expWidth}%` }}></div>
             </div>
             <span className="text-xs font-medium text-white w-12 text-right">{exp.toFixed(2)}</span>
@@ -71,7 +71,7 @@ export function RiskOverview({ kpis }: { kpis: any }) {
         {/* Win Rate */}
         <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-slate-400 w-24">Win Rate</span>
-            <div className="flex-1 mx-4 h-2 bg-[#1e2330] rounded-full overflow-hidden">
+            <div className="flex-1 mx-4 h-2 bg-muted rounded-full overflow-hidden">
                 <div className="h-full bg-violet-500 rounded-full" style={{ width: `${winRate}%` }}></div>
             </div>
             <span className="text-xs font-medium text-white w-12 text-right">{winRate.toFixed(2)}%</span>

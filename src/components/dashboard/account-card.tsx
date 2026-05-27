@@ -65,12 +65,12 @@ export function AccountCard({ acc, isEur, colorClass }: AccountCardProps) {
   return (
     <div 
       onClick={handleCardClick}
-      className={`rounded-3xl overflow-hidden bg-[#1e2128] border border-white/5 shadow-2xl flex flex-col h-[200px] transition-transform hover:-translate-y-1 duration-300 cursor-pointer ${isDeleting ? 'opacity-50 pointer-events-none' : ''}`}
+      className={`rounded-3xl overflow-hidden bg-[#1e2128] border border-border shadow-2xl flex flex-col h-[200px] transition-transform hover:-translate-y-1 duration-300 cursor-pointer ${isDeleting ? 'opacity-50 pointer-events-none' : ''}`}
     >
       {/* Colored Area */}
       <div className={`flex-1 p-6 relative flex flex-col ${colorClass}`}>
         {/* Decorative circles */}
-        <div className="absolute right-[-10%] top-[-10%] w-40 h-40 rounded-full border-[20px] border-white/5 pointer-events-none" />
+        <div className="absolute right-[-10%] top-[-10%] w-40 h-40 rounded-full border-[20px] border-border pointer-events-none" />
         
         {/* Header */}
         <div className="relative z-10 flex justify-between items-start">

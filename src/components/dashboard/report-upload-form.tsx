@@ -114,7 +114,7 @@ export function ReportUploadForm({ trigger }: { trigger?: React.ReactElement }) 
         )}
       />
       
-      <DialogContent className="sm:max-w-md bg-[#0b0e14] border-white/5 text-slate-50">
+      <DialogContent className="sm:max-w-md bg-background border-border text-slate-50">
         <DialogHeader>
           <DialogTitle className="text-xl">Upload MT5 Report</DialogTitle>
           <DialogDescription className="text-slate-400">
@@ -133,14 +133,14 @@ export function ReportUploadForm({ trigger }: { trigger?: React.ReactElement }) 
               value={accountName}
               onChange={(e) => setAccountName(e.target.value)}
               placeholder="e.g. Prop Firm Challenge 1"
-              className="w-full bg-[#131823] border border-white/10 rounded-md px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors"
+              className="w-full bg-card border border-border rounded-md px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors"
             />
           </div>
 
           {!file ? (
             <div 
               className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer ${
-                dragActive ? 'border-indigo-500 bg-indigo-500/10' : 'border-white/10 hover:border-white/20 hover:bg-white/5'
+                dragActive ? 'border-indigo-500 bg-indigo-500/10' : 'border-border hover:border-white/20 hover:bg-white/5'
               }`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
@@ -160,7 +160,7 @@ export function ReportUploadForm({ trigger }: { trigger?: React.ReactElement }) 
               <p className="text-xs text-slate-500 mt-1">or click to browse (.html)</p>
             </div>
           ) : (
-            <div className="bg-[#131823] border border-white/5 p-4 rounded-xl flex items-center justify-between">
+            <div className="bg-card border border-border p-4 rounded-xl flex items-center justify-between">
               <div className="flex items-center gap-3 overflow-hidden">
                 <FileType className="w-8 h-8 text-indigo-400 shrink-0" />
                 <div className="min-w-0">

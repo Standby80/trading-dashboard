@@ -74,8 +74,8 @@ export function DayDetailsModal({ isOpen, onClose, date, trades }: DayDetailsMod
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="w-[95vw] sm:max-w-[800px] md:max-w-4xl lg:max-w-5xl bg-[#0b0e14] border-white/10 text-slate-50 p-0 overflow-hidden shadow-2xl">
-        <div className="p-6 pb-2 border-b border-white/5">
+      <DialogContent className="w-[95vw] sm:max-w-[800px] md:max-w-4xl lg:max-w-5xl bg-background border-border text-slate-50 p-0 overflow-hidden shadow-2xl">
+        <div className="p-6 pb-2 border-b border-border">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold flex items-center gap-3">
               Trading Day: {new Date(date).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' })}
@@ -88,7 +88,7 @@ export function DayDetailsModal({ isOpen, onClose, date, trades }: DayDetailsMod
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             
             {/* Chart Area */}
-            <div className="lg:col-span-3 bg-[#131823] rounded-xl border border-white/5 p-5 relative">
+            <div className="lg:col-span-3 bg-card rounded-xl border border-border p-5 relative">
               <div className="mb-4">
                 <span className="text-sm font-semibold text-slate-400 mr-2">Day P/L</span>
                 <span className={`text-xl font-bold ${isPositiveDay ? 'text-emerald-400' : 'text-rose-500'}`}>
@@ -132,19 +132,19 @@ export function DayDetailsModal({ isOpen, onClose, date, trades }: DayDetailsMod
 
             {/* Metrics Sidebar */}
             <div className="flex flex-col gap-4">
-              <div className="bg-[#131823] rounded-xl border border-white/5 p-4 flex flex-col justify-center">
+              <div className="bg-card rounded-xl border border-border p-4 flex flex-col justify-center">
                 <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Total Trades</div>
                 <div className="text-xl font-bold text-white">{totalTrades}</div>
               </div>
-              <div className="bg-[#131823] rounded-xl border border-white/5 p-4 flex flex-col justify-center">
+              <div className="bg-card rounded-xl border border-border p-4 flex flex-col justify-center">
                 <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Win Rate %</div>
                 <div className="text-xl font-bold text-white">{winRate.toFixed(1)}%</div>
               </div>
-              <div className="bg-[#131823] rounded-xl border border-white/5 p-4 flex flex-col justify-center">
+              <div className="bg-card rounded-xl border border-border p-4 flex flex-col justify-center">
                 <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Average Win</div>
                 <div className="text-xl font-bold text-emerald-400">+${avgWin.toFixed(2)}</div>
               </div>
-              <div className="bg-[#131823] rounded-xl border border-white/5 p-4 flex flex-col justify-center">
+              <div className="bg-card rounded-xl border border-border p-4 flex flex-col justify-center">
                 <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Average Loss</div>
                 <div className="text-xl font-bold text-rose-500">${avgLoss.toFixed(2)}</div>
               </div>
@@ -155,14 +155,14 @@ export function DayDetailsModal({ isOpen, onClose, date, trades }: DayDetailsMod
           <div className="space-y-3">
             <h4 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Trade History</h4>
             {processedTrades.length === 0 ? (
-              <div className="text-center py-8 text-slate-500 bg-[#131823] rounded-xl border border-white/5">
+              <div className="text-center py-8 text-slate-500 bg-card rounded-xl border border-border">
                 No trades recorded for this day.
               </div>
             ) : (
               processedTrades.map((trade, i) => {
                 const isWin = trade.netProfit >= 0;
                 return (
-                  <div key={`${trade.ticket_id}-${i}`} className="bg-[#131823] border border-white/5 rounded-xl overflow-hidden flex relative group hover:border-white/10 transition-colors">
+                  <div key={`${trade.ticket_id}-${i}`} className="bg-card border border-border rounded-xl overflow-hidden flex relative group hover:border-border transition-colors">
                     {/* Left Border Status */}
                     <div className={`w-1.5 absolute left-0 top-0 bottom-0 ${isWin ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
                     

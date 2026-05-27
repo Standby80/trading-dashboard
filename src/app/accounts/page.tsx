@@ -46,7 +46,7 @@ export default async function AccountsPage() {
   );
 
   return (
-    <div className="flex h-screen bg-[#0b0e14] text-slate-50 overflow-hidden font-sans">
+    <div className="flex h-screen bg-background text-slate-50 overflow-hidden font-sans">
       
       {/* Sidebar */}
       <div className="hidden md:block">
@@ -54,7 +54,7 @@ export default async function AccountsPage() {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 bg-[#13151a]">
+      <div className="flex-1 flex flex-col min-w-0 bg-background">
         
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto px-6 lg:px-10 py-8">

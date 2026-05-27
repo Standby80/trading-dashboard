@@ -29,15 +29,15 @@ export function AccountSwitcher({ accounts, currentAccount }: { accounts: string
   return (
     <div className="flex items-center gap-2">
       <Select value={selected} onValueChange={handleAccountChange}>
-        <SelectTrigger className="h-8 w-[140px] bg-[#131823] border-[#1e2330] text-xs focus:ring-1 focus:ring-indigo-500">
+        <SelectTrigger className="h-8 w-[140px] bg-card border-border text-xs focus:ring-1 focus:ring-indigo-500">
           <div className="flex items-center gap-2 text-slate-300">
             <Wallet className="w-3.5 h-3.5 text-indigo-400" />
             <SelectValue placeholder="Select Account" />
           </div>
         </SelectTrigger>
-        <SelectContent className="bg-[#131823] border-[#1e2330] text-slate-200">
+        <SelectContent className="bg-card border-border text-slate-200">
           {displayAccounts.map(account => (
-            <SelectItem key={account} value={account} className="text-xs hover:bg-[#1e2330] focus:bg-[#1e2330]">
+            <SelectItem key={account} value={account} className="text-xs hover:bg-muted focus:bg-muted">
               {account}
             </SelectItem>
           ))}

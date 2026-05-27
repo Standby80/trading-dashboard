@@ -27,8 +27,8 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0b0e14] text-slate-50 font-sans p-4">
-      <div className="w-full max-w-md space-y-8 bg-[#131823] p-8 rounded-2xl border border-white/5 shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center bg-background text-slate-50 font-sans p-4">
+      <div className="w-full max-w-md space-y-8 bg-card p-8 rounded-2xl border border-border shadow-2xl">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight">Create an account</h2>
           <p className="text-sm text-slate-400 mt-2">Start analyzing your trades with MetaMetrics today</p>
@@ -49,7 +49,7 @@ export default function SignupPage() {
               type="email" 
               placeholder="you@example.com" 
               required 
-              className="bg-[#0b0e14] border-white/10 text-white placeholder:text-slate-600 focus-visible:ring-indigo-500"
+              className="bg-background border-border text-white placeholder:text-slate-600 focus-visible:ring-indigo-500"
             />
           </div>
           
@@ -60,7 +60,7 @@ export default function SignupPage() {
               name="password" 
               type="password" 
               required 
-              className="bg-[#0b0e14] border-white/10 text-white focus-visible:ring-indigo-500"
+              className="bg-background border-border text-white focus-visible:ring-indigo-500"
             />
           </div>
 
