@@ -30,7 +30,7 @@ export function AppSidebar({ userEmail, profile }: SidebarProps & { profile?: an
   const pathname = usePathname();
 
   const navItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, href: '/' },
+    { name: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
     { name: 'Accounts', icon: Wallet, href: '/accounts' },
     { name: 'Upload Report', icon: Upload, isAction: true, component: ReportUploadForm },
     { name: 'Live Sync', icon: Activity, isAction: true, component: ConnectLiveSyncButton },
@@ -84,7 +84,7 @@ export function AppSidebar({ userEmail, profile }: SidebarProps & { profile?: an
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto py-6 flex flex-col gap-2 px-3">
         {navItems.map((item) => {
-          const isActive = !item.isAction && (pathname === item.href || (item.name === 'Dashboard' && pathname === '/'));
+          const isActive = !item.isAction && pathname === item.href;
           
           const buttonClass = `flex items-center rounded-lg h-12 transition-all relative w-full ${
             isActive 
