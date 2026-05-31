@@ -143,6 +143,8 @@ export async function POST(request: Request) {
       const existingTicketIds = new Set(existingTrades?.map(t => t.ticket_id) || []);
       const newTradesToInsert = parsedTrades.filter((t: any) => !existingTicketIds.has(t.ticket_id));
 
+      const existingTradesToUpdate = parsedTrades.filter((t: any) => existingTicketIds.has(t.ticket_id));
+
       if (newTradesToInsert.length > 0) {
           const { error: dbError } = await supabaseAdmin
               .from('trades')
@@ -151,6 +153,16 @@ export async function POST(request: Request) {
           if (dbError) {
              console.error("DB Error:", dbError);
              return NextResponse.json({ error: 'Kunde inte spara live-trades.', details: dbError }, { status: 500, headers: corsHeaders });
+          }
+      }
+
+      // Uppdatera befintliga trades som saknar priser
+      if (existingTradesToUpdate.length > 0) {
+          for (const t of existingTradesToUpdate) {
+              await supabaseAdmin.from('trades')
+                  .update({ open_price: t.open_price, close_price: t.close_price })
+                  .eq('ticket_id', t.ticket_id)
+                  .eq('user_id', profile.id);
           }
       }
       
