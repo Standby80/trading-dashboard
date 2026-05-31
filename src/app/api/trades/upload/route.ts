@@ -146,7 +146,7 @@ export async function POST(request: Request) {
       if (newTradesToInsert.length > 0) {
           const { error: dbError } = await supabaseAdmin
               .from('trades')
-              .upsert(newTradesToInsert, { onConflict: 'ticket_id', ignoreDuplicates: true });
+              .insert(newTradesToInsert);
 
           if (dbError) {
              console.error("DB Error:", dbError);
