@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, Download, Puzzle, CheckCircle2, Zap, BarChart3, Clock, TrendingUp } from "lucide-react";
+import { ArrowRight, ShieldCheck, Download, Puzzle, CheckCircle2, Zap, BarChart3, Clock, TrendingUp, Globe, FileUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -7,6 +7,69 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+
+// Mini sparkline SVG component
+function Sparkline({ color = "emerald", negative = false }: { color?: string; negative?: boolean }) {
+  const paths: Record<string, string> = {
+    emerald: "M0,30 C10,28 20,25 30,22 C40,19 50,18 60,14 C70,10 80,8 90,4 C95,2 98,1 100,0",
+    red: "M0,5 C10,7 20,10 30,15 C40,20 50,22 60,25 C70,28 80,29 100,30",
+    flat: "M0,15 C20,15 40,16 60,15 C80,14 90,15 100,15",
+    rise: "M0,28 C15,26 25,22 40,18 C55,14 70,10 85,5 C92,3 96,1 100,0",
+  };
+  const fills: Record<string, string> = {
+    emerald: "rgba(16,185,129,0.08)",
+    red: "rgba(239,68,68,0.08)",
+    flat: "rgba(255,255,255,0.04)",
+    rise: "rgba(16,185,129,0.08)",
+  };
+  const strokes: Record<string, string> = {
+    emerald: "#10b981",
+    red: "#ef4444",
+    flat: "rgba(255,255,255,0.2)",
+    rise: "#10b981",
+  };
+
+  return (
+    <svg viewBox="0 0 100 32" className="w-full h-8" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id={`grad-${color}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={strokes[color]} stopOpacity="0.3" />
+          <stop offset="100%" stopColor={strokes[color]} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path d={paths[color] + " L100,32 L0,32 Z"} fill={`url(#grad-${color})`} />
+      <path d={paths[color]} fill="none" stroke={strokes[color]} strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+const stats = [
+  { label: "Account Value", value: "$10,622.62", color: "flat", textColor: "text-white" },
+  { label: "Net P&L", value: "$622.62", color: "emerald", textColor: "text-emerald-400" },
+  { label: "Win Rate", value: "42.86%", color: "rise", textColor: "text-emerald-400" },
+  { label: "Profit Factor", value: "1.57", color: "emerald", textColor: "text-emerald-400" },
+  { label: "Total Trades", value: "70", color: "flat", textColor: "text-white" },
+  { label: "Average Win", value: "$57.32", color: "emerald", textColor: "text-emerald-400" },
+  { label: "Average Loss", value: "-$27.43", color: "red", textColor: "text-rose-400" },
+  { label: "Sharpe Ratio", value: "0.17", color: "rise", textColor: "text-emerald-400" },
+  { label: "Max Drawdown", value: "1.95%", color: "red", textColor: "text-rose-400" },
+  { label: "Expectancy (R)", value: "0.00", color: "red", textColor: "text-rose-400" },
+  { label: "Winning Trades", value: "30", color: "emerald", textColor: "text-emerald-400" },
+  { label: "Losing Trades", value: "40", color: "red", textColor: "text-rose-400" },
+  { label: "Best Trade", value: "$155.76", color: "emerald", textColor: "text-emerald-400" },
+  { label: "Worst Trade", value: "-$59.78", color: "red", textColor: "text-rose-400" },
+  { label: "Total Growth", value: "6.23%", color: "rise", textColor: "text-emerald-400" },
+];
+
+const days = [
+  { day: "Mon", val: 0, neg: true },
+  { day: "Tue", val: 92 },
+  { day: "Wed", val: 50 },
+  { day: "Thu", val: 12 },
+  { day: "Fri", val: 76 },
+  { day: "Sat", val: 0 },
+  { day: "Sun", val: 0 },
+];
 
 export default function LandingPage() {
   return (
@@ -17,7 +80,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center border border-indigo-500/40">
-              <span className="text-indigo-400 font-bold text-sm">MM</span>
+              <span className="text-indigo-400 font-bold text-xs">MM</span>
             </div>
             <span className="font-bold text-lg tracking-tight text-white">MetaMetrics</span>
           </div>
@@ -34,32 +97,30 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative pt-28 pb-24 px-4 sm:px-6 lg:px-8 text-center max-w-6xl mx-auto overflow-hidden">
-        {/* Background glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-indigo-600/10 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute top-20 right-0 w-[400px] h-[400px] bg-purple-600/5 blur-[100px] rounded-full pointer-events-none" />
+      {/* ─── HERO ─────────────────────────────────────────────── */}
+      <section className="relative pt-28 pb-16 px-4 sm:px-6 lg:px-8 text-center max-w-6xl mx-auto overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-indigo-600/8 blur-[140px] rounded-full pointer-events-none" />
 
         <div className="relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-sm font-medium mb-8">
             <span className="flex h-1.5 w-1.5 rounded-full bg-indigo-400 animate-pulse" />
-            Real-time MT5 sync — no manual imports
+            Real-time MT5 sync — zero manual work
           </div>
 
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-[1.05]">
-            <span className="text-white">Know exactly where</span>
+            <span className="text-white">Stop guessing.</span>
             <br />
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400">
-              your money goes.
+              Start knowing.
             </span>
           </h1>
 
           <p className="text-lg md:text-xl text-white/50 mb-10 max-w-2xl mx-auto leading-relaxed">
             MetaMetrics connects directly to MetaTrader 5 and turns your raw trade data into
-            actionable insights — risk score, win streaks, time patterns and more.
+            actionable insights — instantly. No spreadsheets. No guesswork. Just clarity.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
             <Link href="/signup">
               <Button size="lg" className="h-13 px-8 text-base bg-indigo-600 hover:bg-indigo-500 text-white font-bold shadow-xl shadow-indigo-500/20 rounded-xl">
                 Start for Free
@@ -67,185 +128,200 @@ export default function LandingPage() {
               </Button>
             </Link>
             <Link href="/login">
-              <Button size="lg" variant="ghost" className="h-13 px-8 text-base text-white/60 hover:text-white hover:bg-white/5 rounded-xl">
+              <Button size="lg" variant="ghost" className="h-13 px-8 text-base text-white/50 hover:text-white hover:bg-white/5 rounded-xl">
                 Sign in →
               </Button>
             </Link>
           </div>
-        </div>
 
-        {/* Dashboard screenshots grid */}
-        <div className="relative z-10 mt-20 grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Score card */}
-          <div className="rounded-2xl border border-white/8 bg-[#161b22] overflow-hidden shadow-2xl p-6 text-left">
-            <p className="text-xs font-bold tracking-widest text-white/30 mb-4">METAMETRICS SCORE</p>
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <p className="text-white/50 text-sm mb-1">MetaMetrics Score</p>
-                <p className="text-5xl font-extrabold text-white">84.18</p>
-              </div>
-              {/* Radar placeholder */}
-              <div className="w-28 h-28 relative">
-                <svg viewBox="0 0 100 100" className="w-full h-full opacity-60">
-                  <polygon points="50,10 85,35 73,80 27,80 15,35" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.6)" strokeWidth="1.5" />
-                  <polygon points="50,22 72,40 64,68 36,68 28,40" fill="rgba(99,102,241,0.1)" stroke="rgba(99,102,241,0.4)" strokeWidth="1" />
-                  <polygon points="50,34 62,46 56,62 44,62 38,46" fill="rgba(99,102,241,0.08)" stroke="rgba(99,102,241,0.3)" strokeWidth="1" />
-                </svg>
-              </div>
-            </div>
-            {/* Score bar */}
-            <div className="h-2 rounded-full bg-gradient-to-r from-red-500 via-yellow-400 via-50% to-emerald-500 relative">
-              <div className="absolute right-[12%] top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white border-2 border-[#161b22] shadow-md" />
-            </div>
-            <div className="flex justify-between text-white/30 text-xs mt-1">
-              <span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span>
-            </div>
-          </div>
-
-          {/* Trade Execution card */}
-          <div className="rounded-2xl border border-white/8 bg-[#161b22] overflow-hidden shadow-2xl p-6 text-left">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-5 h-5 rounded-full border border-indigo-500/60 flex items-center justify-center">
-                <div className="w-2 h-2 rounded-full bg-indigo-400" />
-              </div>
-              <p className="text-xs font-bold tracking-widest text-white/30">TRADE EXECUTION & ANALYTICS</p>
-            </div>
-            <div className="mb-5">
-              <div className="flex justify-between items-center mb-1">
-                <p className="text-white/50 text-sm">Risk-to-Reward Ratio</p>
-                <p className="text-white font-bold text-lg">1 : 2.09</p>
-              </div>
-              <div className="h-2 rounded-full overflow-hidden flex">
-                <div className="bg-rose-500 w-[32%]" />
-                <div className="bg-emerald-500 flex-1" />
-              </div>
-              <div className="flex justify-between text-xs mt-1">
-                <span className="text-rose-400">Avg Loss -$27</span>
-                <span className="text-emerald-400">Avg Win +$57</span>
-              </div>
-            </div>
-            <div className="border-t border-white/5 pt-4 space-y-2">
-              <div className="flex justify-between"><span className="text-white/50 text-sm">Average Duration</span><span className="text-white font-semibold">1h 6m</span></div>
-              <div className="flex justify-between"><span className="text-white/50 text-sm">Avg Win Hold Time</span><span className="text-emerald-400 font-semibold">2h 2m</span></div>
-              <div className="flex justify-between"><span className="text-white/50 text-sm">Avg Loss Hold Time</span><span className="text-rose-400 font-semibold">24m</span></div>
-            </div>
-          </div>
-
-          {/* Long/Short split */}
-          <div className="rounded-2xl border border-white/8 bg-[#161b22] overflow-hidden shadow-2xl p-6 text-left">
-            <p className="text-xs font-bold tracking-widest text-white/30 mb-1">LONG & SHORT SPLIT</p>
-            <p className="text-white/30 text-xs mb-4">Distribution and performance</p>
-            <div className="flex items-center gap-6">
-              {/* Donut */}
-              <div className="relative w-24 h-24 shrink-0">
-                <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="#312e81" strokeWidth="3.2" />
-                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="#6366f1" strokeWidth="3.2"
-                    strokeDasharray="53 47" strokeLinecap="round" />
-                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="#a855f7" strokeWidth="3.2"
-                    strokeDasharray="47 53" strokeDashoffset="-53" strokeLinecap="round" />
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                  <span className="text-indigo-400 font-bold text-xs">53%</span>
-                  <span className="text-white/30 text-[10px]">L</span>
-                  <span className="text-purple-400 font-bold text-xs">47%</span>
-                  <span className="text-white/30 text-[10px]">S</span>
+          {/* ── Stats grid mockup ── */}
+          <div className="rounded-2xl border border-white/8 bg-[#161b22] p-1 shadow-2xl">
+            <div className="grid grid-cols-5 gap-1">
+              {stats.map((s) => (
+                <div key={s.label} className="bg-[#0d1117] rounded-xl p-3 text-left overflow-hidden">
+                  <p className="text-white/30 text-[10px] mb-1 truncate">{s.label}</p>
+                  <p className={`text-base font-extrabold mb-1 ${s.textColor}`}>{s.value}</p>
+                  <Sparkline color={s.color} />
                 </div>
-              </div>
-              <div className="flex-1 space-y-2 text-sm">
-                <div className="flex justify-between text-white/30 text-xs font-bold tracking-wider mb-1"><span>TOTAL TRADES</span><span className="text-white">70</span></div>
-                <div className="border-t border-white/5 pt-2 grid grid-cols-2 gap-2">
-                  <div><p className="text-white/30 text-xs">LONGS (37)</p><p className="text-white/50 text-xs">Wins <span className="text-emerald-400 font-bold">15</span></p><p className="text-white/50 text-xs">Losses <span className="text-rose-400 font-bold">22</span></p></div>
-                  <div><p className="text-white/30 text-xs">SHORTS (33)</p><p className="text-white/50 text-xs">Wins <span className="text-emerald-400 font-bold">15</span></p><p className="text-white/50 text-xs">Losses <span className="text-rose-400 font-bold">18</span></p></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Monthly heatmap */}
-          <div className="rounded-2xl border border-white/8 bg-[#161b22] overflow-hidden shadow-2xl p-6 text-left">
-            <p className="text-xs font-bold tracking-widest text-white/30 mb-4">MONTHLY P&L HEATMAP</p>
-            <div className="grid grid-cols-6 gap-1.5 mb-4">
-              {["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].slice(0,6).map(m => (
-                <p key={m} className="text-center text-white/30 text-[10px]">{m}</p>
               ))}
-              <div className="rounded bg-white/5 h-8 flex items-center justify-center text-white/20 text-xs">–</div>
-              <div className="rounded bg-white/5 h-8 flex items-center justify-center text-white/20 text-xs">–</div>
-              <div className="rounded bg-white/5 h-8 flex items-center justify-center text-white/20 text-xs">–</div>
-              <div className="rounded bg-rose-900/50 h-8 flex items-center justify-center text-rose-400 text-xs font-bold">-0.32%</div>
-              <div className="rounded bg-emerald-900/60 h-8 flex items-center justify-center text-emerald-400 text-xs font-bold">6.55%</div>
-              <div className="rounded bg-white/5 h-8 flex items-center justify-center text-white/20 text-xs">–</div>
-            </div>
-            <div className="border-t border-white/5 pt-3 grid grid-cols-3 gap-2 text-center text-xs">
-              <div><p className="text-white/30 text-[10px] font-bold tracking-wider">BEST MONTH</p><p className="text-white font-semibold">May 2026</p><p className="text-emerald-400 font-bold">6.55%</p></div>
-              <div><p className="text-white/30 text-[10px] font-bold tracking-wider">WORST</p><p className="text-white font-semibold">Apr 2026</p><p className="text-rose-400 font-bold">-0.32%</p></div>
-              <div><p className="text-white/30 text-[10px] font-bold tracking-wider">AVG MONTH</p><p className="text-white font-semibold">3.11%</p></div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="py-24 border-y border-white/5 bg-[#0a0e14]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-3">How it works</p>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 text-white">
-            Up and running in 60 seconds.
-          </h2>
-          <p className="text-white/40 text-lg max-w-2xl mx-auto mb-16">
-            No CSV exports. No spreadsheets. Just plug in and your entire trade history appears automatically.
-          </p>
+      {/* ─── BALANCE CHART ───────────────────────────────────── */}
+      <section className="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          {/* Copy */}
+          <div>
+            <p className="text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-3">Balance Curve</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-5 leading-tight">
+              Watch your account grow — trade by trade.
+            </h2>
+            <p className="text-white/40 text-base leading-relaxed mb-6">
+              Every single closed position is plotted on your personal equity curve.
+              Hover any point to see your exact balance on that date.
+              Spot turning points, drawdown periods and winning streaks at a glance.
+            </p>
+            <ul className="space-y-3">
+              {["Full history from day one, automatically", "Interactive hover tooltips per trade", "Instantly reveals your risk patterns"].map(f => (
+                <li key={f} className="flex items-center gap-3 text-white/60 text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />{f}
+                </li>
+              ))}
+            </ul>
+          </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { icon: Download, step: "01", title: "Download the EA", desc: "Get the pre-compiled MetaMetricsSync.ex5 file from your dashboard. No coding needed." },
-              { icon: Puzzle, step: "02", title: "Install in MT5", desc: "Drag the file directly onto your chart in MetaTrader 5. Takes 10 seconds." },
-              { icon: ShieldCheck, step: "03", title: "Paste your API key", desc: "Copy your personal key from the dashboard, paste it in the EA Inputs tab — done!" },
-            ].map(({ icon: Icon, step, title, desc }) => (
-              <div key={step} className="p-8 rounded-2xl border border-white/8 bg-[#161b22] text-left relative group hover:border-indigo-500/30 transition-colors duration-300">
-                <div className="absolute top-6 right-6 text-4xl font-black text-white/4 select-none">{step}</div>
-                <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-5">
-                  <Icon className="w-6 h-6 text-indigo-400" />
+          {/* Chart mockup */}
+          <div className="rounded-2xl border border-white/8 bg-[#161b22] p-6 shadow-2xl">
+            <p className="text-2xl font-extrabold text-white mb-0.5">$10,623</p>
+            <p className="text-white/40 text-xs mb-4 flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-400 inline-block"/>Account Balance</p>
+            {/* SVG chart */}
+            <div className="relative h-40">
+              <svg viewBox="0 0 400 120" className="w-full h-full" preserveAspectRatio="none">
+                {/* Grid lines */}
+                {[0,30,60,90].map(y => (
+                  <line key={y} x1="0" y1={y} x2="400" y2={y} stroke="rgba(255,255,255,0.04)" strokeWidth="1"/>
+                ))}
+                {/* Balance path */}
+                <path
+                  d="M0,95 C10,97 20,100 30,98 C40,96 50,100 60,102 C70,104 80,98 90,96 C100,94 110,85 120,82 C130,79 140,88 150,86 C155,85 160,100 170,92 C180,84 190,95 200,85 C210,75 220,72 230,68 C240,64 245,80 250,75 C255,70 260,65 270,58 C280,52 285,54 290,48 C295,42 300,46 310,42 C320,38 330,40 340,35 C350,30 360,32 370,28 C380,24 390,22 400,18"
+                  fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinejoin="round"
+                />
+                <path
+                  d="M0,95 C10,97 20,100 30,98 C40,96 50,100 60,102 C70,104 80,98 90,96 C100,94 110,85 120,82 C130,79 140,88 150,86 C155,85 160,100 170,92 C180,84 190,95 200,85 C210,75 220,72 230,68 C240,64 245,80 250,75 C255,70 260,65 270,58 C280,52 285,54 290,48 C295,42 300,46 310,42 C320,38 330,40 340,35 C350,30 360,32 370,28 C380,24 390,22 400,18 L400,120 L0,120 Z"
+                  fill="url(#blueGrad)"
+                />
+                <defs>
+                  <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.15"/>
+                    <stop offset="100%" stopColor="#3b82f6" stopOpacity="0"/>
+                  </linearGradient>
+                </defs>
+                {/* Hover point */}
+                <circle cx="200" cy="85" r="4" fill="#3b82f6" stroke="#161b22" strokeWidth="2"/>
+                <line x1="200" y1="0" x2="200" y2="120" stroke="rgba(255,255,255,0.15)" strokeWidth="1" strokeDasharray="3,3"/>
+              </svg>
+              {/* Tooltip */}
+              <div className="absolute top-12 left-1/2 ml-4 bg-[#1c2230] border border-white/10 rounded-xl p-3 shadow-xl pointer-events-none">
+                <p className="text-white/40 text-[10px] mb-1">2026-05-05</p>
+                <p className="text-white font-bold text-sm">Balance : $10 298,47</p>
+              </div>
+            </div>
+            <div className="flex justify-between text-white/20 text-[10px] mt-2">
+              <span>2026-04-29</span><span>2026-05-05</span><span>2026-05-18</span><span>2026-05-28</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── TIME ANALYTICS ──────────────────────────────────── */}
+      <section className="py-20 border-y border-white/5 bg-[#0a0e14]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+
+            {/* Chart mockup */}
+            <div className="rounded-2xl border border-white/8 bg-[#161b22] p-6 shadow-2xl order-2 md:order-1">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <p className="text-xs font-bold tracking-widest text-white/30">TIME ANALYTICS</p>
                 </div>
-                <h3 className="text-lg font-bold text-white mb-2">{title}</h3>
-                <p className="text-white/40 text-sm leading-relaxed">{desc}</p>
+                <div className="flex bg-white/5 rounded-lg p-0.5 text-xs">
+                  <span className="px-3 py-1 rounded-md bg-white/10 text-white font-semibold">Day</span>
+                  <span className="px-3 py-1 text-white/30">Hour</span>
+                </div>
+              </div>
+              <div className="flex items-end gap-2 h-36">
+                {days.map(({ day, val, neg }) => (
+                  <div key={day} className="flex-1 flex flex-col items-center gap-1">
+                    <div className="w-full flex items-end justify-center" style={{ height: "120px" }}>
+                      {val > 0 ? (
+                        <div
+                          className="w-full rounded-t-md bg-emerald-500/80"
+                          style={{ height: `${val}%` }}
+                        />
+                      ) : neg ? (
+                        <div className="w-full h-0.5 bg-rose-500/60 self-center" />
+                      ) : (
+                        <div className="w-full h-0 self-end" />
+                      )}
+                    </div>
+                    <p className="text-white/30 text-[10px]">{day}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="flex justify-between text-white/20 text-[10px] mt-2 border-t border-white/5 pt-3">
+                <span>$-85</span><span>$0</span><span>$85</span><span>$170</span><span>$255</span>
+              </div>
+            </div>
+
+            {/* Copy */}
+            <div className="order-1 md:order-2">
+              <p className="text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-3">Time Analytics</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-5 leading-tight">
+                Are you trading on your worst days?
+              </h2>
+              <p className="text-white/40 text-base leading-relaxed mb-6">
+                Most traders lose money on specific days or hours — without ever realizing it.
+                MetaMetrics shows you exactly which times you perform, and which times you should stay out of the market.
+              </p>
+              <p className="text-white/60 text-base leading-relaxed mb-6 border-l-2 border-indigo-500/50 pl-4 italic">
+                &ldquo;I discovered I was losing 80% of my money on Mondays. I just stopped trading Mondays. My PnL went up immediately.&rdquo;
+              </p>
+              <ul className="space-y-3">
+                {["P&L breakdown by day of week", "Best and worst trading hours", "Avg profit per session — hour view"].map(f => (
+                  <li key={f} className="flex items-center gap-3 text-white/60 text-sm">
+                    <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />{f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 15 METRICS SECTION ─────────────────────────────── */}
+      <section className="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <p className="text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-3">Dashboard Overview</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
+            15 key metrics. One dashboard. Zero spreadsheets.
+          </h2>
+          <p className="text-white/40 text-base max-w-2xl mx-auto">
+            Every number your broker hides from you — surfaced instantly. Know your real performance, not just your last trade.
+          </p>
+        </div>
+
+        {/* Stats grid */}
+        <div className="rounded-2xl border border-white/8 bg-[#161b22] p-1 shadow-2xl mb-12">
+          <div className="grid grid-cols-5 gap-1">
+            {stats.map((s) => (
+              <div key={s.label} className="bg-[#0d1117] rounded-xl p-3 text-left overflow-hidden hover:bg-[#0f1419] transition-colors group cursor-default">
+                <p className="text-white/30 text-[10px] mb-1 truncate group-hover:text-white/50 transition-colors">{s.label}</p>
+                <p className={`text-base font-extrabold mb-1 ${s.textColor}`}>{s.value}</p>
+                <Sparkline color={s.color} />
               </div>
             ))}
           </div>
         </div>
-      </section>
 
-      {/* Features */}
-      <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <p className="text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-3">Analytics</p>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-4">
-            Everything a serious trader needs.
-          </h2>
-          <p className="text-white/40 text-lg max-w-2xl mx-auto">
-            From raw P&L to deep behavioral patterns — MetaMetrics surfaces insights your broker never shows you.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Feature callouts */}
+        <div className="grid md:grid-cols-3 gap-4">
           {[
-            { icon: BarChart3, color: "indigo", title: "MetaMetrics Score", desc: "A single composite score weighing win rate, drawdown, consistency and more." },
-            { icon: TrendingUp, color: "purple", title: "Long & Short Split", desc: "See exactly how your longs vs shorts perform across win rate and hold time." },
-            { icon: Clock, color: "emerald", title: "Time Analytics", desc: "Discover your best hours and days to trade — and when to stay flat." },
-            { icon: Zap, color: "rose", title: "Risk/Reward Ratio", desc: "Real avg win vs avg loss, automatically calculated across your full history." },
+            { icon: TrendingUp, color: "indigo", title: "Growth over time", desc: "Your balance curve shows exactly when you started winning — and when you gave it back." },
+            { icon: BarChart3, color: "purple", title: "Win/Loss breakdown", desc: "Average win, average loss, best and worst trade. Know your edge before you put on the next position." },
+            { icon: Zap, color: "emerald", title: "Risk metrics", desc: "Sharpe ratio, max drawdown, profit factor and expectancy — the stats professional traders live by." },
           ].map(({ icon: Icon, color, title, desc }) => (
-            <div key={title} className="p-6 rounded-2xl border border-white/8 bg-[#161b22] hover:border-white/15 transition-colors duration-300">
+            <div key={title} className="p-6 rounded-2xl border border-white/8 bg-[#0d1117] hover:border-white/15 transition-colors">
               <div className={`w-10 h-10 rounded-xl mb-4 flex items-center justify-center ${
                 color === "indigo" ? "bg-indigo-500/10 border border-indigo-500/20" :
                 color === "purple" ? "bg-purple-500/10 border border-purple-500/20" :
-                color === "emerald" ? "bg-emerald-500/10 border border-emerald-500/20" :
-                "bg-rose-500/10 border border-rose-500/20"
+                "bg-emerald-500/10 border border-emerald-500/20"
               }`}>
                 <Icon className={`w-5 h-5 ${
                   color === "indigo" ? "text-indigo-400" :
                   color === "purple" ? "text-purple-400" :
-                  color === "emerald" ? "text-emerald-400" :
-                  "text-rose-400"
+                  "text-emerald-400"
                 }`} />
               </div>
               <h3 className="text-white font-bold mb-1.5 text-base">{title}</h3>
@@ -255,63 +331,177 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="py-24 border-t border-white/5 bg-[#0a0e14]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <p className="text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-3">Pricing</p>
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-4">
-              Simple, transparent pricing.
+      {/* ─── TWO WAYS TO IMPORT ──────────────────────────────── */}
+      <section className="py-20 border-y border-white/5 bg-[#0a0e14]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <p className="text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-3">Two ways to connect</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Sync your history in 60 seconds.
             </h2>
-            <p className="text-white/40 text-lg">No hidden fees. Cancel anytime.</p>
+            <p className="text-white/40 text-base max-w-xl mx-auto">
+              Whether you prefer real-time automation or a quick one-time upload — we&apos;ve got you.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+
+            {/* Live Sync */}
+            <div className="rounded-2xl border border-indigo-500/20 bg-gradient-to-b from-indigo-950/30 to-[#161b22] p-8 flex flex-col">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+                  <Globe className="w-5 h-5 text-indigo-400" />
+                </div>
+                <div>
+                  <p className="text-white font-bold">Live Sync EA</p>
+                  <p className="text-indigo-400 text-xs">Automatic · Real-time</p>
+                </div>
+              </div>
+              <p className="text-white/40 text-sm leading-relaxed mb-6">
+                Download our pre-compiled Expert Advisor, drop it onto your MT5 chart, paste your API key — and your entire history syncs in seconds. New trades appear automatically as you close them.
+              </p>
+
+              {/* Modal mockup */}
+              <div className="rounded-xl border border-white/8 bg-[#0d1117] p-5 text-sm flex-1">
+                <p className="text-white font-bold mb-1 text-base">MetaMetrics Live Sync API</p>
+                <p className="text-white/30 text-xs mb-4">Use your unique API key to connect your MT5 script with your dashboard.</p>
+                <div className="flex gap-2 mb-3">
+                  <div className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 flex items-center">
+                    <span className="text-white/20 text-sm tracking-wider">••••••••••••••••••••••••••</span>
+                  </div>
+                  <button className="px-3 py-2 bg-white/8 border border-white/10 rounded-lg text-white/50 text-xs font-semibold">Copy</button>
+                </div>
+                <div className="flex gap-4 justify-center mt-4">
+                  {["Download", "Install", "Allow URL", "Activate"].map((s, i) => (
+                    <div key={s} className="flex flex-col items-center gap-1.5">
+                      <div className={`w-8 h-8 rounded-full border flex items-center justify-center ${i === 0 ? "border-indigo-500 bg-indigo-500/20" : "border-white/10 bg-white/5"}`}>
+                        <span className="text-[8px] text-white/40">{i + 1}</span>
+                      </div>
+                      <span className={`text-[9px] ${i === 0 ? "text-white" : "text-white/30"}`}>{s}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* HTML Upload */}
+            <div className="rounded-2xl border border-white/8 bg-[#161b22] p-8 flex flex-col">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                  <FileUp className="w-5 h-5 text-purple-400" />
+                </div>
+                <div>
+                  <p className="text-white font-bold">HTML Report Upload</p>
+                  <p className="text-purple-400 text-xs">One-time · Instant</p>
+                </div>
+              </div>
+              <p className="text-white/40 text-sm leading-relaxed mb-6">
+                Already have a trade history in MT5? Export it as an HTML report (takes 10 seconds), upload it here, and your full history appears immediately. No EA required.
+              </p>
+
+              {/* Upload mockup */}
+              <div className="rounded-xl border border-white/8 bg-[#0d1117] p-5 flex-1">
+                <p className="text-white font-bold mb-1 text-base">Upload MT5 Report</p>
+                <p className="text-white/30 text-xs mb-4">Export your history as an HTML report from MetaTrader 5 and upload it here.</p>
+                <div className="mb-3">
+                  <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Account Name</p>
+                  <div className="bg-white/5 border border-indigo-500/30 rounded-lg px-3 py-2">
+                    <span className="text-white/50 text-sm">Default</span>
+                  </div>
+                </div>
+                <div className="border-2 border-dashed border-white/10 rounded-xl p-6 flex flex-col items-center text-center hover:border-white/20 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center mb-3">
+                    <FileUp className="w-5 h-5 text-white/20" />
+                  </div>
+                  <p className="text-white/40 text-sm font-medium">Drag & drop your report here</p>
+                  <p className="text-white/20 text-xs mt-1">or click to browse (.html)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── HOW IT WORKS ────────────────────────────────────── */}
+      <section className="py-20">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-3">Setup</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Up and running in 3 steps.</h2>
+          <p className="text-white/40 text-base mb-14 max-w-xl mx-auto">
+            No developer required. If you can drag a file, you can use MetaMetrics.
+          </p>
+          <div className="grid md:grid-cols-3 gap-5">
+            {[
+              { icon: Download, step: "01", title: "Download the EA", desc: "Get the pre-compiled MetaMetricsSync.ex5 from your dashboard. No coding. No compilation." },
+              { icon: Puzzle, step: "02", title: "Drop onto your chart", desc: "Open MT5, drag the file onto any chart. The EA installs and loads your full history instantly." },
+              { icon: ShieldCheck, step: "03", title: "Paste your API key", desc: "Copy your key from the dashboard, paste it in the EA Inputs tab. Your data is live." },
+            ].map(({ icon: Icon, step, title, desc }) => (
+              <div key={step} className="p-7 rounded-2xl border border-white/8 bg-[#161b22] text-left relative group hover:border-indigo-500/30 transition-colors">
+                <div className="absolute top-5 right-5 text-5xl font-black text-white/3 select-none">{step}</div>
+                <div className="w-11 h-11 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-5">
+                  <Icon className="w-5 h-5 text-indigo-400" />
+                </div>
+                <h3 className="text-white font-bold mb-2">{title}</h3>
+                <p className="text-white/40 text-sm leading-relaxed">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── PRICING ─────────────────────────────────────────── */}
+      <section className="py-20 border-t border-white/5 bg-[#0a0e14]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <p className="text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-3">Pricing</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">Simple, transparent pricing.</h2>
+            <p className="text-white/40">No hidden fees. Cancel anytime.</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* Monthly */}
-            <div className="p-8 rounded-2xl border border-white/10 bg-[#161b22] flex flex-col hover:border-white/20 transition-colors duration-300">
-              <p className="text-white/40 text-sm font-semibold uppercase tracking-widest mb-4">Monthly</p>
+            <div className="p-8 rounded-2xl border border-white/10 bg-[#161b22] flex flex-col hover:border-white/20 transition-colors">
+              <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-4">Monthly</p>
               <div className="flex items-end gap-2 mb-2">
                 <span className="text-5xl font-extrabold text-white">$9</span>
-                <span className="text-white/40 text-base mb-1.5">/month</span>
+                <span className="text-white/30 text-base mb-1.5">/month</span>
               </div>
-              <p className="text-white/30 text-sm mb-8">Billed monthly. Full access, cancel anytime.</p>
+              <p className="text-white/25 text-sm mb-8">Billed monthly. Cancel anytime.</p>
               <ul className="space-y-3 mb-8 flex-1">
-                {["Automatic EA Live-Sync", "Full Trade History Import", "MetaMetrics Score", "Time & Risk Analytics", "Long/Short Split Analysis", "Performance Calendar"].map(f => (
-                  <li key={f} className="flex items-center gap-3 text-white/60 text-sm">
-                    <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />
-                    {f}
+                {["Automatic EA Live-Sync", "Full Trade History Import", "MetaMetrics Score", "Time & Risk Analytics", "Long/Short Split Analysis", "Performance Calendar", "15 Key Dashboard Metrics"].map(f => (
+                  <li key={f} className="flex items-center gap-3 text-white/55 text-sm">
+                    <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />{f}
                   </li>
                 ))}
               </ul>
               <Link href="/signup">
-                <Button variant="outline" className="w-full h-12 text-base font-semibold border-white/10 text-white hover:bg-white/5 hover:border-white/20 rounded-xl bg-transparent">
-                  Get Started
+                <Button variant="outline" className="w-full h-12 font-semibold border-white/10 text-white hover:bg-white/5 hover:border-white/20 rounded-xl bg-transparent">
+                  Get Started — $9/mo
                 </Button>
               </Link>
             </div>
 
-            {/* Yearly — highlighted */}
+            {/* Yearly */}
             <div className="p-8 rounded-2xl border border-indigo-500/40 bg-gradient-to-b from-indigo-950/40 to-[#161b22] flex flex-col relative shadow-2xl shadow-indigo-500/10">
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-full tracking-wider">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-full tracking-wider whitespace-nowrap">
                 BEST VALUE — SAVE 27%
               </div>
-              <p className="text-indigo-400 text-sm font-semibold uppercase tracking-widest mb-4">Yearly</p>
+              <p className="text-indigo-400 text-xs font-bold uppercase tracking-widest mb-4">Yearly</p>
               <div className="flex items-end gap-2 mb-1">
                 <span className="text-5xl font-extrabold text-white">$79</span>
-                <span className="text-white/40 text-base mb-1.5">/year</span>
+                <span className="text-white/30 text-base mb-1.5">/year</span>
               </div>
-              <p className="text-white/30 text-sm mb-1">That&apos;s just <span className="text-indigo-400 font-semibold">$6.58/month</span>.</p>
+              <p className="text-white/30 text-sm mb-0.5">That&apos;s just <span className="text-indigo-400 font-semibold">$6.58/month</span>.</p>
               <p className="text-white/20 text-xs mb-8">Billed annually.</p>
               <ul className="space-y-3 mb-8 flex-1">
-                {["Automatic EA Live-Sync", "Full Trade History Import", "MetaMetrics Score", "Time & Risk Analytics", "Long/Short Split Analysis", "Performance Calendar"].map(f => (
+                {["Automatic EA Live-Sync", "Full Trade History Import", "MetaMetrics Score", "Time & Risk Analytics", "Long/Short Split Analysis", "Performance Calendar", "15 Key Dashboard Metrics"].map(f => (
                   <li key={f} className="flex items-center gap-3 text-white/80 text-sm">
-                    <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />
-                    {f}
+                    <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />{f}
                   </li>
                 ))}
               </ul>
               <Link href="/signup">
-                <Button className="w-full h-12 text-base font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-500/20">
+                <Button className="w-full h-12 font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-500/20">
                   Get Started — $79/yr
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
@@ -321,16 +511,17 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="py-24 border-t border-white/5">
+      {/* ─── FAQ ─────────────────────────────────────────────── */}
+      <section className="py-20 border-t border-white/5">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center text-white mb-10">Frequently Asked Questions</h2>
           <Accordion type="single" collapsible className="w-full space-y-2">
             {[
-              { q: "Do I need to import data manually?", a: "No. Our EA automatically fetches your full account history the moment you install it, and syncs new trades in real-time as they close." },
-              { q: "Is my trading data secure?", a: "Yes. We use encrypted API keys and secure storage via Supabase. We never ask for your MT5 password or broker credentials." },
+              { q: "Do I need to import data manually?", a: "No. Our EA automatically fetches your full account history the moment you install it, and syncs new trades in real-time as they close. Alternatively you can upload an HTML report in seconds." },
+              { q: "What if I already have years of trade history?", a: "No problem. The EA performs a full history scan on first load — every single trade, going back as far as your MT5 account has records." },
+              { q: "Is my trading data secure?", a: "Yes. We use encrypted API keys and Supabase for secure storage. We never ask for your MT5 password or broker credentials." },
               { q: "Does it work on Mac and Windows?", a: "Yes. The MetaMetricsSync.ex5 file works in all MetaTrader 5 terminals regardless of operating system." },
-              { q: "Can I cancel my subscription?", a: "Absolutely. You can cancel at any time from your account settings. No questions asked." },
+              { q: "Can I cancel my subscription?", a: "Absolutely. Cancel at any time from your account settings. No questions asked, no cancellation fees." },
             ].map(({ q, a }) => (
               <AccordionItem key={q} value={q} className="border border-white/8 rounded-xl px-6 bg-[#161b22]">
                 <AccordionTrigger className="text-base font-semibold text-white/80 hover:text-white py-5 hover:no-underline">
@@ -345,9 +536,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA Banner */}
+      {/* ─── CTA BANNER ──────────────────────────────────────── */}
       <section className="py-20 px-4">
-        <div className="max-w-3xl mx-auto rounded-3xl border border-indigo-500/20 bg-gradient-to-br from-indigo-950/60 to-purple-950/30 p-12 text-center relative overflow-hidden">
+        <div className="max-w-3xl mx-auto rounded-3xl border border-indigo-500/20 bg-gradient-to-br from-indigo-950/60 to-purple-950/20 p-12 text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/5 to-purple-600/5" />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-indigo-500/10 blur-3xl rounded-full" />
           <div className="relative z-10">
@@ -367,7 +558,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
+      {/* ─── FOOTER ──────────────────────────────────────────── */}
       <footer className="py-10 border-t border-white/5 text-center">
         <p className="text-white/20 text-sm">&copy; {new Date().getFullYear()} MetaMetrics. All rights reserved.</p>
       </footer>
