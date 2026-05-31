@@ -65,17 +65,17 @@ export function TradingCalendar({ data, availableSymbols = [], rawTrades = [] }:
       <div className="flex items-center justify-between mb-4">
         <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Performance Calendar (P&L)</span>
         
-        <div className="flex bg-background rounded p-1 border border-border">
+         <div className="flex bg-background rounded p-1 border border-border">
            <button 
              onClick={() => setDisplayMode('$')}
-             className={`flex items-center justify-center p-1 rounded transition-colors ${displayMode === '$' ? 'bg-muted text-emerald-400' : 'text-slate-500 hover:text-white'}`}
+             className={`flex items-center justify-center p-1 rounded transition-colors ${displayMode === '$' ? 'bg-muted text-emerald-400' : 'text-muted-foreground hover:text-foreground'}`}
              title="Show in Dollars"
            >
              <DollarSign className="w-3.5 h-3.5" />
            </button>
            <button 
              onClick={() => setDisplayMode('%')}
-             className={`flex items-center justify-center p-1 rounded transition-colors ${displayMode === '%' ? 'bg-muted text-emerald-400' : 'text-slate-500 hover:text-white'}`}
+             className={`flex items-center justify-center p-1 rounded transition-colors ${displayMode === '%' ? 'bg-muted text-emerald-400' : 'text-muted-foreground hover:text-foreground'}`}
              title="Show in Percent"
            >
              <Percent className="w-3.5 h-3.5" />
@@ -85,13 +85,13 @@ export function TradingCalendar({ data, availableSymbols = [], rawTrades = [] }:
 
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <button onClick={handlePrevMonth} className="text-slate-400 hover:text-white transition-colors">
+          <button onClick={handlePrevMonth} className="text-muted-foreground hover:text-foreground transition-colors">
             <ChevronLeft className="w-4 h-4" />
           </button>
-          <span className="text-sm font-medium text-white min-w-[80px] text-center">
+          <span className="text-sm font-medium text-foreground min-w-[80px] text-center">
              {mounted ? `${monthName} ${year}` : '...'}
           </span>
-          <button onClick={handleNextMonth} className="text-slate-400 hover:text-white transition-colors">
+          <button onClick={handleNextMonth} className="text-muted-foreground hover:text-foreground transition-colors">
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
@@ -100,7 +100,7 @@ export function TradingCalendar({ data, availableSymbols = [], rawTrades = [] }:
       <div className="flex-1 flex flex-col min-h-0">
         <div className="grid grid-cols-8 mb-2">
           {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Week'].map(d => (
-            <div key={d} className={`text-center text-xs font-medium ${d === 'Week' ? 'text-slate-500' : 'text-slate-400'} py-1`}>
+            <div key={d} className={`text-center text-xs font-medium ${d === 'Week' ? 'text-muted-foreground opacity-70' : 'text-muted-foreground'} py-1`}>
               {d}
             </div>
           ))}
@@ -148,14 +148,14 @@ export function TradingCalendar({ data, availableSymbols = [], rawTrades = [] }:
                           }
                         }}
                       >
-                       <span className={`text-sm ${d.isCurrentMonth ? 'text-slate-200' : 'text-slate-600'}`}>{d.day}</span>
+                       <span className={`text-sm ${d.isCurrentMonth ? 'text-foreground' : 'text-muted-foreground opacity-50'}`}>{d.day}</span>
                        {d.pnl !== null && (
                          <span className={`text-xs font-bold ${isWin ? 'text-emerald-500' : 'text-rose-500'}`}>
                            {isWin ? '+' : '-'}{displayMode === '$' ? '$' : ''}{Math.abs(displayVal || 0).toFixed(2)}{displayMode === '%' ? '%' : ''}
                          </span>
                        )}
                        {d.trades > 0 && (
-                         <span className="text-[10px] text-slate-400/80 mt-0.5">{d.trades} {d.trades === 1 ? 'trade' : 'trades'}</span>
+                         <span className="text-[10px] text-muted-foreground mt-0.5">{d.trades} {d.trades === 1 ? 'trade' : 'trades'}</span>
                        )}
                      </div>
                    )
@@ -168,10 +168,10 @@ export function TradingCalendar({ data, availableSymbols = [], rawTrades = [] }:
                        <span className={`text-[13px] font-bold ${isWeekWin ? 'text-emerald-500' : 'text-rose-500'}`}>
                           {isWeekWin ? '+' : '-'}{displayMode === '$' ? '$' : ''}{Math.abs(weekDisplayVal).toFixed(displayMode === '$' ? 0 : 2)}{displayMode === '%' ? '%' : ''}
                        </span>
-                       <span className="text-[10px] text-slate-400/80 mt-0.5">{weekTrades} trades</span>
+                       <span className="text-[10px] text-muted-foreground mt-0.5">{weekTrades} trades</span>
                      </>
                    ) : (
-                     <span className="text-[11px] text-slate-600">-</span>
+                     <span className="text-[11px] text-muted-foreground opacity-50">-</span>
                    )}
                  </div>
                </div>

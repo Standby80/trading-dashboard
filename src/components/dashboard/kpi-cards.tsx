@@ -65,7 +65,7 @@ export function KPICards({ data }: { data?: any }) {
       <Card className="bg-card border-border rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
         <CardContent className="p-4 flex flex-col h-full z-10">
           <span className="text-xs text-slate-400 mb-2 font-medium">Profit Factor</span>
-          <div className="text-2xl font-bold text-white">
+          <div className="text-2xl font-bold text-foreground">
             {kpi.profitFactor?.toFixed(2) || '0.00'}
           </div>
           <span className="text-[10px] text-emerald-500 mt-1">Good</span>
@@ -79,7 +79,7 @@ export function KPICards({ data }: { data?: any }) {
       <Card className="bg-card border-border rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
         <CardContent className="p-4 flex flex-col h-full z-10">
           <span className="text-xs text-slate-400 mb-2 font-medium">Win Rate</span>
-          <div className="text-2xl font-bold text-white">
+          <div className="text-2xl font-bold text-foreground">
             {winRateVal.toFixed(2)}%
           </div>
           <span className="text-[10px] text-emerald-500 mt-1">+4.1% vs previous</span>
@@ -93,7 +93,7 @@ export function KPICards({ data }: { data?: any }) {
       <Card className="bg-card border-border rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
         <CardContent className="p-4 flex flex-col h-full z-10">
           <span className="text-xs text-slate-400 mb-2 font-medium">Expectancy (R)</span>
-          <div className="text-2xl font-bold text-white">
+          <div className="text-2xl font-bold text-foreground">
             {kpi.expectancy?.toFixed(2) || '0.00'}
           </div>
           <span className="text-[10px] text-emerald-500 mt-1">Strong</span>
