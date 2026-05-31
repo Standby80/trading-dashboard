@@ -77,6 +77,7 @@ int OnInit()
          ResetLastError();
          int res = WebRequest("POST", InpServerUrl, headers, 5000, data, result, result_headers);
          Print("MetaMetrics: Synced ", added, " historical trades. Response code: ", res);
+         Print("Server Response: ", CharArrayToString(result));
       }
       else
       {

@@ -168,7 +168,14 @@ export async function POST(request: Request) {
       
       console.log(`Live Sync: Mottog ${parsedTrades.length} st trades, sparade ${newTradesToInsert.length} st nya trades.`);
 
-      return NextResponse.json({ success: true, message: `Live trade(s) synkad(e)! (${newTradesToInsert.length} nya sparade)` }, { headers: corsHeaders });
+      return NextResponse.json({ 
+          success: true, 
+          message: `Live trade(s) synkad(e)! (${newTradesToInsert.length} nya sparade)`,
+          debug: {
+              rawTrade0: rawTrades[0],
+              parsedTrade0: parsedTrades[0]
+          }
+      }, { headers: corsHeaders });
     }
 
     // ==========================================
