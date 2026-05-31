@@ -37,6 +37,16 @@ export async function DELETE(request: Request) {
       .eq('user_id', user.id)
       .eq('account_name', accountName);
 
+    // If it's an MT5 account, delete it from mt5_accounts
+    if (accountName.startsWith('MT5 - ')) {
+      const accountNumber = accountName.replace('MT5 - ', '');
+      await supabase
+        .from('mt5_accounts')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('account_number', accountNumber);
+    }
+
     // Clear the cache
     if (redis) {
       const keys = await redis.keys(`dashboard_data_*${user.id}*`);
