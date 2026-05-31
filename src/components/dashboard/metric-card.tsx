@@ -70,8 +70,8 @@ export function MetricCard({
   tooltip?: string
 }) {
   const color = trend === 'positive' ? '#10b981' : trend === 'negative' ? '#f43f5e' : '#64748b';
-  const valColorClass = valueColor ? valueColor : (trend === 'positive' ? 'text-emerald-500' : trend === 'negative' ? 'text-rose-500' : 'text-white');
-  const subtextColor = trend === 'positive' ? 'text-emerald-500' : trend === 'negative' ? 'text-rose-500' : 'text-slate-400';
+  const valColorClass = valueColor ? valueColor : (trend === 'positive' ? 'text-emerald-500' : trend === 'negative' ? 'text-rose-500' : 'text-foreground');
+  const subtextColor = trend === 'positive' ? 'text-emerald-500' : trend === 'negative' ? 'text-rose-500' : 'text-muted-foreground';
 
   return (
     <Card className="bg-card border-border rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between h-full">
