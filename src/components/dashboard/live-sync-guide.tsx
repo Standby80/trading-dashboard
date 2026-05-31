@@ -46,10 +46,10 @@ export default function LiveSyncGuide() {
               <p className="text-sm text-foreground">
                 Start by downloading our custom sync script (Expert Advisor) to your computer.
               </p>
-              <a href="/api/download/ex5" download>
-                <Button className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white gap-2">
+              <a href="/api/download/mq5" download>
+                <Button className="mt-4 gap-2 bg-[#F97316] hover:bg-[#F97316]/90 text-white">
                   <Download className="w-4 h-4" />
-                  Download MetaMetricsSync.ex5
+                  Ladda ner MetaMetricsSync.mq5
                 </Button>
               </a>
             </div>

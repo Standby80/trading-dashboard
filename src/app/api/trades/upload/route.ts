@@ -268,6 +268,45 @@ export async function POST(request: Request) {
       }
 
       if (cells.length >= 13) {
+        const typeStr = cells[3]?.toLowerCase();
+        const posIdNum = parseInt(cells[1]);
+        
+        // Kolla om det är en rad från POSITIONS-tabellen
+        if (!isNaN(posIdNum) && (typeStr === 'buy' || typeStr === 'sell') && cells[2].length > 2) {
+            const openTimeStr = formatDateTime(cells[0]);
+            const closeTimeStr = formatDateTime(cells[8]);
+            
+            const openTimestamp = new Date(openTimeStr.replace(/\./g, '/')).getTime();
+            const closeTimestamp = new Date(closeTimeStr.replace(/\./g, '/')).getTime();
+            let holdTimeMins = 0;
+            if (!isNaN(openTimestamp) && !isNaN(closeTimestamp)) {
+                holdTimeMins = Math.max(0, Math.floor((closeTimestamp - openTimestamp) / 1000 / 60));
+            }
+
+            const commission = parseCleanNumber(cells[10]);
+            const swap = parseCleanNumber(cells[11]);
+            const profit = parseCleanNumber(cells[12]);
+            const netProfit = parseFloat((profit + commission + swap).toFixed(2));
+            
+            trades.push({
+                ticket_id: cells[1],
+                user_id: user.id,
+                account_name: accountName,
+                symbol: cells[2].replace('.', ''),
+                type: typeStr.toUpperCase(),
+                open_time: openTimeStr,
+                close_time: closeTimeStr,
+                commission,
+                swap,
+                profit: netProfit,
+                volume: parseCleanNumber(cells[4]),
+                hold_time_mins: holdTimeMins,
+                open_price: parseCleanNumber(cells[5]),
+                close_price: parseCleanNumber(cells[9])
+            });
+            continue; // Gå vidare till nästa rad, vi behöver inte parsa Deals om Positions funkar
+        }
+
         const direction = cells[4]?.toLowerCase();
         
         // Om det är startinsättningen, spara den som DEPOSIT, ignorera
