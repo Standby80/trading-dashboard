@@ -1,9 +1,12 @@
 #property copyright "MetaMetrics"
-#property version   "1.02"
+#property version   "1.03"
 #property description "Real-time Live Sync for MetaMetrics Dashboard"
 
 input string InpApiKey    = "DIN_API_NYCKEL_HAR";
 input string InpServerUrl = "PLACEHOLDER_SERVER_URL/api/trades/upload";
+input int    InpTimerSec  = 30;
+
+datetime g_last_sync = 0;
 
 struct DealData
 {
@@ -22,16 +25,36 @@ struct DealData
 
 int OnInit()
 {
-   Print("MetaMetrics EA: Startar historik-synk...");
+   g_last_sync = 0;
+   EventSetTimer(InpTimerSec);
+   Print("MetaMetrics EA v1.03: Initierad. Synkar historik nu...");
+   SyncTrades(0, TimeCurrent());
+   return(INIT_SUCCEEDED);
+}
 
-   if(!HistorySelect(0, TimeCurrent()))
+void OnDeinit(const int reason)
+{
+   EventKillTimer();
+}
+
+void OnTimer()
+{
+   datetime from = (g_last_sync > 0) ? g_last_sync - 60 : 0;
+   SyncTrades(from, TimeCurrent());
+}
+
+void OnTick() {}
+
+void SyncTrades(datetime from, datetime to)
+{
+   if(!HistorySelect(from, to))
    {
-      Print("MetaMetrics EA: Kunde inte lasa historik!");
-      return(INIT_SUCCEEDED);
+      Print("MetaMetrics EA: Kunde inte valja historik!");
+      return;
    }
 
    int total = HistoryDealsTotal();
-   Print("MetaMetrics EA: Hittade ", total, " deals totalt i historiken.");
+   if(total == 0) return;
 
    DealData deals[];
    int deal_count = 0;
@@ -64,19 +87,18 @@ int OnInit()
       deal_count++;
    }
 
-   Print("MetaMetrics EA: Hittade ", deal_count, " avslutade positioner. Hamtar oppningspriser...");
+   if(deal_count == 0) return;
 
    for(int i = 0; i < deal_count; i++)
    {
       if(HistorySelectByPosition(deals[i].position_id))
       {
-         int pos_deals = HistoryDealsTotal();
-         for(int j = 0; j < pos_deals; j++)
+         int pos_total = HistoryDealsTotal();
+         for(int j = 0; j < pos_total; j++)
          {
             ulong pos_ticket = HistoryDealGetTicket(j);
             if(pos_ticket == 0) continue;
-            long pos_entry = HistoryDealGetInteger(pos_ticket, DEAL_ENTRY);
-            if(pos_entry == DEAL_ENTRY_IN)
+            if(HistoryDealGetInteger(pos_ticket, DEAL_ENTRY) == DEAL_ENTRY_IN)
             {
                datetime open_time = (datetime)HistoryDealGetInteger(pos_ticket, DEAL_TIME);
                deals[i].open_time_str = TimeToString(open_time, TIME_DATE|TIME_MINUTES|TIME_SECONDS);
@@ -87,98 +109,33 @@ int OnInit()
       }
    }
 
-   if(deal_count == 0)
-   {
-      Print("MetaMetrics EA: Inga avslutade positioner att synka.");
-      return(INIT_SUCCEEDED);
-   }
-
-   string json = "{\"apiKey\":\"" + InpApiKey + "\",\"account_number\":\"" + IntegerToString(AccountInfoInteger(ACCOUNT_LOGIN)) + "\",\"broker_name\":\"" + AccountInfoString(ACCOUNT_COMPANY) + "\",\"trades\":[";
+   string json = "{\"apiKey\":\"" + InpApiKey + "\",\"account_number\":\"" +
+                 IntegerToString(AccountInfoInteger(ACCOUNT_LOGIN)) +
+                 "\",\"broker_name\":\"" + AccountInfoString(ACCOUNT_COMPANY) +
+                 "\",\"trades\":[";
 
    for(int i = 0; i < deal_count; i++)
    {
-      string tradeJson = StringFormat(
+      string t = StringFormat(
          "{\"positionId\":\"%I64u\",\"symbol\":\"%s\",\"type\":\"%s\",\"volume\":%.2f,\"openTime\":\"%s\",\"closeTime\":\"%s\",\"commission\":%.2f,\"swap\":%.2f,\"grossProfit\":%.2f,\"openPrice\":%.5f,\"closePrice\":%.5f}",
          deals[i].position_id, deals[i].symbol, deals[i].type_str, deals[i].volume,
          deals[i].open_time_str, deals[i].close_time_str,
          deals[i].commission, deals[i].swap, deals[i].profit,
-         deals[i].open_price, deals[i].close_price
-      );
+         deals[i].open_price, deals[i].close_price);
       if(i > 0) json += ",";
-      json += tradeJson;
+      json += t;
    }
    json += "]}";
 
-   Print("MetaMetrics EA: Skickar bulk-historik till servern (", deal_count, " st trades)...");
+   Print("MetaMetrics EA: Skickar ", deal_count, " trades...");
 
    string headers = "Content-Type: application/json\r\n";
    char data[]; char result[]; string result_headers;
    StringToCharArray(json, data, 0, StringLen(json), CP_UTF8);
    ResetLastError();
    int res = WebRequest("POST", InpServerUrl, headers, 10000, data, result, result_headers);
-   Print("MetaMetrics EA: Bulk Sync Svar-kod = ", res);
-   Print("MetaMetrics EA: Server-svar = ", CharArrayToString(result));
+   Print("MetaMetrics EA: Svar-kod = ", res);
 
-   return(INIT_SUCCEEDED);
-}
-
-void OnTradeTransaction(const MqlTradeTransaction& trans, const MqlTradeOrder& order, const MqlTradeProperties& props)
-{
-   if(trans.type == TRADE_TRANSACTION_DEAL_ADD)
-   {
-      ulong deal_ticket = trans.deal;
-      if(!HistoryDealSelect(deal_ticket)) return;
-
-      long entry = HistoryDealGetInteger(deal_ticket, DEAL_ENTRY);
-      if(entry != DEAL_ENTRY_OUT && entry != DEAL_ENTRY_INOUT) return;
-
-      ulong position_id  = (ulong)HistoryDealGetInteger(deal_ticket, DEAL_POSITION_ID);
-      string symbol      = HistoryDealGetString(deal_ticket, DEAL_SYMBOL);
-      double profit      = HistoryDealGetDouble(deal_ticket, DEAL_PROFIT);
-      double commission  = HistoryDealGetDouble(deal_ticket, DEAL_COMMISSION);
-      double swap        = HistoryDealGetDouble(deal_ticket, DEAL_SWAP);
-      double volume      = HistoryDealGetDouble(deal_ticket, DEAL_VOLUME);
-      double close_price = HistoryDealGetDouble(deal_ticket, DEAL_PRICE);
-
-      long deal_type = HistoryDealGetInteger(deal_ticket, DEAL_TYPE);
-      string type_str = (deal_type == DEAL_TYPE_BUY) ? "SELL" : "BUY";
-
-      datetime close_time = (datetime)HistoryDealGetInteger(deal_ticket, DEAL_TIME);
-      string close_time_str = TimeToString(close_time, TIME_DATE|TIME_MINUTES|TIME_SECONDS);
-
-      string open_time_str = close_time_str;
-      double open_price    = 0.0;
-
-      if(HistorySelectByPosition(position_id))
-      {
-         int pos_deals = HistoryDealsTotal();
-         for(int j = 0; j < pos_deals; j++)
-         {
-            ulong pos_ticket = HistoryDealGetTicket(j);
-            if(pos_ticket == 0) continue;
-            long pos_entry = HistoryDealGetInteger(pos_ticket, DEAL_ENTRY);
-            if(pos_entry == DEAL_ENTRY_IN)
-            {
-               datetime open_time = (datetime)HistoryDealGetInteger(pos_ticket, DEAL_TIME);
-               open_time_str = TimeToString(open_time, TIME_DATE|TIME_MINUTES|TIME_SECONDS);
-               open_price    = HistoryDealGetDouble(pos_ticket, DEAL_PRICE);
-               break;
-            }
-         }
-      }
-
-      string json = StringFormat(
-         "{\"apiKey\":\"%s\",\"account_number\":\"%d\",\"broker_name\":\"%s\",\"positionId\":\"%I64u\",\"symbol\":\"%s\",\"type\":\"%s\",\"volume\":%.2f,\"openTime\":\"%s\",\"closeTime\":\"%s\",\"commission\":%.2f,\"swap\":%.2f,\"grossProfit\":%.2f,\"openPrice\":%.5f,\"closePrice\":%.5f}",
-         InpApiKey, AccountInfoInteger(ACCOUNT_LOGIN), AccountInfoString(ACCOUNT_COMPANY),
-         position_id, symbol, type_str, volume,
-         open_time_str, close_time_str, commission, swap, profit, open_price, close_price
-      );
-
-      string headers = "Content-Type: application/json\r\n";
-      char data[]; char result[]; string result_headers;
-      StringToCharArray(json, data, 0, StringLen(json), CP_UTF8);
-      ResetLastError();
-      int res = WebRequest("POST", InpServerUrl, headers, 5000, data, result, result_headers);
-      Print("MetaMetrics EA: Live trade synkad. Svar-kod = ", res);
-   }
+   if(res == 200)
+      g_last_sync = TimeCurrent();
 }
