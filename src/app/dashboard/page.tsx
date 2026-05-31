@@ -43,7 +43,7 @@ export default async function DashboardPage({
   const isConnected = !!data;
 
   return (
-    <div className="flex h-screen bg-background text-slate-50 overflow-hidden font-sans">
+    <div className="flex h-screen bg-background text-foreground overflow-hidden font-sans">
       
       {/* Sidebar - Hidden on mobile, handled by AppSidebar component */}
       <div className="hidden md:block">
