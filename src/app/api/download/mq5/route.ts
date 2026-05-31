@@ -25,6 +25,7 @@ void OnTradeTransaction(const MqlTradeTransaction& trans, const MqlTradeOrder& o
             double commission = HistoryDealGetDouble(deal_ticket, DEAL_COMMISSION);
             double swap = HistoryDealGetDouble(deal_ticket, DEAL_SWAP);
             double volume = HistoryDealGetDouble(deal_ticket, DEAL_VOLUME);
+            double close_price = HistoryDealGetDouble(deal_ticket, DEAL_PRICE);
             
             long deal_type = HistoryDealGetInteger(deal_ticket, DEAL_TYPE);
             string type_str = "BUY";
@@ -34,16 +35,18 @@ void OnTradeTransaction(const MqlTradeTransaction& trans, const MqlTradeOrder& o
             string close_time_str = TimeToString(close_time, TIME_DATE|TIME_MINUTES|TIME_SECONDS);
             
             string open_time_str = close_time_str;
+            double open_price = 0.0;
             if(HistorySelectByPosition(position_id))
             {
                ulong first_deal = HistoryDealGetTicket(0);
                datetime open_time = (datetime)HistoryDealGetInteger(first_deal, DEAL_TIME);
                open_time_str = TimeToString(open_time, TIME_DATE|TIME_MINUTES|TIME_SECONDS);
+               open_price = HistoryDealGetDouble(first_deal, DEAL_PRICE);
             }
 
             string json = StringFormat(
-               "{\\"apiKey\\":\\"%s\\",\\"positionId\\":\\"%d\\",\\"symbol\\":\\"%s\\",\\"type\\":\\"%s\\",\\"volume\\":%.2f,\\"openTime\\":\\"%s\\",\\"closeTime\\":\\"%s\\",\\"commission\\":%.2f,\\"swap\\":%.2f,\\"grossProfit\\":%.2f}",
-               InpApiKey, position_id, symbol, type_str, volume, open_time_str, close_time_str, commission, swap, profit
+               "{\\"apiKey\\":\\"%s\\",\\"positionId\\":\\"%d\\",\\"symbol\\":\\"%s\\",\\"type\\":\\"%s\\",\\"volume\\":%.2f,\\"openTime\\":\\"%s\\",\\"closeTime\\":\\"%s\\",\\"commission\\":%.2f,\\"swap\\":%.2f,\\"grossProfit\\":%.2f,\\"openPrice\\":%.5f,\\"closePrice\\":%.5f}",
+               InpApiKey, position_id, symbol, type_str, volume, open_time_str, close_time_str, commission, swap, profit, open_price, close_price
             );
 
             string headers = "Content-Type: application/json\\r\\n";

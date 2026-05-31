@@ -83,7 +83,9 @@ export async function POST(req: Request) {
       ...t,
       user_id: userProfile.id,
       mt5_account_id: mt5_account_id || t.mt5_account_id,
-      account_name: account_name
+      account_name: account_name,
+      open_price: t.openPrice || t.open_price || 0,
+      close_price: t.closePrice || t.close_price || 0
     }));
 
     // Insert to database (upsert by ticket_id and user_id to avoid duplicates)

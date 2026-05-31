@@ -128,8 +128,8 @@ export async function POST(request: Request) {
               commission: t.commission || 0,
               swap: t.swap || 0,
               profit: netProfit,
-              open_price: 0,
-              close_price: 0
+              open_price: t.openPrice || 0,
+              close_price: t.closePrice || 0
           };
       });
 
