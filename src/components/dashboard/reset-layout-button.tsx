@@ -14,7 +14,7 @@ export function ResetLayoutButton() {
   return (
     <button 
       onClick={resetLayout}
-      className="w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
+      className="w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-sm font-medium text-foreground hover:text-foreground hover:bg-white/5 transition-colors"
     >
       <LayoutGrid className="w-4 h-4 shrink-0" />
       Reset Layout

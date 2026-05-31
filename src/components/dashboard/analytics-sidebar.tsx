@@ -50,11 +50,11 @@ export function AnalyticsSidebar({ cumulativeData, kpis }: { cumulativeData?: an
       {/* MetaMetrics Score / Radar Chart */}
       <Card className="bg-transparent border-transparent rounded-xl shadow-none flex-1 flex flex-col h-full min-h-0">
         <CardHeader className="pb-0 pt-5 px-5 shrink-0">
-          <CardTitle className="text-sm font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+          <CardTitle className="text-sm font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
             {t('metaMetricsScore')}
             <UITooltip>
-              <TooltipTrigger className="outline-none"><Info className="w-4 h-4 text-slate-500 cursor-pointer" /></TooltipTrigger>
-              <TooltipContent className="bg-[#1e293b] text-white border-border"><p>{t('metaMetricsTooltip')}</p></TooltipContent>
+              <TooltipTrigger className="outline-none"><Info className="w-4 h-4 text-muted-foreground cursor-pointer" /></TooltipTrigger>
+              <TooltipContent className="bg-[#1e293b] text-foreground border-border"><p>{t('metaMetricsTooltip')}</p></TooltipContent>
             </UITooltip>
           </CardTitle>
         </CardHeader>
@@ -79,14 +79,14 @@ export function AnalyticsSidebar({ cumulativeData, kpis }: { cumulativeData?: an
           </div>
           
           <div className="mt-4 shrink-0">
-            <div className="text-xs text-slate-400 mb-1">{t('metaMetricsScore')}</div>
+            <div className="text-xs text-muted-foreground mb-1">{t('metaMetricsScore')}</div>
             <div className="flex items-end justify-between">
-              <div className="text-3xl font-semibold text-white">{metaMetricsScore.toFixed(2)}</div>
+              <div className="text-3xl font-semibold text-foreground">{metaMetricsScore.toFixed(2)}</div>
             </div>
             <div className="w-full h-1.5 rounded-full mt-3 bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-500 relative">
                <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white border-2 border-[#131823] rounded-full" style={{ left: `${metaMetricsScore}%` }}></div>
             </div>
-            <div className="flex justify-between mt-2 text-[10px] text-slate-500">
+            <div className="flex justify-between mt-2 text-[10px] text-muted-foreground">
               <span>0</span>
               <span>20</span>
               <span>40</span>

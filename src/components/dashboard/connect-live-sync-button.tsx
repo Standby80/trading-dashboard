@@ -21,7 +21,7 @@ export function ConnectLiveSyncButton({ profile, trigger }: { profile?: any, tri
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger 
         render={trigger || (
-          <button className="w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+          <button className="w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-sm font-medium text-foreground hover:text-foreground hover:bg-white/5 transition-colors">
             {isPremium ? (
               <span className="relative flex h-2 w-2 shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>

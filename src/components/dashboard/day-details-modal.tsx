@@ -90,7 +90,7 @@ export function DayDetailsModal({ isOpen, onClose, date, trades }: DayDetailsMod
             {/* Chart Area */}
             <div className="lg:col-span-3 bg-card rounded-xl border border-border p-5 relative">
               <div className="mb-4">
-                <span className="text-sm font-semibold text-slate-400 mr-2">Day P/L</span>
+                <span className="text-sm font-semibold text-muted-foreground mr-2">Day P/L</span>
                 <span className={`text-xl font-bold ${isPositiveDay ? 'text-emerald-400' : 'text-rose-500'}`}>
                   {isPositiveDay ? '+' : ''}${totalProfit.toFixed(2)}
                 </span>
@@ -133,19 +133,19 @@ export function DayDetailsModal({ isOpen, onClose, date, trades }: DayDetailsMod
             {/* Metrics Sidebar */}
             <div className="flex flex-col gap-4">
               <div className="bg-card rounded-xl border border-border p-4 flex flex-col justify-center">
-                <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Total Trades</div>
-                <div className="text-xl font-bold text-white">{totalTrades}</div>
+                <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-1">Total Trades</div>
+                <div className="text-xl font-bold text-foreground">{totalTrades}</div>
               </div>
               <div className="bg-card rounded-xl border border-border p-4 flex flex-col justify-center">
-                <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Win Rate %</div>
-                <div className="text-xl font-bold text-white">{winRate.toFixed(1)}%</div>
+                <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-1">Win Rate %</div>
+                <div className="text-xl font-bold text-foreground">{winRate.toFixed(1)}%</div>
               </div>
               <div className="bg-card rounded-xl border border-border p-4 flex flex-col justify-center">
-                <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Average Win</div>
+                <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-1">Average Win</div>
                 <div className="text-xl font-bold text-emerald-400">+${avgWin.toFixed(2)}</div>
               </div>
               <div className="bg-card rounded-xl border border-border p-4 flex flex-col justify-center">
-                <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Average Loss</div>
+                <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-1">Average Loss</div>
                 <div className="text-xl font-bold text-rose-500">${avgLoss.toFixed(2)}</div>
               </div>
             </div>
@@ -153,9 +153,9 @@ export function DayDetailsModal({ isOpen, onClose, date, trades }: DayDetailsMod
 
           {/* Trades List */}
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Trade History</h4>
+            <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2">Trade History</h4>
             {processedTrades.length === 0 ? (
-              <div className="text-center py-8 text-slate-500 bg-card rounded-xl border border-border">
+              <div className="text-center py-8 text-muted-foreground bg-card rounded-xl border border-border">
                 No trades recorded for this day.
               </div>
             ) : (
@@ -172,10 +172,10 @@ export function DayDetailsModal({ isOpen, onClose, date, trades }: DayDetailsMod
                           {isWin ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                         </div>
                         <div>
-                          <div className="font-semibold text-slate-200">{trade.symbol}</div>
-                          <div className="text-xs text-slate-400 mt-0.5 flex gap-3">
-                            <span>Entry: <span className="text-slate-300 font-mono">{trade.open_price}</span></span>
-                            <span>Exit: <span className="text-slate-300 font-mono">{trade.close_price}</span></span>
+                          <div className="font-semibold text-foreground">{trade.symbol}</div>
+                          <div className="text-xs text-muted-foreground mt-0.5 flex gap-3">
+                            <span>Entry: <span className="text-foreground font-mono">{trade.open_price}</span></span>
+                            <span>Exit: <span className="text-foreground font-mono">{trade.close_price}</span></span>
                           </div>
                         </div>
                       </div>
@@ -185,7 +185,7 @@ export function DayDetailsModal({ isOpen, onClose, date, trades }: DayDetailsMod
                           <div className={`text-lg font-bold font-mono ${isWin ? 'text-emerald-400' : 'text-rose-500'}`}>
                             {isWin ? '+' : ''}${trade.netProfit.toFixed(2)}
                           </div>
-                          <div className="text-[10px] text-slate-500">
+                          <div className="text-[10px] text-muted-foreground">
                             {new Date(trade.open_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(trade.close_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </div>
                         </div>

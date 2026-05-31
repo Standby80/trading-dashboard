@@ -50,7 +50,7 @@ export function KPICards({ data }: { data?: any }) {
       {/* Net P&L */}
       <Card className="bg-card border-border rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
         <CardContent className="p-4 flex flex-col h-full z-10">
-          <span className="text-xs text-slate-400 mb-2 font-medium">Net P&L</span>
+          <span className="text-xs text-muted-foreground mb-2 font-medium">Net P&L</span>
           <div className={`text-2xl font-bold ${isProfit ? 'text-emerald-500' : 'text-rose-500'}`}>
             ${Math.abs(totalNetProfit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
@@ -64,7 +64,7 @@ export function KPICards({ data }: { data?: any }) {
       {/* Profit Factor */}
       <Card className="bg-card border-border rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
         <CardContent className="p-4 flex flex-col h-full z-10">
-          <span className="text-xs text-slate-400 mb-2 font-medium">Profit Factor</span>
+          <span className="text-xs text-muted-foreground mb-2 font-medium">Profit Factor</span>
           <div className="text-2xl font-bold text-foreground">
             {kpi.profitFactor?.toFixed(2) || '0.00'}
           </div>
@@ -78,7 +78,7 @@ export function KPICards({ data }: { data?: any }) {
       {/* Win Rate */}
       <Card className="bg-card border-border rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
         <CardContent className="p-4 flex flex-col h-full z-10">
-          <span className="text-xs text-slate-400 mb-2 font-medium">Win Rate</span>
+          <span className="text-xs text-muted-foreground mb-2 font-medium">Win Rate</span>
           <div className="text-2xl font-bold text-foreground">
             {winRateVal.toFixed(2)}%
           </div>
@@ -92,7 +92,7 @@ export function KPICards({ data }: { data?: any }) {
       {/* Expectancy (R) */}
       <Card className="bg-card border-border rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
         <CardContent className="p-4 flex flex-col h-full z-10">
-          <span className="text-xs text-slate-400 mb-2 font-medium">Expectancy (R)</span>
+          <span className="text-xs text-muted-foreground mb-2 font-medium">Expectancy (R)</span>
           <div className="text-2xl font-bold text-foreground">
             {kpi.expectancy?.toFixed(2) || '0.00'}
           </div>
@@ -106,7 +106,7 @@ export function KPICards({ data }: { data?: any }) {
       {/* Wins vs Losses */}
       <Card className="bg-card border-border rounded-xl shadow-none overflow-hidden flex flex-col justify-between">
         <CardContent className="p-4 flex flex-col h-full justify-between">
-          <span className="text-xs text-slate-400 font-medium">Wins vs Losses</span>
+          <span className="text-xs text-muted-foreground font-medium">Wins vs Losses</span>
           <div className="flex justify-between items-end mt-2">
             <span className="text-xl font-bold text-emerald-500">{winRateVal.toFixed(0)}%</span>
             <span className="text-xl font-bold text-rose-500">{(100 - winRateVal).toFixed(0)}%</span>
@@ -116,8 +116,8 @@ export function KPICards({ data }: { data?: any }) {
             <div className="bg-rose-500 h-full" style={{ width: `${100 - winRateVal}%` }}></div>
           </div>
           <div className="flex justify-between mt-auto">
-             <span className="text-[10px] text-slate-400"><span className="text-emerald-500">${totalWinDol.toLocaleString(undefined, {maximumFractionDigits:0})}</span> Wins</span>
-             <span className="text-[10px] text-slate-400"><span className="text-rose-500">${totalLossDol.toLocaleString(undefined, {maximumFractionDigits:0})}</span> Losses</span>
+             <span className="text-[10px] text-muted-foreground"><span className="text-emerald-500">${totalWinDol.toLocaleString(undefined, {maximumFractionDigits:0})}</span> Wins</span>
+             <span className="text-[10px] text-muted-foreground"><span className="text-rose-500">${totalLossDol.toLocaleString(undefined, {maximumFractionDigits:0})}</span> Losses</span>
           </div>
         </CardContent>
       </Card>

@@ -37,7 +37,7 @@ export function LiveSyncIndicator({ currentAccount }: { currentAccount: string }
       
       <button 
         onClick={handleRefresh}
-        className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors outline-none"
+        className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors outline-none"
         title="Uppdatera data"
       >
         <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-emerald-400' : ''}`} />

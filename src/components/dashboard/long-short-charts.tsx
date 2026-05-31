@@ -19,8 +19,8 @@ export function LongShortCharts({ kpis }: { kpis: any }) {
     if (active && payload && payload.length) {
       return (
         <div className="bg-[#0f131a] border border-border p-3 rounded-lg shadow-xl text-sm font-mono">
-          <p className="font-semibold text-white mb-1">{payload[0].name}</p>
-          <p className="text-slate-400">Total: {payload[0].value} trades</p>
+          <p className="font-semibold text-foreground mb-1">{payload[0].name}</p>
+          <p className="text-muted-foreground">Total: {payload[0].value} trades</p>
           {payload[0].name === 'Longs' && (
             <p className="text-emerald-400 mt-1">Win Rate: {kpis.longTrades > 0 ? ((kpis.longWins / kpis.longTrades) * 100).toFixed(1) : 0}%</p>
           )}
@@ -37,10 +37,10 @@ export function LongShortCharts({ kpis }: { kpis: any }) {
     <div className="h-full w-full">
       <Card className="bg-transparent border-transparent rounded-xl shadow-none flex flex-col h-full p-5">
         <div className="shrink-0 mb-6">
-          <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1">
+          <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-1">
             Long & Short Split
           </h3>
-          <p className="text-[11px] text-slate-500 font-mono">Distribution and performance</p>
+          <p className="text-[11px] text-muted-foreground font-mono">Distribution and performance</p>
         </div>
         
         <div className="flex-1 flex flex-col justify-between min-h-0 relative">
@@ -68,9 +68,9 @@ export function LongShortCharts({ kpis }: { kpis: any }) {
             
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                <div className="flex flex-col items-center leading-none font-mono">
-                 <span className="text-lg font-bold text-indigo-400">{longPct}% <span className="text-[10px] text-slate-500 font-normal">L</span></span>
+                 <span className="text-lg font-bold text-indigo-400">{longPct}% <span className="text-[10px] text-muted-foreground font-normal">L</span></span>
                  <div className="w-8 h-px bg-white/10 my-1"></div>
-                 <span className="text-lg font-bold text-purple-400">{shortPct}% <span className="text-[10px] text-slate-500 font-normal">S</span></span>
+                 <span className="text-lg font-bold text-purple-400">{shortPct}% <span className="text-[10px] text-muted-foreground font-normal">S</span></span>
                </div>
             </div>
           </div>
@@ -79,8 +79,8 @@ export function LongShortCharts({ kpis }: { kpis: any }) {
           <div className="w-full flex flex-col gap-3 justify-end mt-auto font-mono text-[11px]">
              
              <div className="flex justify-between items-center pb-2 border-b border-border">
-                <span className="text-slate-500 uppercase tracking-wider">Total Trades</span>
-                <span className="text-sm font-bold text-slate-200">{kpis.totalTrades}</span>
+                <span className="text-muted-foreground uppercase tracking-wider">Total Trades</span>
+                <span className="text-sm font-bold text-foreground">{kpis.totalTrades}</span>
              </div>
              
              <div className="grid grid-cols-2 gap-4 mt-1">
@@ -88,11 +88,11 @@ export function LongShortCharts({ kpis }: { kpis: any }) {
                   <span className="text-gray-500 uppercase tracking-wider mb-2">Longs ({kpis.longTrades})</span>
                   <div className="flex flex-col gap-1">
                      <div className="flex justify-between items-center">
-                        <span className="text-slate-400">Wins</span>
+                        <span className="text-muted-foreground">Wins</span>
                         <span className="text-emerald-400 font-bold">{kpis.longWins}</span>
                      </div>
                      <div className="flex justify-between items-center">
-                        <span className="text-slate-400">Losses</span>
+                        <span className="text-muted-foreground">Losses</span>
                         <span className="text-rose-500 font-bold">{kpis.longTrades - kpis.longWins}</span>
                      </div>
                   </div>
@@ -102,11 +102,11 @@ export function LongShortCharts({ kpis }: { kpis: any }) {
                   <span className="text-gray-500 uppercase tracking-wider mb-2">Shorts ({kpis.shortTrades})</span>
                   <div className="flex flex-col gap-1">
                      <div className="flex justify-between items-center">
-                        <span className="text-slate-400">Wins</span>
+                        <span className="text-muted-foreground">Wins</span>
                         <span className="text-emerald-400 font-bold">{kpis.shortWins}</span>
                      </div>
                      <div className="flex justify-between items-center">
-                        <span className="text-slate-400">Losses</span>
+                        <span className="text-muted-foreground">Losses</span>
                         <span className="text-rose-500 font-bold">{kpis.shortTrades - kpis.shortWins}</span>
                      </div>
                   </div>

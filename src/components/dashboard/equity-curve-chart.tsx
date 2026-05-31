@@ -14,10 +14,10 @@ export function EquityCurveChart({ data }: { data: any[] }) {
     <Card className="bg-transparent border-transparent rounded-xl p-6 shadow-none flex flex-col h-full">
       <div className="flex justify-between items-start mb-6 shrink-0">
          <div>
-             <span className="text-xl font-bold text-white">${formatMoney(currentBalance)}</span>
+             <span className="text-xl font-bold text-foreground">${formatMoney(currentBalance)}</span>
              <div className="flex items-center gap-2 mt-1">
                <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-               <span className="text-xs text-slate-400">Account Balance</span>
+               <span className="text-xs text-muted-foreground">Account Balance</span>
              </div>
          </div>
       </div>

@@ -93,7 +93,7 @@ export function DashboardGrid({ data }: { data: any }) {
   };
 
   if (!mounted) {
-    return <div className="flex h-64 items-center justify-center text-slate-500">Loading dynamic layout...</div>;
+    return <div className="flex h-64 items-center justify-center text-muted-foreground">Loading dynamic layout...</div>;
   }
 
   const DragHandle = () => (

@@ -32,12 +32,12 @@ export function DashboardFilters() {
   return (
     <div className="flex items-center gap-2">
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center gap-2 bg-card hover:bg-muted border border-border px-3 py-1.5 rounded-md text-sm font-medium text-slate-300 transition-colors outline-none">
+        <DropdownMenuTrigger className="flex items-center gap-2 bg-card hover:bg-muted border border-border px-3 py-1.5 rounded-md text-sm font-medium text-foreground transition-colors outline-none">
           <CalendarIcon className="w-4 h-4 text-indigo-400" />
           {getPeriodLabel()}
           <ChevronDown className="w-4 h-4 opacity-50" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="bg-card border border-border text-slate-300">
+        <DropdownMenuContent align="end" className="bg-card border border-border text-foreground">
           <DropdownMenuItem onClick={() => handlePeriodChange('allTime')} className="hover:bg-muted cursor-pointer">
             All Time
           </DropdownMenuItem>

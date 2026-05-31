@@ -9,8 +9,8 @@ export function ExpectancyCurve({ data }: { data?: any[] }) {
     return (
       <Card className="bg-transparent border-transparent rounded-xl shadow-none">
         <CardHeader>
-          <CardTitle className="text-white text-lg">Expectancy Curve</CardTitle>
-          <CardDescription className="text-slate-400">Not enough data to project</CardDescription>
+          <CardTitle className="text-foreground text-lg">Expectancy Curve</CardTitle>
+          <CardDescription className="text-muted-foreground">Not enough data to project</CardDescription>
         </CardHeader>
       </Card>
     );
@@ -19,8 +19,8 @@ export function ExpectancyCurve({ data }: { data?: any[] }) {
   return (
     <Card className="bg-transparent border-transparent rounded-xl shadow-none col-span-full">
       <CardHeader>
-        <CardTitle className="text-white text-lg">Expectancy Curve (Next 100 Trades)</CardTitle>
-        <CardDescription className="text-slate-400">
+        <CardTitle className="text-foreground text-lg">Expectancy Curve (Next 100 Trades)</CardTitle>
+        <CardDescription className="text-muted-foreground">
           Projection based on your historical Win Rate, Average Win, and Average Loss.
         </CardDescription>
       </CardHeader>

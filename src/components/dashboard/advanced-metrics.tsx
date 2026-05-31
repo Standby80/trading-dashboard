@@ -51,12 +51,12 @@ export function TradeExecutionWidget({ kpis, isPremium = false }: { kpis: any, i
     <>
       <Card className="bg-transparent border-transparent rounded-xl shadow-none h-full overflow-hidden flex flex-col relative">
         <CardHeader className="pb-2 pt-4 px-4 flex flex-row items-center justify-between border-b border-border">
-          <CardTitle className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+          <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
             <Target className="w-4 h-4 text-indigo-400" />
             {t('tradeExecution')}
             <UITooltip>
-              <TooltipTrigger className="outline-none"><Info className="w-4 h-4 text-slate-500 cursor-pointer" /></TooltipTrigger>
-              <TooltipContent className="bg-[#1e293b] text-white border-border w-64">
+              <TooltipTrigger className="outline-none"><Info className="w-4 h-4 text-muted-foreground cursor-pointer" /></TooltipTrigger>
+              <TooltipContent className="bg-[#1e293b] text-foreground border-border w-64">
                  <p><strong>Risk to Reward:</strong> Avg Loss (Risk) vs Avg Win (Reward).<br/><strong>Hold Times:</strong> Time you stay in winning vs losing trades.</p>
               </TooltipContent>
             </UITooltip>
@@ -67,7 +67,7 @@ export function TradeExecutionWidget({ kpis, isPremium = false }: { kpis: any, i
           {!isPremium && (
             <div className="absolute inset-0 z-10 backdrop-blur-md bg-card/60 flex flex-col items-center justify-center p-4">
               <Lock className="w-8 h-8 text-indigo-400 mb-3" />
-              <p className="text-sm font-medium text-slate-200 text-center mb-4 max-w-[200px]">
+              <p className="text-sm font-medium text-foreground text-center mb-4 max-w-[200px]">
                 {t('upgradePremium')}
               </p>
               <Button 
@@ -84,10 +84,10 @@ export function TradeExecutionWidget({ kpis, isPremium = false }: { kpis: any, i
             <div>
               <div className="flex items-end justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <Target className="w-4 h-4 text-slate-400" />
-                  <span className="text-xs font-medium text-slate-400">Risk-to-Reward Ratio</span>
+                  <Target className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs font-medium text-muted-foreground">Risk-to-Reward Ratio</span>
                 </div>
-                <span className="text-lg font-bold text-white">{rrRatio}</span>
+                <span className="text-lg font-bold text-foreground">{rrRatio}</span>
               </div>
               
               <div className="w-full flex h-3 rounded-full overflow-hidden bg-slate-800">
@@ -97,11 +97,11 @@ export function TradeExecutionWidget({ kpis, isPremium = false }: { kpis: any, i
               
               <div className="flex justify-between mt-2 text-xs font-medium">
                  <div className="flex flex-col">
-                   <span className="text-slate-500 text-[10px]">Avg Loss</span>
+                   <span className="text-muted-foreground text-[10px]">Avg Loss</span>
                    <span className="text-rose-500">-${avgLoss.toFixed(0)}</span>
                  </div>
                  <div className="flex flex-col items-end">
-                   <span className="text-slate-500 text-[10px]">Avg Win</span>
+                   <span className="text-muted-foreground text-[10px]">Avg Win</span>
                    <span className="text-emerald-500">+${avgWin.toFixed(0)}</span>
                  </div>
               </div>
@@ -110,33 +110,33 @@ export function TradeExecutionWidget({ kpis, isPremium = false }: { kpis: any, i
             {/* Hold Times Section */}
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-4">
-                <Clock className="w-4 h-4 text-slate-400" />
-                <span className="text-xs font-medium text-slate-400">Hold Times</span>
+                <Clock className="w-4 h-4 text-muted-foreground" />
+                <span className="text-xs font-medium text-muted-foreground">Hold Times</span>
               </div>
               
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-slate-300">Average Duration</span>
-                  <span className="text-sm font-semibold text-white">{formatDuration(avgTotalDuration)}</span>
+                  <span className="text-sm text-foreground">Average Duration</span>
+                  <span className="text-sm font-semibold text-foreground">{formatDuration(avgTotalDuration)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-slate-300">Avg Win Hold Time</span>
+                  <span className="text-sm text-foreground">Avg Win Hold Time</span>
                   <span className="text-sm font-semibold text-emerald-400">{formatDuration(avgWinDuration)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-slate-300">Avg Loss Hold Time</span>
+                  <span className="text-sm text-foreground">Avg Loss Hold Time</span>
                   <span className="text-sm font-semibold text-rose-400">{formatDuration(avgLossDuration)}</span>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 mt-6 pt-4 border-t border-border">
                 <div>
-                  <span className="block text-[10px] text-slate-500 uppercase tracking-wider mb-1">Longest Trade</span>
-                  <span className="text-sm font-semibold text-white">{formatDuration(kpis.longestTradeMs)}</span>
+                  <span className="block text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Longest Trade</span>
+                  <span className="text-sm font-semibold text-foreground">{formatDuration(kpis.longestTradeMs)}</span>
                 </div>
                 <div>
-                  <span className="block text-[10px] text-slate-500 uppercase tracking-wider mb-1">Shortest Trade</span>
-                  <span className="text-sm font-semibold text-white">{formatDuration(kpis.shortestTradeMs)}</span>
+                  <span className="block text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Shortest Trade</span>
+                  <span className="text-sm font-semibold text-foreground">{formatDuration(kpis.shortestTradeMs)}</span>
                 </div>
               </div>
             </div>
@@ -148,7 +148,7 @@ export function TradeExecutionWidget({ kpis, isPremium = false }: { kpis: any, i
         <DialogContent className="sm:max-w-md bg-background border-border text-slate-50">
           <DialogHeader>
             <DialogTitle className="text-xl">Upgrade to Premium</DialogTitle>
-            <DialogDescription className="text-slate-400">
+            <DialogDescription className="text-muted-foreground">
               Get access to Risk-to-Reward analysis, hold times, automated MT5 live-sync, and the manual trading journal!
             </DialogDescription>
           </DialogHeader>
@@ -161,7 +161,7 @@ export function TradeExecutionWidget({ kpis, isPremium = false }: { kpis: any, i
           ) : (
             <form onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }} className="mt-5 space-y-3">
              <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-400">Regular price</span>
+                <span className="text-muted-foreground">Regular price</span>
                 <span className="font-medium">$9.99 / month</span>
              </div>
              <div className="flex items-center justify-between text-sm font-bold text-emerald-400">
@@ -175,7 +175,7 @@ export function TradeExecutionWidget({ kpis, isPremium = false }: { kpis: any, i
                  value={email}
                  onChange={(e) => setEmail(e.target.value)}
                  required
-                 className="w-full bg-slate-900/50 border border-indigo-500/30 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 mb-2"
+                 className="w-full bg-slate-900/50 border border-indigo-500/30 rounded-lg px-3 py-2 text-sm text-foreground placeholder-slate-500 focus:outline-none focus:border-indigo-500 mb-2"
                />
                <Button type="submit" className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 rounded-lg transition-colors text-sm">
                  Secure my 50% discount
@@ -215,7 +215,7 @@ export function TimeAnalyticsWidget({ hourlyData = [], weekdayData = [] }: { hou
       const val = payload[0].value;
       return (
         <div className="bg-[#1e293b] border border-border rounded-lg p-3 shadow-xl">
-          <p className="text-slate-300 text-xs mb-1">{label}</p>
+          <p className="text-foreground text-xs mb-1">{label}</p>
           <p className={`text-sm font-bold ${val >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
             {val >= 0 ? '+' : '-'}${Math.abs(val).toFixed(2)}
           </p>
@@ -229,11 +229,11 @@ export function TimeAnalyticsWidget({ hourlyData = [], weekdayData = [] }: { hou
     <Card className="bg-transparent border-transparent rounded-xl shadow-none flex flex-col h-full relative group/card overflow-hidden">
       <CardHeader className="pb-0 pt-5 px-5 shrink-0">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+          <CardTitle className="text-sm font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
             Time Analytics
             <UITooltip>
-              <TooltipTrigger className="outline-none"><Info className="w-4 h-4 text-slate-500 cursor-pointer" /></TooltipTrigger>
-              <TooltipContent className="bg-[#1e293b] text-white border-border w-64">
+              <TooltipTrigger className="outline-none"><Info className="w-4 h-4 text-muted-foreground cursor-pointer" /></TooltipTrigger>
+              <TooltipContent className="bg-[#1e293b] text-foreground border-border w-64">
                  <p>Net P&L based on the weekday or hour the trade was opened. All times are converted to Swedish time (CET/CEST).</p>
               </TooltipContent>
             </UITooltip>
@@ -298,17 +298,17 @@ export function SecondaryStats({ data }: { data: any }) {
       {/* Trades */}
       <div className="bg-card border border-border rounded-xl p-4 flex justify-between items-center h-full">
         <div className="flex flex-col">
-          <span className="text-xs text-slate-400 uppercase tracking-wider mb-2 font-semibold">Trades</span>
-          <span className="text-3xl font-bold text-white mb-1">{kpis.totalTrades}</span>
-          <span className="text-xs text-slate-500 mb-2">Total</span>
+          <span className="text-xs text-muted-foreground uppercase tracking-wider mb-2 font-semibold">Trades</span>
+          <span className="text-3xl font-bold text-foreground mb-1">{kpis.totalTrades}</span>
+          <span className="text-xs text-muted-foreground mb-2">Total</span>
           <div className="flex gap-4 mt-auto">
              <div className="flex flex-col">
                <span className="text-emerald-500 font-bold">{kpis.winningTrades}</span>
-               <span className="text-[10px] text-slate-500">Won</span>
+               <span className="text-[10px] text-muted-foreground">Won</span>
              </div>
              <div className="flex flex-col">
                <span className="text-rose-500 font-bold">{kpis.losingTrades}</span>
-               <span className="text-[10px] text-slate-500">Lost</span>
+               <span className="text-[10px] text-muted-foreground">Lost</span>
              </div>
           </div>
         </div>
@@ -326,49 +326,49 @@ export function SecondaryStats({ data }: { data: any }) {
       {/* Equity */}
       <div className="bg-card border border-border rounded-xl p-4 flex flex-col justify-between h-full relative overflow-hidden">
         <div className="flex flex-col relative z-10">
-          <span className="text-xs text-slate-400 uppercase tracking-wider mb-1 font-semibold">Equity</span>
-          <span className="text-2xl font-bold text-white">${kpis.currentBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}</span>
-          <span className="text-[10px] text-slate-500 mb-3">Account Value</span>
+          <span className="text-xs text-muted-foreground uppercase tracking-wider mb-1 font-semibold">Equity</span>
+          <span className="text-2xl font-bold text-foreground">${kpis.currentBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}</span>
+          <span className="text-[10px] text-muted-foreground mb-3">Account Value</span>
           
           <span className="text-lg font-bold text-emerald-400">${Math.abs(kpis.netProfit || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-          <span className="text-[10px] text-slate-500">Equity Growth</span>
+          <span className="text-[10px] text-muted-foreground">Equity Growth</span>
         </div>
       </div>
 
       {/* Risk */}
       <div className="bg-card border border-border rounded-xl p-4 flex flex-col justify-between h-full">
-        <span className="text-xs text-slate-400 uppercase tracking-wider mb-2 font-semibold">Risk</span>
+        <span className="text-xs text-muted-foreground uppercase tracking-wider mb-2 font-semibold">Risk</span>
         <div className="flex flex-col gap-3">
           <div className="flex flex-col">
             <span className="text-emerald-500 font-bold">${(kpis.bestTrade || 0).toFixed(2)}</span>
-            <span className="text-[10px] text-slate-500">Largest Win</span>
+            <span className="text-[10px] text-muted-foreground">Largest Win</span>
           </div>
           <div className="flex flex-col">
             <span className="text-rose-500 font-bold">-${Math.abs(kpis.worstTrade || 0).toFixed(2)}</span>
-            <span className="text-[10px] text-slate-500">Largest Loss</span>
+            <span className="text-[10px] text-muted-foreground">Largest Loss</span>
           </div>
         </div>
       </div>
 
       {/* Key Stats */}
       <div className="bg-card border border-border rounded-xl p-4 flex flex-col justify-between h-full">
-        <span className="text-xs text-slate-400 uppercase tracking-wider mb-2 font-semibold">Key Stats</span>
+        <span className="text-xs text-muted-foreground uppercase tracking-wider mb-2 font-semibold">Key Stats</span>
         <div className="flex flex-col gap-2 mt-1">
           <div className="flex justify-between items-center text-xs">
-            <span className="text-slate-400">Avg. Win</span>
+            <span className="text-muted-foreground">Avg. Win</span>
             <span className="text-emerald-500 font-medium">${(kpis.avgWin || 0).toFixed(2)}</span>
           </div>
           <div className="flex justify-between items-center text-xs">
-            <span className="text-slate-400">Avg. Loss</span>
+            <span className="text-muted-foreground">Avg. Loss</span>
             <span className="text-rose-500 font-medium">-${(kpis.avgLoss || 0).toFixed(2)}</span>
           </div>
           <div className="flex justify-between items-center text-xs">
-            <span className="text-slate-400">Max Drawdown</span>
-            <span className="text-white font-medium">{((kpis.maxDrawdownDol || 0) / (kpis.peakBalance || 1) * 100).toFixed(2)}%</span>
+            <span className="text-muted-foreground">Max Drawdown</span>
+            <span className="text-foreground font-medium">{((kpis.maxDrawdownDol || 0) / (kpis.peakBalance || 1) * 100).toFixed(2)}%</span>
           </div>
           <div className="flex justify-between items-center text-xs">
-            <span className="text-slate-400">Sharpe Ratio</span>
-            <span className="text-white font-medium">{kpis.sharpeRatio?.toFixed(2) || '0.00'}</span>
+            <span className="text-muted-foreground">Sharpe Ratio</span>
+            <span className="text-foreground font-medium">{kpis.sharpeRatio?.toFixed(2) || '0.00'}</span>
           </div>
         </div>
       </div>
@@ -385,12 +385,12 @@ export function TradeDistribution({ data }: { data: any }) {
   return (
     <Card className="bg-transparent border-transparent rounded-xl shadow-none h-full overflow-hidden flex flex-col">
       <CardHeader className="pb-2 pt-4 px-4 flex flex-row items-center justify-between border-b border-border">
-        <CardTitle className="text-sm font-semibold text-slate-400 uppercase tracking-wider">
+        <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
           Trade Distribution
         </CardTitle>
         <div className="flex bg-background rounded p-1 border border-border">
-           <button className="text-[10px] px-2 py-0.5 rounded bg-muted text-white">By Asset</button>
-           <button className="text-[10px] px-2 py-0.5 rounded text-slate-500 hover:text-white">By Direction</button>
+           <button className="text-[10px] px-2 py-0.5 rounded bg-muted text-foreground">By Asset</button>
+           <button className="text-[10px] px-2 py-0.5 rounded text-muted-foreground hover:text-foreground">By Direction</button>
         </div>
       </CardHeader>
       <CardContent className="p-4 flex-1 flex flex-col items-center justify-center relative">
@@ -403,21 +403,21 @@ export function TradeDistribution({ data }: { data: any }) {
                 </svg>
             )}
             <div className="flex flex-col items-center text-center">
-               <span className="text-2xl font-bold text-white">{kpis.totalTrades}</span>
-               <span className="text-[10px] text-slate-500">Total</span>
+               <span className="text-2xl font-bold text-foreground">{kpis.totalTrades}</span>
+               <span className="text-[10px] text-muted-foreground">Total</span>
             </div>
         </div>
         
         <div className="w-full flex justify-between px-4 mt-6">
             <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                <span className="text-xs text-slate-400">Winners</span>
-                <span className="text-xs text-white font-medium ml-1">{kpis.winningTrades} ({tradesWinPct.toFixed(1)}%)</span>
+                <span className="text-xs text-muted-foreground">Winners</span>
+                <span className="text-xs text-foreground font-medium ml-1">{kpis.winningTrades} ({tradesWinPct.toFixed(1)}%)</span>
             </div>
             <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-rose-500"></div>
-                <span className="text-xs text-slate-400">Losers</span>
-                <span className="text-xs text-white font-medium ml-1">{kpis.losingTrades} ({(100 - tradesWinPct).toFixed(1)}%)</span>
+                <span className="text-xs text-muted-foreground">Losers</span>
+                <span className="text-xs text-foreground font-medium ml-1">{kpis.losingTrades} ({(100 - tradesWinPct).toFixed(1)}%)</span>
             </div>
         </div>
       </CardContent>
@@ -433,7 +433,7 @@ export function DrawdownAnalysis({ kpis }: { kpis: any }) {
   return (
     <Card className="bg-transparent border-transparent rounded-xl shadow-none h-full overflow-hidden flex flex-col">
       <CardHeader className="pb-2 pt-4 px-4 border-b border-border">
-        <CardTitle className="text-sm font-semibold text-slate-400 uppercase tracking-wider">
+        <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
           Drawdown Analysis
         </CardTitle>
       </CardHeader>
@@ -444,8 +444,8 @@ export function DrawdownAnalysis({ kpis }: { kpis: any }) {
                 <circle cx="72" cy="72" r="64" fill="none" stroke="#8b5cf6" strokeWidth="8" strokeDasharray="100 402" />
             </svg>
             <div className="flex flex-col items-center text-center">
-               <span className="text-[10px] text-slate-500">Max<br/>Drawdown</span>
-               <span className="text-lg font-bold text-white mt-1">{ddPct}%</span>
+               <span className="text-[10px] text-muted-foreground">Max<br/>Drawdown</span>
+               <span className="text-lg font-bold text-foreground mt-1">{ddPct}%</span>
             </div>
         </div>
         
@@ -453,16 +453,16 @@ export function DrawdownAnalysis({ kpis }: { kpis: any }) {
             <div className="flex justify-between items-center w-full">
                 <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-violet-500"></div>
-                    <span className="text-xs text-slate-400">Current</span>
+                    <span className="text-xs text-muted-foreground">Current</span>
                 </div>
-                <span className="text-xs text-white font-medium">{ddPct}%</span>
+                <span className="text-xs text-foreground font-medium">{ddPct}%</span>
             </div>
             <div className="flex justify-between items-center w-full">
                 <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-muted"></div>
-                    <span className="text-xs text-slate-400">Previous Max</span>
+                    <span className="text-xs text-muted-foreground">Previous Max</span>
                 </div>
-                <span className="text-xs text-white font-medium">-</span>
+                <span className="text-xs text-foreground font-medium">-</span>
             </div>
         </div>
       </CardContent>

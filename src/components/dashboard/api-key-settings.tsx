@@ -74,7 +74,7 @@ export default function ApiKeySettings() {
 
   return (
     <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl backdrop-blur-md max-w-2xl">
-      <h2 className="text-xl font-semibold text-white mb-2">MetaMetrics Live Sync API</h2>
+      <h2 className="text-xl font-semibold text-foreground mb-2">MetaMetrics Live Sync API</h2>
       <p className="text-sm text-zinc-400 mb-6">
         Use your unique API key to connect your MetaTrader 5 script with your dashboard for real-time syncing.
       </p>
@@ -86,7 +86,7 @@ export default function ApiKeySettings() {
             <div className="p-3 bg-indigo-600/10 rounded-full border border-indigo-500/20 mb-4">
               <Lock className="w-6 h-6 text-indigo-500" />
             </div>
-            <h3 className="text-white font-medium mb-1">Premium Feature</h3>
+            <h3 className="text-foreground font-medium mb-1">Premium Feature</h3>
             <p className="text-xs text-zinc-400 max-w-sm mb-4">
               Automatic Live Sync requires a Premium membership. For now, you can upload your reports manually via HTML.
             </p>

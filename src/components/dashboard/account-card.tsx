@@ -75,13 +75,13 @@ export function AccountCard({ acc, isEur, colorClass }: AccountCardProps) {
         {/* Header */}
         <div className="relative z-10 flex justify-between items-start">
           <div>
-            <h3 className="text-white font-bold text-xl italic tracking-tight">{acc.name}</h3>
-            <p className="text-white/60 text-xs mt-1 font-mono tracking-wider">#*********</p>
+            <h3 className="text-foreground font-bold text-xl italic tracking-tight">{acc.name}</h3>
+            <p className="text-foreground/60 text-xs mt-1 font-mono tracking-wider">#*********</p>
           </div>
           
           <button 
             onClick={handleDelete}
-            className="text-white/50 hover:text-rose-400 p-2 -mt-2 -mr-2 transition-colors rounded-full hover:bg-white/5"
+            className="text-foreground/50 hover:text-rose-400 p-2 -mt-2 -mr-2 transition-colors rounded-full hover:bg-white/5"
             title="Delete Account"
           >
             <Trash2 size={16} />
@@ -90,23 +90,23 @@ export function AccountCard({ acc, isEur, colorClass }: AccountCardProps) {
         
         {/* Balance */}
         <div className="relative z-10 mt-3">
-          <div className="text-white text-3xl font-bold tracking-tight">
+          <div className="text-foreground text-3xl font-bold tracking-tight">
             {formatMoneyDynamic(acc.balance, isEur)}
           </div>
         </div>
         
         {/* Bottom Stats */}
         <div className="relative z-10 mt-auto flex justify-between items-end w-full">
-          <div className="text-white/80 text-xs font-bold">{isEur ? 'EUR' : 'USD'}</div>
+          <div className="text-foreground/80 text-xs font-bold">{isEur ? 'EUR' : 'USD'}</div>
           <div className="flex gap-6 text-right">
             <div>
-              <div className="text-white/60 text-[10px] uppercase font-bold mb-1 tracking-widest">Deposits</div>
+              <div className="text-foreground/60 text-[10px] uppercase font-bold mb-1 tracking-widest">Deposits</div>
               <div className="text-emerald-400 text-sm font-bold tracking-wide">
                 {formatMoneyDynamic(acc.deposits, isEur)}
               </div>
             </div>
             <div>
-              <div className="text-white/60 text-[10px] uppercase font-bold mb-1 tracking-widest">Withdrawals</div>
+              <div className="text-foreground/60 text-[10px] uppercase font-bold mb-1 tracking-widest">Withdrawals</div>
               <div className="text-rose-400 text-sm font-bold tracking-wide">
                 {formatMoneyDynamic(acc.withdrawals, isEur)}
               </div>

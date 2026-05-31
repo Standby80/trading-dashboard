@@ -70,9 +70,9 @@ export function MonthlyHeatmap({ kpis }: { kpis: any }) {
   return (
     <div className="w-full flex flex-col relative h-full">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-sm font-semibold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+        <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider flex items-center gap-2">
           Monthly P/L
-          <HelpCircle className="w-3.5 h-3.5 text-slate-500 cursor-help" />
+          <HelpCircle className="w-3.5 h-3.5 text-muted-foreground cursor-help" />
         </h3>
         <div className="flex gap-2">
           <div className="flex bg-muted rounded-md overflow-hidden border border-border text-xs">
@@ -111,16 +111,16 @@ export function MonthlyHeatmap({ kpis }: { kpis: any }) {
           <table className="w-full text-left border-collapse min-w-[600px] h-full">
             <thead>
               <tr>
-                <th className="py-2 px-3 text-xs font-medium text-slate-500 font-mono">Datum</th>
+                <th className="py-2 px-3 text-xs font-medium text-muted-foreground font-mono">Datum</th>
                 {months.map(m => (
-                  <th key={m} className="py-2 px-3 text-xs font-medium text-slate-300 text-center">{m}</th>
+                  <th key={m} className="py-2 px-3 text-xs font-medium text-foreground text-center">{m}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {years.map(year => (
                 <tr key={year} className="border-t border-border">
-                  <td className="py-3 px-3 text-sm font-medium text-slate-400 font-mono">{year}</td>
+                  <td className="py-3 px-3 text-sm font-medium text-muted-foreground font-mono">{year}</td>
                   {months.map(month => {
                     const val = data[year][month];
                     const hasData = val !== undefined && val !== null;
@@ -194,20 +194,20 @@ export function MonthlyHeatmap({ kpis }: { kpis: any }) {
       {/* Footer Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-auto pt-4 border-t border-border shrink-0">
         <div className="bg-transparent rounded-lg p-3">
-          <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Best Month</span>
-          <div className="text-sm font-bold text-slate-200">
-            {bestMonth.label !== '' ? bestMonth.label : '-'} <span className="text-slate-500 mx-1">•</span> <span className="text-emerald-400">{bestMonth.pct !== -Infinity ? (valueMode === 'pct' ? formatPct(bestMonth.pct) : formatDol(bestMonth.pct)) : '-'}</span>
+          <span className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Best Month</span>
+          <div className="text-sm font-bold text-foreground">
+            {bestMonth.label !== '' ? bestMonth.label : '-'} <span className="text-muted-foreground mx-1">•</span> <span className="text-emerald-400">{bestMonth.pct !== -Infinity ? (valueMode === 'pct' ? formatPct(bestMonth.pct) : formatDol(bestMonth.pct)) : '-'}</span>
           </div>
         </div>
         <div className="bg-transparent rounded-lg p-3">
-          <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Worst</span>
-          <div className="text-sm font-bold text-slate-200">
-            {worstMonth.label !== '' ? worstMonth.label : '-'} <span className="text-slate-500 mx-1">•</span> <span className="text-rose-400">{worstMonth.pct !== Infinity ? (valueMode === 'pct' ? formatPct(worstMonth.pct) : formatDol(worstMonth.pct)) : '-'}</span>
+          <span className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Worst</span>
+          <div className="text-sm font-bold text-foreground">
+            {worstMonth.label !== '' ? worstMonth.label : '-'} <span className="text-muted-foreground mx-1">•</span> <span className="text-rose-400">{worstMonth.pct !== Infinity ? (valueMode === 'pct' ? formatPct(worstMonth.pct) : formatDol(worstMonth.pct)) : '-'}</span>
           </div>
         </div>
         <div className="bg-transparent rounded-lg p-3">
-          <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Avg Month</span>
-          <div className="text-sm font-bold text-slate-200">
+          <span className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Avg Month</span>
+          <div className="text-sm font-bold text-foreground">
             {valueMode === 'pct' ? formatPct(avgMonthPct) : formatDol(avgMonthPct)}
           </div>
         </div>

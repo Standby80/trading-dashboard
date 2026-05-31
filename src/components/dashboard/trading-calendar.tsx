@@ -63,7 +63,7 @@ export function TradingCalendar({ data, availableSymbols = [], rawTrades = [] }:
   return (
     <div className="flex flex-col h-full bg-card rounded-xl overflow-hidden p-4">
       <div className="flex items-center justify-between mb-4">
-        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Performance Calendar (P&L)</span>
+        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Performance Calendar (P&L)</span>
         
          <div className="flex bg-background rounded p-1 border border-border">
            <button 

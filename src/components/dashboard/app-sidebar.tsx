@@ -46,7 +46,7 @@ export function AppSidebar({ userEmail, profile }: SidebarProps & { profile?: an
       {/* Collapse Toggle */}
       <button 
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-3 top-6 bg-card border border-border rounded-full p-1 text-slate-400 hover:text-white hover:bg-white/5 transition-colors z-50"
+        className="absolute -right-3 top-6 bg-card border border-border rounded-full p-1 text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors z-50"
       >
         {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
       </button>
@@ -73,7 +73,7 @@ export function AppSidebar({ userEmail, profile }: SidebarProps & { profile?: an
               {profile?.is_premium ? (
                 <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 shrink-0">PRO</span>
               ) : (
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-500/20 text-slate-500 border border-slate-500/30 shrink-0">FREE</span>
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-500/20 text-muted-foreground border border-slate-500/30 shrink-0">FREE</span>
               )}
             </div>
             <p className="text-muted-foreground text-xs truncate w-full mt-1">{userEmail || 'demo@user.com'}</p>
