@@ -45,7 +45,7 @@ void OnTradeTransaction(const MqlTradeTransaction& trans, const MqlTradeOrder& o
             }
 
             string json = StringFormat(
-               "{\\"apiKey\\":\\"%s\\",\\"positionId\\":\\"%d\\",\\"symbol\\":\\"%s\\",\\"type\\":\\"%s\\",\\"volume\\":%.2f,\\"openTime\\":\\"%s\\",\\"closeTime\\":\\"%s\\",\\"commission\\":%.2f,\\"swap\\":%.2f,\\"grossProfit\\":%.2f,\\"openPrice\\":%.5f,\\"closePrice\\":%.5f}",
+               "{\\"apiKey\\":\\"%s\\",\\"positionId\\":\\"%I64u\\",\\"symbol\\":\\"%s\\",\\"type\\":\\"%s\\",\\"volume\\":%.2f,\\"openTime\\":\\"%s\\",\\"closeTime\\":\\"%s\\",\\"commission\\":%.2f,\\"swap\\":%.2f,\\"grossProfit\\":%.2f,\\"openPrice\\":%.5f,\\"closePrice\\":%.5f}",
                InpApiKey, position_id, symbol, type_str, volume, open_time_str, close_time_str, commission, swap, profit, open_price, close_price
             );
 
