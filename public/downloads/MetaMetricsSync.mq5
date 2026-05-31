@@ -3,7 +3,7 @@
 #property description "Real-time Live Sync for MetaMetrics Dashboard"
 
 input string InpApiKey    = "DIN_API_NYCKEL_HAR";
-input string InpServerUrl = "PLACEHOLDER_SERVER_URL/api/trades/upload";
+input string InpServerUrl = "https://metametrics.app/api/trades/upload";
 input int    InpTimerSec  = 30;
 
 datetime g_last_sync = 0;
