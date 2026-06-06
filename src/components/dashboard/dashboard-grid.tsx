@@ -49,7 +49,7 @@ export function DashboardGrid({ data }: { data: any }) {
       { i: 'metric-avgloss', x: 12, y: 2, w: 12, h: 2, minW: 3, minH: 2 },
       { i: 'metric-sharpe', x: 24, y: 2, w: 12, h: 2, minW: 3, minH: 2 },
       { i: 'metric-maxdd', x: 36, y: 2, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-expectancy', x: 48, y: 2, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-commission', x: 48, y: 2, w: 12, h: 2, minW: 3, minH: 2 },
       
       // Row 3: Additional KPIs
       { i: 'metric-winning', x: 0, y: 4, w: 12, h: 2, minW: 3, minH: 2 },
@@ -142,13 +142,13 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Percentage of winning trades out of total trades."
             />
         </div>
-        <div key="metric-expectancy" data-grid={{ x: 36, y: 0, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-commission" data-grid={{ x: 36, y: 0, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
-                title="Expectancy (R)" 
-                value={(data?.kpis?.expectancy || 0).toFixed(2)}
-                trend={(data?.kpis?.expectancy || 0) > 0 ? 'positive' : 'negative'}
-                tooltip="Average R-multiple returned per trade."
+                title="Total Commission" 
+                value={`-$${Math.abs(data?.kpis?.totalCommissions || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
+                trend="negative"
+                tooltip="Total commissions paid to the broker."
             />
         </div>
         <div key="metric-trades" data-grid={{ x: 48, y: 0, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">

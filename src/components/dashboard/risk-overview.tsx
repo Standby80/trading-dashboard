@@ -59,14 +59,7 @@ export function RiskOverview({ kpis }: { kpis: any }) {
             <span className="text-xs font-medium text-foreground w-12 text-right">{pf.toFixed(2)}</span>
         </div>
 
-        {/* Expectancy */}
-        <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-muted-foreground w-24">Expectancy (R)</span>
-            <div className="flex-1 mx-4 h-2 bg-muted rounded-full overflow-hidden">
-                <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${expWidth}%` }}></div>
-            </div>
-            <span className="text-xs font-medium text-foreground w-12 text-right">{exp.toFixed(2)}</span>
-        </div>
+
 
         {/* Win Rate */}
         <div className="flex items-center justify-between mb-2">
@@ -75,6 +68,19 @@ export function RiskOverview({ kpis }: { kpis: any }) {
                 <div className="h-full bg-violet-500 rounded-full" style={{ width: `${winRate}%` }}></div>
             </div>
             <span className="text-xs font-medium text-foreground w-12 text-right">{winRate.toFixed(2)}%</span>
+        </div>
+
+        {/* Total Commission */}
+        <div className="flex items-center justify-between p-3 rounded-lg border border-border bg-background mb-2">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-rose-500/10 flex items-center justify-center">
+              <span className="text-rose-500 text-xs font-bold">-</span>
+            </div>
+            <span className="text-xs text-muted-foreground w-24">Commission</span>
+          </div>
+          <span className="font-mono text-sm text-foreground">
+            -${Math.abs(kpis.totalCommissions || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+          </span>
         </div>
 
         {/* Wins / Losses */}

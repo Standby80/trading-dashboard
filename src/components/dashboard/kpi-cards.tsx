@@ -89,17 +89,18 @@ export function KPICards({ data }: { data?: any }) {
         </div>
       </Card>
 
-      {/* Expectancy (R) */}
+      {/* Total Commission */}
       <Card className="bg-card border-border rounded-xl shadow-none overflow-hidden relative flex flex-col justify-between">
         <CardContent className="p-4 flex flex-col h-full z-10">
-          <span className="text-xs text-muted-foreground mb-2 font-medium">Expectancy (R)</span>
-          <div className="text-2xl font-bold text-foreground">
-            {kpi.expectancy?.toFixed(2) || '0.00'}
+          <span className="text-xs text-muted-foreground mb-2 font-medium">Total Commission</span>
+          <div className="text-2xl font-bold text-foreground flex items-baseline gap-1">
+             <span className="text-sm text-muted-foreground">-</span>
+             ${Math.abs(kpi.totalCommissions || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
           </div>
-          <span className="text-[10px] text-emerald-500 mt-1">Strong</span>
+          <span className="text-[10px] text-rose-500 mt-1">Cost incurred</span>
         </CardContent>
         <div className="absolute bottom-0 left-0 right-0 z-0">
-           <Sparkline color="#10b981" />
+           <Sparkline color="#f43f5e" />
         </div>
       </Card>
 

@@ -53,7 +53,7 @@ const stats = [
   { label: "Average Loss", value: "-$27.43", color: "red", textColor: "text-rose-400" },
   { label: "Sharpe Ratio", value: "0.17", color: "rise", textColor: "text-emerald-400" },
   { label: "Max Drawdown", value: "1.95%", color: "red", textColor: "text-rose-400" },
-  { label: "Expectancy (R)", value: "0.00", color: "red", textColor: "text-rose-400" },
+  { label: "Total Commission", value: "-$142.50", color: "red", textColor: "text-rose-400" },
   { label: "Winning Trades", value: "30", color: "emerald", textColor: "text-emerald-400" },
   { label: "Losing Trades", value: "40", color: "red", textColor: "text-rose-400" },
   { label: "Best Trade", value: "$155.76", color: "emerald", textColor: "text-emerald-400" },
