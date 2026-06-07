@@ -34,7 +34,7 @@ export function AppSidebar({ userEmail, profile }: SidebarProps & { profile?: an
     { name: 'Accounts', icon: Wallet, href: '/accounts' },
     { name: 'Upload Report', icon: Upload, isAction: true, component: ReportUploadForm },
     { name: 'Live Sync', icon: Activity, isAction: true, component: ConnectLiveSyncButton },
-    { name: 'Settings', icon: Settings, href: '#' },
+    { name: 'Settings', icon: Settings, href: '/settings' },
   ];
 
   return (
