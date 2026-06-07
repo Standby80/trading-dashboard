@@ -14,7 +14,8 @@ import {
   ChevronRight,
   UserCircle,
   Wallet,
-  Crown
+  Crown,
+  BookOpen
 } from 'lucide-react';
 
 import { ReportUploadForm } from "./report-upload-form";
@@ -32,6 +33,7 @@ export function AppSidebar({ userEmail, profile }: SidebarProps & { profile?: an
   const navItems = [
     { name: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
     { name: 'Accounts', icon: Wallet, href: '/accounts' },
+    { name: 'Journal', icon: BookOpen, href: '/journal' },
     { name: 'Upload Report', icon: Upload, isAction: true, component: ReportUploadForm },
     { name: 'Live Sync', icon: Activity, isAction: true, component: ConnectLiveSyncButton },
     { name: 'Settings', icon: Settings, href: '/settings' },
