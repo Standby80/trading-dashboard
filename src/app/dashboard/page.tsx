@@ -35,11 +35,14 @@ export default async function DashboardPage({
   let isPremium = false;
   let fullName = '';
   let avatarUrl = '';
+  let trialEndsAt = null;
+
   if (user) {
     const { data: profile } = await supabase.from('users').select('subscription_tier, full_name, avatar_url, trial_ends_at').eq('id', user.id).single();
     isPremium = profile?.subscription_tier === 'premium';
     fullName = profile?.full_name || '';
     avatarUrl = profile?.avatar_url || '';
+    trialEndsAt = profile?.trial_ends_at || null;
     
     // Check Trial Expiration
     if (!isPremium && profile?.trial_ends_at) {
@@ -61,7 +64,7 @@ export default async function DashboardPage({
       
       {/* Sidebar - Desktop */}
       <div className="hidden md:block">
-        <AppSidebar userEmail={user?.email} profile={{ is_premium: isPremium, full_name: fullName, avatar_url: avatarUrl, trial_ends_at: profile?.trial_ends_at || null }} />
+        <AppSidebar userEmail={user?.email} profile={{ is_premium: isPremium, full_name: fullName, avatar_url: avatarUrl, trial_ends_at: trialEndsAt }} />
       </div>
 
       {/* Main Content Area */}
