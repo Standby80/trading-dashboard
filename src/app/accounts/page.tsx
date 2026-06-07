@@ -20,10 +20,14 @@ export default async function AccountsPage() {
   let fullName = '';
   let avatarUrl = '';
   if (user) {
-    const { data: profile } = await supabase.from('users').select('subscription_tier, full_name, avatar_url').eq('id', user.id).single();
+    const { data: profile } = await supabase.from('users').select('subscription_tier, full_name, avatar_url, trial_ends_at').eq('id', user.id).single();
     isPremium = profile?.subscription_tier === 'premium';
     fullName = profile?.full_name || '';
     avatarUrl = profile?.avatar_url || '';
+    
+    // Check Trial Expiration (optional: maybe block accounts page too)
+    // We didn't block it before, so let's just pass trial_ends_at to the sidebar.
+    var trialEndsAt = profile?.trial_ends_at;
   }
 
   const accountNames = await getUserAccounts();
@@ -55,7 +59,8 @@ export default async function AccountsPage() {
       
       {/* Sidebar */}
       <div className="hidden md:block">
-        <AppSidebar userEmail={user?.email} profile={{ is_premium: isPremium, full_name: fullName, avatar_url: avatarUrl }} />
+        {/* @ts-ignore */}
+        <AppSidebar userEmail={user?.email} profile={{ is_premium: isPremium, full_name: fullName, avatar_url: avatarUrl, trial_ends_at: trialEndsAt }} />
       </div>
 
       {/* Main Content Area */}

@@ -83,6 +83,17 @@ export function AppSidebar({ userEmail, profile }: SidebarProps & { profile?: an
               )}
             </div>
             <p className="text-muted-foreground text-xs truncate w-full mt-1">{userEmail || 'demo@user.com'}</p>
+            {!profile?.is_premium && profile?.trial_ends_at && (
+              <p className={`text-[10px] mt-1.5 font-medium px-2 py-0.5 rounded-full ${
+                new Date(profile.trial_ends_at).getTime() > new Date().getTime() 
+                  ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20' 
+                  : 'bg-rose-500/10 text-rose-500 border border-rose-500/20'
+              }`}>
+                {new Date(profile.trial_ends_at).getTime() > new Date().getTime() 
+                  ? `${Math.max(0, Math.ceil((new Date(profile.trial_ends_at).getTime() - new Date().getTime()) / (1000 * 3600 * 24)))} days left of trial` 
+                  : 'Trial expired'}
+              </p>
+            )}
           </div>
         )}
       </div>
