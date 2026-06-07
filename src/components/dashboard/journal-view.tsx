@@ -1,14 +1,26 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { Search, Filter, TrendingUp, TrendingDown, Image as ImageIcon, FileText, ChevronRight, Hash, Clock, Maximize2, BookOpen } from 'lucide-react';
+import React, { useState, useMemo, useRef } from 'react';
+import { Search, Filter, TrendingUp, TrendingDown, Image as ImageIcon, FileText, ChevronRight, Hash, Clock, Maximize2, BookOpen, Pencil, Save, Loader2, Trash2, Camera } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 
 export function JournalView({ trades }: { trades: any[] }) {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<'ALL' | 'WINS' | 'LOSSES'>('ALL');
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [selectedTradeId, setSelectedTradeId] = useState<string | null>(null);
+
+  // Edit state
+  const [isEditing, setIsEditing] = useState(false);
+  const [editNotes, setEditNotes] = useState('');
+  const [editScreenshotUrl, setEditScreenshotUrl] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Parse all unique hashtags from notes
   const allTags = useMemo(() => {
@@ -56,6 +68,67 @@ export function JournalView({ trades }: { trades: any[] }) {
       setSelectedTradeId(filteredTrades[0].ticket_id);
     }
   }, [filteredTrades, selectedTradeId]);
+
+  // Reset edit state when selected trade changes
+  React.useEffect(() => {
+    if (selectedTrade) {
+      setIsEditing(false);
+      setEditNotes(selectedTrade.notes || '');
+      setEditScreenshotUrl(selectedTrade.screenshot_url || '');
+    }
+  }, [selectedTradeId, selectedTrade]);
+
+  const handleSave = async () => {
+    if (!selectedTrade) return;
+    setIsSaving(true);
+    try {
+      const res = await fetch(`/api/trades/${selectedTrade.ticket_id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notes: editNotes, screenshot_url: editScreenshotUrl })
+      });
+      if (!res.ok) throw new Error('Failed to save');
+      
+      setIsEditing(false);
+      router.refresh(); // Refresh data from server
+    } catch (e) {
+      alert("Error saving notes");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!selectedTrade) return;
+    try {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      setIsUploading(true);
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not logged in");
+
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${user.id}/${selectedTrade.ticket_id}-${Math.random()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('trade_screenshots')
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('trade_screenshots')
+        .getPublicUrl(filePath);
+
+      setEditScreenshotUrl(publicUrl);
+    } catch (error: any) {
+      alert("Error uploading screenshot: " + error.message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col h-full bg-background border border-border rounded-xl overflow-hidden shadow-xl">
@@ -237,26 +310,88 @@ export function JournalView({ trades }: { trades: any[] }) {
 
               {/* Notes */}
               <div className="space-y-3">
-                <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-indigo-400" />
-                  Journal Notes
-                </h3>
-                <div className="p-6 bg-card border border-border rounded-xl">
-                  {selectedTrade.notes ? (
-                    <p className="text-foreground leading-relaxed whitespace-pre-wrap text-lg">
-                      {selectedTrade.notes.split(/(#\w+)/g).map((part: string, i: number) => {
-                        if (part.startsWith('#')) return <span key={i} className="text-indigo-400 font-semibold">{part}</span>;
-                        return <span key={i}>{part}</span>;
-                      })}
-                    </p>
-                  ) : (
-                    <p className="text-muted-foreground italic">No notes were written for this trade.</p>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-indigo-400" />
+                    Journal Notes
+                  </h3>
+                  {!isEditing && (
+                    <Button variant="ghost" size="sm" onClick={() => setIsEditing(true)} className="text-muted-foreground hover:text-foreground">
+                      <Pencil className="w-4 h-4 mr-2" />
+                      Edit Journal
+                    </Button>
                   )}
                 </div>
+                
+                {isEditing ? (
+                  <div className="space-y-3">
+                    <textarea 
+                      placeholder="Why did you take this trade? What did you learn?"
+                      value={editNotes}
+                      onChange={e => setEditNotes(e.target.value)}
+                      className="w-full flex min-h-[150px] rounded-md border border-input bg-card px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
+                    />
+                    
+                    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                      <div 
+                        onClick={() => !editScreenshotUrl && fileInputRef.current?.click()}
+                        className={`w-full sm:w-64 min-h-[100px] border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center relative overflow-hidden transition-colors ${!editScreenshotUrl ? 'cursor-pointer hover:border-indigo-500/50 hover:bg-indigo-500/5' : ''}`}
+                      >
+                        {editScreenshotUrl ? (
+                          <>
+                            <a href={editScreenshotUrl} target="_blank" rel="noreferrer" className="w-full h-full block absolute inset-0">
+                              <img src={editScreenshotUrl} alt="Screenshot" className="w-full h-full object-cover hover:opacity-80 transition-opacity" />
+                            </a>
+                            <button 
+                              onClick={(e) => { e.stopPropagation(); setEditScreenshotUrl(''); }}
+                              className="absolute top-2 right-2 z-10 bg-black/60 text-white p-1.5 rounded-md hover:bg-rose-500 transition-colors"
+                              title="Remove Image"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </>
+                        ) : (
+                          <div className="text-center p-4">
+                            {isUploading ? (
+                              <Loader2 className="w-5 h-5 text-indigo-400 animate-spin mx-auto mb-1" />
+                            ) : (
+                              <Camera className="w-5 h-5 text-muted-foreground mx-auto mb-1" />
+                            )}
+                            <span className="text-[10px] text-muted-foreground font-medium uppercase">
+                              {isUploading ? 'Uploading...' : 'Add screenshot'}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleUpload} />
+
+                      <div className="flex-1 flex justify-end gap-2 w-full sm:w-auto">
+                        <Button variant="outline" size="sm" onClick={() => setIsEditing(false)} disabled={isSaving}>Cancel</Button>
+                        <Button size="sm" onClick={handleSave} disabled={isSaving || isUploading} className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                          {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+                          {isSaving ? 'Saving...' : 'Save Changes'}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-6 bg-card border border-border rounded-xl">
+                    {selectedTrade.notes ? (
+                      <p className="text-foreground leading-relaxed whitespace-pre-wrap text-lg">
+                        {selectedTrade.notes.split(/(#\w+)/g).map((part: string, i: number) => {
+                          if (part.startsWith('#')) return <span key={i} className="text-indigo-400 font-semibold">{part}</span>;
+                          return <span key={i}>{part}</span>;
+                        })}
+                      </p>
+                    ) : (
+                      <p className="text-muted-foreground italic">No notes were written for this trade.</p>
+                    )}
+                  </div>
+                )}
               </div>
 
-              {/* Screenshot */}
-              {selectedTrade.screenshot_url && (
+              {/* Screenshot (View Mode) */}
+              {!isEditing && selectedTrade.screenshot_url && (
                 <div className="space-y-3">
                   <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
                     <ImageIcon className="w-5 h-5 text-indigo-400" />
