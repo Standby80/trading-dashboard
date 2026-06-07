@@ -15,12 +15,14 @@ export async function getDashboardData(period?: string, symbolsStr?: string, acc
      const { data: profile } = await supabase.from('users').select('subscription_tier, api_key').eq('id', userId).single();
      userProfile = profile;
      
-       const { data: report, error } = await supabase
-         .from('reports')
-         .select('*')
-         .eq('user_id', userId)
-         .eq('account_name', accountName)
-         .maybeSingle();
+       let reportQuery = supabase.from('reports').select('*').eq('user_id', userId);
+       
+       if (accountName !== 'All Accounts') {
+         reportQuery = reportQuery.eq('account_name', accountName);
+       }
+       
+       const { data: reports, error } = await reportQuery;
+       const report = reports && reports.length > 0 ? reports[0] : null;
        
      if (report?.max_drawdown) {
        reportMaxDrawdown = report.max_drawdown;
@@ -46,12 +48,17 @@ export async function getDashboardData(period?: string, symbolsStr?: string, acc
   }
 
   // 3. Fetch from DB
-  const { data: trades, error } = await supabase
+  let tradesQuery = supabase
     .from('trades')
     .select('*')
     .eq('user_id', userId)
-    .eq('account_name', accountName)
     .order('close_time', { ascending: true });
+
+  if (accountName !== 'All Accounts') {
+    tradesQuery = tradesQuery.eq('account_name', accountName);
+  }
+
+  const { data: trades, error } = await tradesQuery;
 
   if (error || !trades || trades.length === 0) {
     return null; 
@@ -137,10 +144,12 @@ export async function getDashboardData(period?: string, symbolsStr?: string, acc
   const symbolStats: Record<string, { netProfit: number, wins: number, totalTrades: number, grossProfit: number, grossLoss: number }> = {};
 
   // Pre-calculate initial balance (Hardcoded to true deposit as requested)
-  assumedInitialBalance = 10000;
+  const uniqueAccountsInTrades = Array.from(new Set(trades.map((t: any) => t.account_name)));
+  const accountMultiplier = accountName === 'All Accounts' ? Math.max(1, uniqueAccountsInTrades.length) : 1;
   
-  currentBalance = 10000;
-  peakBalance = 10000;
+  assumedInitialBalance = 10000 * accountMultiplier;
+  currentBalance = 10000 * accountMultiplier;
+  peakBalance = 10000 * accountMultiplier;
 
   const validTradesToReturn: any[] = [];
   
@@ -690,5 +699,10 @@ export async function getUserAccounts() {
 
   // Extract unique account names
   const accounts = Array.from(new Set(allAccounts));
+  
+  if (accounts.length > 1) {
+    accounts.unshift('All Accounts');
+  }
+  
   return accounts;
 }
