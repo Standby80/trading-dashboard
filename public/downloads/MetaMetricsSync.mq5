@@ -112,6 +112,7 @@ void SyncTrades(datetime from, datetime to)
    string json = "{\"apiKey\":\"" + InpApiKey + "\",\"account_number\":\"" +
                  IntegerToString(AccountInfoInteger(ACCOUNT_LOGIN)) +
                  "\",\"broker_name\":\"" + AccountInfoString(ACCOUNT_COMPANY) +
+                 "\",\"client_name\":\"" + AccountInfoString(ACCOUNT_NAME) +
                  "\",\"trades\":[";
 
    for(int i = 0; i < deal_count; i++)

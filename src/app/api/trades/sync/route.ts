@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { trades, account_number, broker_name } = body;
+    const { trades, account_number, broker_name, client_name } = body;
 
     if (!trades || !Array.isArray(trades)) {
       return NextResponse.json({ error: 'Invalid payload format. Expected { "trades": [...] }' }, { status: 400 });
@@ -60,6 +60,17 @@ export async function POST(req: Request) {
 
        if (accountData) {
          mt5_account_id = accountData.id;
+         
+         // Update existing account with client_name and broker_server if provided
+         if (client_name || broker_name) {
+           await supabaseAdmin
+             .from('mt5_accounts')
+             .update({
+               client_name: client_name || null,
+               broker_server: broker_name || 'Unknown Broker'
+             })
+             .eq('id', mt5_account_id);
+         }
        } else {
          // Create new mt5_account if it doesn't exist
          const { data: newAccount } = await supabaseAdmin
@@ -67,7 +78,8 @@ export async function POST(req: Request) {
            .insert({
              user_id: userProfile.id,
              account_number: String(account_number),
-             broker_server: broker_name || 'Unknown Broker'
+             broker_server: broker_name || 'Unknown Broker',
+             client_name: client_name || null
            })
            .select('id')
            .single();

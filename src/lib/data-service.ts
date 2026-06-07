@@ -692,7 +692,7 @@ export function calculateMetaMetricsScore(trades: any[], initialBalance: number 
 export async function getUserAccounts() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return ['Default'];
+  if (!user) return [{ id: 'Default', label: 'Default' }];
 
   // Hämta manuellt uppladdade konton
   const { data: reportsData, error: reportsError } = await supabase
@@ -703,23 +703,38 @@ export async function getUserAccounts() {
   // Hämta inkopplade live-konton
   const { data: mt5Data, error: mt5Error } = await supabase
     .from('mt5_accounts')
-    .select('account_number')
+    .select('account_number, client_name, broker_server')
     .eq('user_id', user.id);
 
-  const reportAccounts = reportsData ? reportsData.map(r => r.account_name || 'Default') : [];
-  const mt5Accounts = mt5Data ? mt5Data.map(r => `MT5 - ${r.account_number}`) : [];
+  const reportAccounts = reportsData ? reportsData.map(r => ({
+    id: r.account_name || 'Default',
+    label: r.account_name || 'Default'
+  })) : [];
+
+  const mt5Accounts = mt5Data ? mt5Data.map(r => {
+    const id = `MT5 - ${r.account_number}`;
+    const label = r.client_name ? `${r.client_name} (${r.broker_server})` : id;
+    return { id, label };
+  }) : [];
 
   const allAccounts = [...reportAccounts, ...mt5Accounts];
 
   if (allAccounts.length === 0) {
-    return ['Default'];
+    return [{ id: 'Default', label: 'Default' }];
   }
 
-  // Extract unique account names
-  const accounts = Array.from(new Set(allAccounts));
+  // Deduplicate by ID
+  const uniqueAccountsMap = new Map<string, { id: string, label: string }>();
+  for (const acc of allAccounts) {
+    if (!uniqueAccountsMap.has(acc.id)) {
+      uniqueAccountsMap.set(acc.id, acc);
+    }
+  }
+  
+  const accounts = Array.from(uniqueAccountsMap.values());
   
   if (accounts.length > 1) {
-    accounts.unshift('All Accounts');
+    accounts.unshift({ id: 'All Accounts', label: 'All Accounts' });
   }
   
   return accounts;
