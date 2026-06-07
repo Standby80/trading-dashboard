@@ -26,8 +26,8 @@ export default async function AccountsPage() {
   
   // Fetch high-level data for all accounts
   const accountsData = await Promise.all(
-    accountNames.map(async (accName, index) => {
-      const data = await getDashboardData('all', undefined, accName);
+    accountNames.map(async (account, index) => {
+      const data = await getDashboardData('all', undefined, account.id);
       
       const balance = data?.kpis?.currentBalance || 10000;
       const initial = data?.kpis?.initialBalance || 10000;
@@ -35,7 +35,8 @@ export default async function AccountsPage() {
       const withdrawals = 0; 
       
       return {
-        name: accName,
+        name: account.label,
+        id: account.id,
         balance: balance,
         currency: 'USD',
         deposits: initial,
