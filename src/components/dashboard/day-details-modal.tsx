@@ -8,7 +8,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
-import { TrendingUp, TrendingDown, Eye } from 'lucide-react'
 
 interface Trade {
   ticket_id: string;
@@ -22,13 +21,178 @@ interface Trade {
   commission?: number;
   type?: string;
   volume?: number;
+  notes?: string;
+  screenshot_url?: string;
 }
 
+// ... keeping DayDetailsModalProps
 interface DayDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   date: string;
   trades: Trade[];
+}
+
+import { createClient } from '@/lib/supabase/client';
+import { Camera, Save, ChevronDown, ChevronUp, Image as ImageIcon, Loader2, Trash2, TrendingUp, TrendingDown, Eye } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
+function ExpandableTradeRow({ trade }: { trade: Trade & { netProfit: number } }) {
+  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [notes, setNotes] = React.useState(trade.notes || '');
+  const [screenshotUrl, setScreenshotUrl] = React.useState(trade.screenshot_url || '');
+  const [isSaving, setIsSaving] = React.useState(false);
+  const [isUploading, setIsUploading] = React.useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const isWin = trade.netProfit >= 0;
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      const res = await fetch(`/api/trades/${trade.ticket_id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notes, screenshot_url: screenshotUrl })
+      });
+      if (!res.ok) throw new Error('Failed to save');
+      // Optional: show toast
+    } catch (e) {
+      alert("Error saving notes");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      setIsUploading(true);
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not logged in");
+
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${user.id}/${trade.ticket_id}-${Math.random()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('trade_screenshots')
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('trade_screenshots')
+        .getPublicUrl(filePath);
+
+      setScreenshotUrl(publicUrl);
+    } catch (error: any) {
+      alert("Error uploading screenshot: " + error.message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  return (
+    <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col relative group hover:border-border transition-colors">
+      {/* Left Border Status */}
+      <div className={`w-1.5 absolute left-0 top-0 bottom-0 ${isWin ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
+      
+      {/* Main Row */}
+      <div 
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="flex-1 p-4 pl-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer hover:bg-white/5 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <div className={`p-2 rounded-lg bg-opacity-10 ${isWin ? 'bg-emerald-500 text-emerald-400' : 'bg-rose-500 text-rose-400'}`}>
+            {isWin ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
+          </div>
+          <div>
+            <div className="font-semibold text-foreground flex items-center gap-2">
+              {trade.symbol}
+              {(notes || screenshotUrl) && (
+                <div className="w-2 h-2 rounded-full bg-indigo-500" title="Has journal entry"></div>
+              )}
+            </div>
+            <div className="text-xs text-muted-foreground mt-0.5 flex gap-3">
+              <span>Entry: <span className="text-foreground font-mono">{trade.open_price}</span></span>
+              <span>Exit: <span className="text-foreground font-mono">{trade.close_price}</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between sm:justify-end gap-6">
+          <div className="text-right">
+            <div className={`text-lg font-bold font-mono ${isWin ? 'text-emerald-400' : 'text-rose-500'}`}>
+              {isWin ? '+' : ''}${trade.netProfit.toFixed(2)}
+            </div>
+            <div className="text-[10px] text-muted-foreground">
+              {new Date(trade.open_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(trade.close_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </div>
+          </div>
+          <button className="text-muted-foreground hover:text-foreground transition-colors p-2 rounded-full hover:bg-white/5">
+            {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Expanded Area */}
+      {isExpanded && (
+        <div className="p-4 pl-6 border-t border-border/50 bg-black/20 flex flex-col md:flex-row gap-6">
+          <div className="flex-1 space-y-3">
+            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Trade Notes & Lessons</label>
+            <textarea 
+              placeholder="Why did you take this trade? What did you learn?"
+              value={notes}
+              onChange={e => setNotes(e.target.value)}
+              className="w-full flex min-h-[120px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
+            />
+            <Button onClick={handleSave} disabled={isSaving} size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white">
+              {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+              {isSaving ? 'Saving...' : 'Save Journal'}
+            </Button>
+          </div>
+          
+          <div className="w-full md:w-64 space-y-3 flex flex-col">
+            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Screenshot</label>
+            <div 
+              onClick={() => !screenshotUrl && fileInputRef.current?.click()}
+              className={`flex-1 min-h-[120px] border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center relative overflow-hidden transition-colors ${!screenshotUrl ? 'cursor-pointer hover:border-indigo-500/50 hover:bg-indigo-500/5' : ''}`}
+            >
+              {screenshotUrl ? (
+                <>
+                  <a href={screenshotUrl} target="_blank" rel="noreferrer" className="w-full h-full block">
+                    <img src={screenshotUrl} alt="Trade Screenshot" className="w-full h-full object-cover hover:opacity-80 transition-opacity" />
+                  </a>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); setScreenshotUrl(''); }}
+                    className="absolute top-2 right-2 bg-black/60 text-white p-1.5 rounded-md hover:bg-rose-500 transition-colors"
+                    title="Remove Image"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </>
+              ) : (
+                <div className="text-center p-4">
+                  {isUploading ? (
+                    <Loader2 className="w-6 h-6 text-indigo-400 animate-spin mx-auto mb-2" />
+                  ) : (
+                    <Camera className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
+                  )}
+                  <span className="text-xs text-muted-foreground font-medium">
+                    {isUploading ? 'Uploading...' : 'Click to add screenshot'}
+                  </span>
+                </div>
+              )}
+            </div>
+            <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleUpload} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export function DayDetailsModal({ isOpen, onClose, date, trades }: DayDetailsModalProps) {
@@ -159,41 +323,9 @@ export function DayDetailsModal({ isOpen, onClose, date, trades }: DayDetailsMod
                 No trades recorded for this day.
               </div>
             ) : (
-              processedTrades.map((trade, i) => {
-                const isWin = trade.netProfit >= 0;
-                return (
-                  <div key={`${trade.ticket_id}-${i}`} className="bg-card border border-border rounded-xl overflow-hidden flex relative group hover:border-border transition-colors">
-                    {/* Left Border Status */}
-                    <div className={`w-1.5 absolute left-0 top-0 bottom-0 ${isWin ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
-                    
-                    <div className="flex-1 p-4 pl-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                      <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-lg bg-opacity-10 ${isWin ? 'bg-emerald-500 text-emerald-400' : 'bg-rose-500 text-rose-400'}`}>
-                          {isWin ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
-                        </div>
-                        <div>
-                          <div className="font-semibold text-foreground">{trade.symbol}</div>
-                          <div className="text-xs text-muted-foreground mt-0.5 flex gap-3">
-                            <span>Entry: <span className="text-foreground font-mono">{trade.open_price}</span></span>
-                            <span>Exit: <span className="text-foreground font-mono">{trade.close_price}</span></span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between sm:justify-end gap-6">
-                        <div className="text-right">
-                          <div className={`text-lg font-bold font-mono ${isWin ? 'text-emerald-400' : 'text-rose-500'}`}>
-                            {isWin ? '+' : ''}${trade.netProfit.toFixed(2)}
-                          </div>
-                          <div className="text-[10px] text-muted-foreground">
-                            {new Date(trade.open_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(trade.close_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })
+              processedTrades.map((trade, i) => (
+                <ExpandableTradeRow key={`${trade.ticket_id}-${i}`} trade={trade} />
+              ))
             )}
           </div>
         </div>
