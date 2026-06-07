@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 interface AccountCardProps {
   acc: {
     name: string;
+    id: string;
     balance: number;
     currency: string;
     deposits: number;
@@ -31,7 +32,7 @@ export function AccountCard({ acc, isEur, colorClass }: AccountCardProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleCardClick = () => {
-    router.push(`/?account=${acc.name}`);
+    router.push(`/?account=${acc.id}`);
   };
 
   const handleDelete = async (e: React.MouseEvent) => {
@@ -44,7 +45,7 @@ export function AccountCard({ acc, isEur, colorClass }: AccountCardProps) {
     setIsDeleting(true);
     try {
       const params = new URLSearchParams();
-      params.set('account', acc.name);
+      params.set('account', acc.id);
       
       const res = await fetch(`/api/trades/clear?${params.toString()}`, {
         method: 'DELETE',

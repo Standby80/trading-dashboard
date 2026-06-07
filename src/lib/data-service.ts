@@ -713,7 +713,14 @@ export async function getUserAccounts() {
 
   const mt5Accounts = mt5Data ? mt5Data.map(r => {
     const id = `MT5 - ${r.account_number}`;
-    const label = r.client_name ? `${r.client_name} (${r.broker_server})` : id;
+    let label = id;
+    if (r.client_name && r.broker_server && r.broker_server !== 'Unknown Broker') {
+      label = `${r.client_name} (${r.broker_server})`;
+    } else if (r.client_name) {
+      label = r.client_name;
+    } else if (r.broker_server && r.broker_server !== 'Unknown Broker') {
+      label = `${id} (${r.broker_server})`;
+    }
     return { id, label };
   }) : [];
 
