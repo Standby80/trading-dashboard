@@ -141,15 +141,36 @@ export function JournalView({ trades }: { trades: any[] }) {
                       <div className="flex items-center gap-2">
                         <span className={`w-2 h-2 rounded-full ${isWin ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
                         <span className="font-bold text-foreground">{trade.symbol}</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider ${
+                          (trade.type === 'DEAL_TYPE_BUY' || trade.type === 'BUY') 
+                            ? 'bg-emerald-500/10 text-emerald-400' 
+                            : 'bg-rose-500/10 text-rose-400'
+                        }`}>
+                          {(trade.type === 'DEAL_TYPE_BUY' || trade.type === 'BUY') ? 'BUY' : 'SELL'}
+                        </span>
                       </div>
                       <span className={`font-mono font-bold ${isWin ? 'text-emerald-400' : 'text-rose-500'}`}>
                         {isWin ? '+' : ''}${netProfit.toFixed(2)}
                       </span>
                     </div>
                     
-                    <div className="text-xs text-muted-foreground mb-3 flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {new Date(trade.close_time).toLocaleDateString()} {new Date(trade.close_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    <div className="text-xs text-muted-foreground mb-3 flex items-center gap-3">
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {new Date(trade.close_time).toLocaleDateString()} {new Date(trade.close_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </div>
+                      <div className="flex items-center gap-1 text-foreground/60" title="Holding Time">
+                        <TrendingUp className="w-3 h-3 opacity-50" />
+                        {(() => {
+                          const ms = new Date(trade.close_time).getTime() - new Date(trade.open_time).getTime();
+                          const mins = Math.floor(ms / 60000);
+                          const hours = Math.floor(mins / 60);
+                          const days = Math.floor(hours / 24);
+                          if (days > 0) return `${days}d ${hours % 24}h`;
+                          if (hours > 0) return `${hours}h ${mins % 60}m`;
+                          return `${mins}m`;
+                        })()}
+                      </div>
                     </div>
 
                     <p className="text-sm text-foreground/80 line-clamp-2 leading-relaxed">
