@@ -61,7 +61,7 @@ export default async function DashboardPage({
       
       {/* Sidebar - Desktop */}
       <div className="hidden md:block">
-        <AppSidebar userEmail={user?.email} profile={{ is_premium: isPremium, full_name: fullName, avatar_url: avatarUrl, trial_ends_at: profile?.trial_ends_at }} />
+        <AppSidebar userEmail={user?.email} profile={{ is_premium: isPremium, full_name: fullName, avatar_url: avatarUrl, trial_ends_at: profile?.trial_ends_at || null }} />
       </div>
 
       {/* Main Content Area */}

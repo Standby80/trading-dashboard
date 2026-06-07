@@ -62,7 +62,7 @@ export default async function JournalPage({
             is_premium: isPremium, 
             full_name: fullName, 
             avatar_url: avatarUrl,
-            trial_ends_at: profile?.trial_ends_at 
+            trial_ends_at: profile?.trial_ends_at || null
           }} 
         />
       </div>

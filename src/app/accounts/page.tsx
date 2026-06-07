@@ -60,7 +60,7 @@ export default async function AccountsPage() {
       {/* Sidebar */}
       <div className="hidden md:block">
         {/* @ts-ignore */}
-        <AppSidebar userEmail={user?.email} profile={{ is_premium: isPremium, full_name: fullName, avatar_url: avatarUrl, trial_ends_at: trialEndsAt }} />
+        <AppSidebar userEmail={user?.email} profile={{ is_premium: isPremium, full_name: fullName, avatar_url: avatarUrl, trial_ends_at: trialEndsAt || null }} />
       </div>
 
       {/* Main Content Area */}
