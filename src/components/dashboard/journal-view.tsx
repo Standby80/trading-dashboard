@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, TrendingUp, TrendingDown, Image as ImageIcon, FileText, ChevronRight, Hash, Clock, Maximize2 } from 'lucide-react';
+import { Search, Filter, TrendingUp, TrendingDown, Image as ImageIcon, FileText, ChevronRight, Hash, Clock, Maximize2, BookOpen } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
 export function JournalView({ trades }: { trades: any[] }) {
