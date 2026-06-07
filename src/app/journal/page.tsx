@@ -22,11 +22,19 @@ export default async function JournalPage({
   // Fetch full profile for sidebar
   const { data: profile } = await supabase
     .from('users')
-    .select('subscription_tier, full_name, avatar_url')
+    .select('subscription_tier, full_name, avatar_url, trial_ends_at')
     .eq('id', user.id)
     .single();
 
   const isPremium = profile?.subscription_tier === 'premium';
+  
+  // Check Trial Expiration
+  if (!isPremium && profile?.trial_ends_at) {
+    if (new Date(profile.trial_ends_at) < new Date()) {
+      redirect('/upgrade?expired=true');
+    }
+  }
+
   const fullName = profile?.full_name || '';
   const avatarUrl = profile?.avatar_url || '';
 

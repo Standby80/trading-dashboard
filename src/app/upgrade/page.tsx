@@ -1,11 +1,15 @@
 'use client';
 
-import { useState } from 'react';
-import { Check, ChevronLeft, Loader2, ShieldCheck } from 'lucide-react';
+import { useState, Suspense } from 'react';
+import { Check, ChevronLeft, Loader2, ShieldCheck, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import { getCheckoutURL } from './actions';
+import { useSearchParams } from 'next/navigation';
 
-export default function UpgradePage() {
+function UpgradeContent() {
+  const searchParams = useSearchParams();
+  const isExpired = searchParams.get('expired') === 'true';
+
   const [isLoadingMonthly, setIsLoadingMonthly] = useState(false);
   const [isLoadingAnnually, setIsLoadingAnnually] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,10 +48,26 @@ export default function UpgradePage() {
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-12 lg:py-20">
         <div className="text-center mb-12">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-4 tracking-tight">Upgrade to <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">Premium</span></h1>
-          <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-6">
-            Unlock the full potential of MetaMetrics. Manage multiple accounts, sync live data, and get advanced analytics.
-          </p>
+          {isExpired ? (
+            <>
+              <div className="flex justify-center mb-6">
+                <div className="bg-rose-500/10 p-4 rounded-full">
+                  <AlertTriangle className="w-10 h-10 text-rose-500" />
+                </div>
+              </div>
+              <h1 className="text-4xl lg:text-5xl font-bold mb-4 tracking-tight">Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-orange-400">7-Day Free Trial</span> Has Expired</h1>
+              <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-6">
+                Subscribe to a premium plan below to unlock your dashboard, journal, and resume live EA syncing.
+              </p>
+            </>
+          ) : (
+            <>
+              <h1 className="text-4xl lg:text-5xl font-bold mb-4 tracking-tight">Upgrade to <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">Premium</span></h1>
+              <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-6">
+                Unlock the full potential of MetaMetrics. Manage multiple accounts, sync live data, and get advanced analytics.
+              </p>
+            </>
+          )}
           
           {error && (
             <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 px-4 py-3 rounded-lg max-w-md mx-auto text-sm">
@@ -111,5 +131,13 @@ export default function UpgradePage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function UpgradePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-8 h-8 text-indigo-500 animate-spin" /></div>}>
+      <UpgradeContent />
+    </Suspense>
   );
 }

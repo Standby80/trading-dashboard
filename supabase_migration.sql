@@ -4,7 +4,8 @@ CREATE TABLE public.users (
     email TEXT,
     subscription_tier TEXT DEFAULT 'free', -- 'free', 'basic', 'premium'
     api_key UUID DEFAULT gen_random_uuid(), -- Used for MQL5 MT5 Auto-sync
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()),
+    trial_ends_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) + INTERVAL '7 days'
 );
 
 -- 2. Enable Row Level Security (RLS)
@@ -24,8 +25,8 @@ USING (auth.uid() = id);
 CREATE OR REPLACE FUNCTION public.handle_new_user() 
 RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO public.users (id, email)
-    VALUES (new.id, new.email);
+    INSERT INTO public.users (id, email, trial_ends_at)
+    VALUES (new.id, new.email, timezone('utc'::text, now()) + INTERVAL '7 days');
     RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

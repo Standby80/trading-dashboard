@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     // Verify API Key
     const { data: userProfile, error: profileError } = await supabaseAdmin
       .from('users')
-      .select('id, subscription_tier')
+      .select('id, subscription_tier, trial_ends_at')
       .eq('api_key', apiKey)
       .single();
 
@@ -33,8 +33,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid API Key' }, { status: 401 });
     }
 
-    if (userProfile.subscription_tier !== 'premium') {
-       return NextResponse.json({ error: 'Sync API requires Premium subscription' }, { status: 403 });
+    const isPremium = userProfile.subscription_tier === 'premium';
+    const isTrialActive = userProfile.trial_ends_at && new Date(userProfile.trial_ends_at) > new Date();
+
+    if (!isPremium && !isTrialActive) {
+       return NextResponse.json({ error: 'Payment Required: Your 7-day free trial has expired.' }, { status: 402 });
     }
 
     const body = await req.json();
