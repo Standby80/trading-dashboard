@@ -203,62 +203,86 @@ export function JournalView({ trades }: { trades: any[] }) {
                 const isWin = netProfit >= 0;
                 
                 return (
-                  <button
-                    key={trade.ticket_id}
-                    onClick={() => setSelectedTradeId(trade.ticket_id)}
-                    className={`w-full text-left p-4 transition-colors relative group ${isSelected ? 'bg-indigo-500/10' : 'hover:bg-white/5'}`}
-                  >
+                  <div key={trade.ticket_id} className={`w-full text-left p-4 transition-colors relative group ${isSelected ? 'bg-indigo-500/10' : 'hover:bg-white/5'}`}>
                     {isSelected && <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500"></div>}
                     
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className={`w-2 h-2 rounded-full ${isWin ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
-                        <span className="font-bold text-foreground">{trade.symbol}</span>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider ${
-                          (trade.type === 'DEAL_TYPE_BUY' || trade.type === 'BUY') 
-                            ? 'bg-emerald-500/10 text-emerald-400' 
-                            : 'bg-rose-500/10 text-rose-400'
-                        }`}>
-                          {(trade.type === 'DEAL_TYPE_BUY' || trade.type === 'BUY') ? 'BUY' : 'SELL'}
+                    <div 
+                      onClick={() => setSelectedTradeId(trade.ticket_id)}
+                      className="cursor-pointer"
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className={`w-2 h-2 rounded-full ${isWin ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
+                          <span className="font-bold text-foreground">{trade.symbol}</span>
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider ${
+                            (trade.type === 'DEAL_TYPE_BUY' || trade.type === 'BUY') 
+                              ? 'bg-emerald-500/10 text-emerald-400' 
+                              : 'bg-rose-500/10 text-rose-400'
+                          }`}>
+                            {(trade.type === 'DEAL_TYPE_BUY' || trade.type === 'BUY') ? 'BUY' : 'SELL'}
+                          </span>
+                        </div>
+                        <span className={`font-mono font-bold ${isWin ? 'text-emerald-400' : 'text-rose-500'}`}>
+                          {isWin ? '+' : ''}${netProfit.toFixed(2)}
                         </span>
                       </div>
-                      <span className={`font-mono font-bold ${isWin ? 'text-emerald-400' : 'text-rose-500'}`}>
-                        {isWin ? '+' : ''}${netProfit.toFixed(2)}
-                      </span>
-                    </div>
-                    
-                    <div className="text-xs text-muted-foreground mb-3 flex items-center gap-3">
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        {new Date(trade.close_time).toLocaleDateString()} {new Date(trade.close_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      
+                      <div className="text-xs text-muted-foreground mb-3 flex items-center gap-3">
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          {new Date(trade.close_time).toLocaleDateString()} {new Date(trade.close_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                        <div className="flex items-center gap-1 text-foreground/60" title="Holding Time">
+                          <TrendingUp className="w-3 h-3 opacity-50" />
+                          {(() => {
+                            const ms = new Date(trade.close_time).getTime() - new Date(trade.open_time).getTime();
+                            const mins = Math.floor(ms / 60000);
+                            const hours = Math.floor(mins / 60);
+                            const days = Math.floor(hours / 24);
+                            if (days > 0) return `${days}d ${hours % 24}h`;
+                            if (hours > 0) return `${hours}h ${mins % 60}m`;
+                            return `${mins}m`;
+                          })()}
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1 text-foreground/60" title="Holding Time">
-                        <TrendingUp className="w-3 h-3 opacity-50" />
-                        {(() => {
-                          const ms = new Date(trade.close_time).getTime() - new Date(trade.open_time).getTime();
-                          const mins = Math.floor(ms / 60000);
-                          const hours = Math.floor(mins / 60);
-                          const days = Math.floor(hours / 24);
-                          if (days > 0) return `${days}d ${hours % 24}h`;
-                          if (hours > 0) return `${hours}h ${mins % 60}m`;
-                          return `${mins}m`;
-                        })()}
-                      </div>
+
+                      <p className="text-sm text-foreground/80 line-clamp-2 leading-relaxed">
+                        {trade.notes || <span className="italic text-muted-foreground">No notes written...</span>}
+                      </p>
                     </div>
 
-                    <p className="text-sm text-foreground/80 line-clamp-2 leading-relaxed">
-                      {trade.notes || <span className="italic text-muted-foreground">No notes written...</span>}
-                    </p>
-
-                    <div className="mt-3 flex gap-2">
-                      {trade.screenshot_url && <ImageIcon className="w-4 h-4 text-indigo-400" />}
-                      {trade.notes && trade.notes.match(/#\w+/g)?.map((tag: string) => (
-                        <span key={tag} className="text-[10px] text-indigo-300 bg-indigo-500/10 px-1.5 py-0.5 rounded">
-                          {tag}
-                        </span>
-                      ))}
+                    <div className="mt-3 flex items-center justify-between">
+                      <div className="flex gap-2">
+                        {trade.screenshot_url && <ImageIcon className="w-4 h-4 text-indigo-400" />}
+                        {trade.notes && trade.notes.match(/#\w+/g)?.map((tag: string) => (
+                          <span key={tag} className="text-[10px] text-indigo-300 bg-indigo-500/10 px-1.5 py-0.5 rounded">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                      <button 
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          if (confirm('Are you sure you want to delete this journal entry?')) {
+                            try {
+                              const res = await fetch(`/api/trades/${trade.ticket_id}`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ notes: '', screenshot_url: '' })
+                              });
+                              if (res.ok) router.refresh();
+                            } catch (err) {
+                              alert('Failed to delete journal entry.');
+                            }
+                          }
+                        }}
+                        className="text-muted-foreground hover:text-rose-500 transition-colors p-1 rounded hover:bg-rose-500/10"
+                        title="Delete Journal Entry"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
-                  </button>
+                  </div>
                 );
               })}
             </div>
