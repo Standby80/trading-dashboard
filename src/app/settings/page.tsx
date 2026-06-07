@@ -15,12 +15,16 @@ export default async function SettingsPage() {
 
   let isPremium = false;
   let apiKey = '';
+  let fullName = '';
+  let avatarUrl = '';
 
-  const { data: profile } = await supabase.from('users').select('subscription_tier, api_key').eq('id', user.id).single();
+  const { data: profile } = await supabase.from('users').select('subscription_tier, api_key, full_name, avatar_url').eq('id', user.id).single();
   
   if (profile) {
     isPremium = profile.subscription_tier === 'premium';
     apiKey = profile.api_key;
+    fullName = profile.full_name || '';
+    avatarUrl = profile.avatar_url || '';
   }
 
   return (
@@ -28,7 +32,7 @@ export default async function SettingsPage() {
       
       {/* Sidebar */}
       <div className="hidden md:block">
-        <AppSidebar userEmail={user.email} profile={{ is_premium: isPremium }} />
+        <AppSidebar userEmail={user.email} profile={{ is_premium: isPremium, full_name: fullName, avatar_url: avatarUrl }} />
       </div>
 
       {/* Main Content Area */}
@@ -49,7 +53,12 @@ export default async function SettingsPage() {
           </div>
 
           {/* Settings Form */}
-          <SettingsForm initialApiKey={apiKey} />
+          <SettingsForm 
+            initialApiKey={apiKey} 
+            initialName={fullName} 
+            initialEmail={user.email} 
+            initialAvatar={avatarUrl} 
+          />
 
         </div>
       </div>

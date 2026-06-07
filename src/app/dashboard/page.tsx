@@ -32,9 +32,13 @@ export default async function DashboardPage({
   const { data: { user } } = await supabase.auth.getUser();
 
   let isPremium = false;
+  let fullName = '';
+  let avatarUrl = '';
   if (user) {
-    const { data: profile } = await supabase.from('users').select('subscription_tier').eq('id', user.id).single();
+    const { data: profile } = await supabase.from('users').select('subscription_tier, full_name, avatar_url').eq('id', user.id).single();
     isPremium = profile?.subscription_tier === 'premium';
+    fullName = profile?.full_name || '';
+    avatarUrl = profile?.avatar_url || '';
   }
 
   const currentAccount = params?.account || 'Default';
@@ -45,9 +49,9 @@ export default async function DashboardPage({
   return (
     <div className="flex h-screen bg-background text-foreground overflow-hidden font-sans">
       
-      {/* Sidebar - Hidden on mobile, handled by AppSidebar component */}
+      {/* Sidebar - Desktop */}
       <div className="hidden md:block">
-        <AppSidebar userEmail={user?.email} profile={{ is_premium: isPremium }} />
+        <AppSidebar userEmail={user?.email} profile={{ is_premium: isPremium, full_name: fullName, avatar_url: avatarUrl }} />
       </div>
 
       {/* Main Content Area */}

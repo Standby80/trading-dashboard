@@ -64,12 +64,16 @@ export function AppSidebar({ userEmail, profile }: SidebarProps & { profile?: an
       {/* User Profile */}
       <div className={`px-6 py-6 border-b border-border shrink-0 flex flex-col ${isCollapsed ? 'items-center px-0' : 'items-center'}`}>
         <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 overflow-hidden mb-3">
-          <UserCircle className="w-10 h-10 text-primary/50" strokeWidth={1} />
+          {profile?.avatar_url ? (
+            <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+          ) : (
+            <UserCircle className="w-10 h-10 text-primary/50" strokeWidth={1} />
+          )}
         </div>
         {!isCollapsed && (
           <div className="text-center w-full overflow-hidden flex flex-col items-center">
             <div className="flex items-center gap-2 justify-center w-full">
-              <h3 className="text-foreground font-medium text-sm truncate">Trader</h3>
+              <h3 className="text-foreground font-medium text-sm truncate">{profile?.full_name || 'Trader'}</h3>
               {profile?.is_premium ? (
                 <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 shrink-0">PRO</span>
               ) : (

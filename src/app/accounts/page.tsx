@@ -17,9 +17,13 @@ export default async function AccountsPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   let isPremium = false;
+  let fullName = '';
+  let avatarUrl = '';
   if (user) {
-    const { data: profile } = await supabase.from('users').select('subscription_tier').eq('id', user.id).single();
+    const { data: profile } = await supabase.from('users').select('subscription_tier, full_name, avatar_url').eq('id', user.id).single();
     isPremium = profile?.subscription_tier === 'premium';
+    fullName = profile?.full_name || '';
+    avatarUrl = profile?.avatar_url || '';
   }
 
   const accountNames = await getUserAccounts();
@@ -51,7 +55,7 @@ export default async function AccountsPage() {
       
       {/* Sidebar */}
       <div className="hidden md:block">
-        <AppSidebar userEmail={user?.email} profile={{ is_premium: isPremium }} />
+        <AppSidebar userEmail={user?.email} profile={{ is_premium: isPremium, full_name: fullName, avatar_url: avatarUrl }} />
       </div>
 
       {/* Main Content Area */}
