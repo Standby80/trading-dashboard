@@ -143,13 +143,31 @@ export async function getDashboardData(period?: string, symbolsStr?: string, acc
   const monthlyPnlMap: Record<string, Record<string, number>> = {};
   const symbolStats: Record<string, { netProfit: number, wins: number, totalTrades: number, grossProfit: number, grossLoss: number }> = {};
 
-  // Pre-calculate initial balance (Hardcoded to true deposit as requested)
-  const uniqueAccountsInTrades = Array.from(new Set(trades.map((t: any) => t.account_name)));
-  const accountMultiplier = accountName === 'All Accounts' ? Math.max(1, uniqueAccountsInTrades.length) : 1;
-  
-  assumedInitialBalance = 10000 * accountMultiplier;
-  currentBalance = 10000 * accountMultiplier;
-  peakBalance = 10000 * accountMultiplier;
+  // Calculate initial balance dynamically from DEPOSIT trades
+  let calculatedInitialBalance = 0;
+  for (const t of trades) {
+    const isDeposit = t.type === 'DEPOSIT' || t.symbol === 'DEPOSIT' || t.type === 'BALANCE' || t.type === 'DEAL_TYPE_BALANCE';
+    if (isDeposit) {
+       const rawProfit = t.profit ?? t.net_profit ?? t.netPnl ?? 0;
+       const profit = typeof rawProfit === 'number' 
+         ? rawProfit 
+         : parseFloat(String(rawProfit).replace(/\s+/g, '').replace(/[^0-9.-]/g, '')) || 0;
+       if (profit > 0) {
+         calculatedInitialBalance += profit;
+       }
+    }
+  }
+
+  // Fallback if no deposits were found in the history
+  if (calculatedInitialBalance <= 0) {
+    const uniqueAccountsInTrades = Array.from(new Set(trades.map((t: any) => t.account_name)));
+    const accountMultiplier = accountName === 'All Accounts' ? Math.max(1, uniqueAccountsInTrades.length) : 1;
+    calculatedInitialBalance = 10000 * accountMultiplier;
+  }
+
+  assumedInitialBalance = calculatedInitialBalance;
+  currentBalance = calculatedInitialBalance;
+  peakBalance = calculatedInitialBalance;
 
   const validTradesToReturn: any[] = [];
   
