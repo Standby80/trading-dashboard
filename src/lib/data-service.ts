@@ -485,6 +485,38 @@ export async function getDashboardData(period?: string, symbolsStr?: string, acc
     }
   };
 
+  // New Hedge Fund KPIs calculations
+  const expectancy = (winRate / 100 * avgWin) - ((1 - winRate / 100) * avgLoss);
+  const avgRR = avgLoss === 0 ? avgWin : avgWin / avgLoss;
+  
+  const activeTradingDays = Object.keys(dailyTradeIndexMap).length;
+  const tradeFrequency = activeTradingDays > 0 ? totalTrades / activeTradingDays : 0;
+  
+  const profitPerHour = totalDurationMs > 0 ? netPnl / (totalDurationMs / (1000 * 60 * 60)) : 0;
+
+  let currentAth = assumedInitialBalance;
+  let currentAthDate: Date | null = null;
+  let maxDrawdownDays = 0;
+
+  cumulativeData.forEach(point => {
+    if (point.y >= currentAth) {
+      currentAth = point.y;
+      currentAthDate = new Date(point.x);
+    } else if (currentAthDate) {
+      const daysUnderAth = (new Date(point.x).getTime() - currentAthDate.getTime()) / (1000 * 60 * 60 * 24);
+      if (daysUnderAth > maxDrawdownDays) {
+        maxDrawdownDays = daysUnderAth;
+      }
+    }
+  });
+
+  const avgWinHoldMins = winningTrades > 0 ? winDurationMs / winningTrades / 60000 : 0;
+  const avgLossHoldMins = (totalTrades - winningTrades) > 0 ? lossDurationMs / (totalTrades - winningTrades) / 60000 : 0;
+  const holdTimeDiff = avgWinHoldMins - avgLossHoldMins;
+  
+  const topAsset = assetPerformance.length > 0 ? assetPerformance[0] : { symbol: '-', netProfit: 0 };
+  const winLossRatio = (totalTrades - winningTrades) === 0 ? winningTrades : winningTrades / (totalTrades - winningTrades);
+
   const result = {
     kpis: {
       initialBalance: assumedInitialBalance,
@@ -563,7 +595,18 @@ export async function getDashboardData(period?: string, symbolsStr?: string, acc
         validTradesToReturn.map(t => ({ netProfit: Number(t.profit) + Number(t.swap || 0) + Number(t.commission || 0) })),
         assumedInitialBalance > 0 ? assumedInitialBalance : 10000,
         reportMaxDrawdown || 2.04
-      )
+      ),
+
+      // New Hedge Fund KPIs
+      expectancy,
+      avgRR,
+      profitPerHour,
+      tradeFrequency,
+      maxDrawdownDays: Math.round(maxDrawdownDays),
+      holdTimeDiff,
+      topAssetSymbol: topAsset.symbol,
+      topAssetProfit: topAsset.netProfit,
+      winLossRatio
     },
     dailyData: dailyPnl,
     cumulativeData,
