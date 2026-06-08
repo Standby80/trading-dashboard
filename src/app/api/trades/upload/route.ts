@@ -46,14 +46,16 @@ export async function POST(request: Request) {
 
       const { data: profile, error: authError } = await supabaseAdmin
           .from('users')
-          .select('id, subscription_tier')
+          .select('id, subscription_tier, trial_ends_at')
           .eq('api_key', apiKey.trim())
           .single();
 
       const isPremium = profile && profile.subscription_tier && profile.subscription_tier.toLowerCase() === 'premium';
+      const isTrialActive = profile?.trial_ends_at && new Date(profile.trial_ends_at).getTime() > new Date().getTime();
+      const hasAccess = isPremium || isTrialActive;
 
-      if (authError || !profile || !isPremium) {
-          console.error("Auth error:", authError || "Användaren hittades inte eller är inte Premium.");
+      if (authError || !profile || !hasAccess) {
+          console.error("Auth error:", authError || "Användaren hittades inte, är inte Premium, eller har utgången testperiod.");
           return NextResponse.json({ error: 'Obehörig eller ogiltig API-nyckel för Live Sync.' }, { status: 401, headers: corsHeaders });
       }
 
