@@ -16,13 +16,15 @@ export function ConnectLiveSyncButton({ profile, trigger }: { profile?: any, tri
   // but we can use the passed down profile for the UI button lock icon.
   // Profile subscription_tier vs plan_level mapping depending on your DB schema
   const isPremium = profile?.subscription_tier === 'premium' || profile?.plan_level === 'PREMIUM';
+  const isTrialActive = profile?.trial_ends_at && new Date(profile.trial_ends_at).getTime() > new Date().getTime();
+  const hasAccess = isPremium || isTrialActive;
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger 
         render={trigger || (
           <button className="w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-sm font-medium text-foreground hover:text-foreground hover:bg-white/5 transition-colors">
-            {isPremium ? (
+            {hasAccess ? (
               <span className="relative flex h-2 w-2 shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>

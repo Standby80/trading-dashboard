@@ -13,7 +13,7 @@ export async function GET() {
 
     const { data: profile, error } = await supabase
       .from('users')
-      .select('subscription_tier, api_key, full_name, avatar_url, email')
+      .select('subscription_tier, api_key, full_name, avatar_url, email, trial_ends_at')
       .eq('id', user.id)
       .single();
 
@@ -26,7 +26,8 @@ export async function GET() {
       api_key: profile.api_key,
       full_name: profile.full_name,
       avatar_url: profile.avatar_url,
-      email: user.email || profile.email
+      email: user.email || profile.email,
+      trial_ends_at: profile.trial_ends_at
     });
   } catch (err: any) {
     return NextResponse.json({ error: err.message || 'Internal server error' }, { status: 500 });

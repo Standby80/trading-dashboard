@@ -29,14 +29,15 @@ export default function ApiKeySettings() {
         // Map from database to the structure the component requires
         setProfile({
           plan_level: (data.plan_level === 'PREMIUM' || data.subscription_tier === 'premium') ? 'PREMIUM' : 'FREE',
-          api_key: data.api_key || null
+          api_key: data.api_key || null,
+          trial_ends_at: data.trial_ends_at || null
         });
       } catch (err: any) {
         console.error('Failed to fetch profile:', err);
         setError(err.message || 'Could not load API settings.');
         
         // Set a fallback profile to unlock the UI instead of getting stuck in the loading screen
-        setProfile({ plan_level: 'FREE', api_key: null });
+        setProfile({ plan_level: 'FREE', api_key: null, trial_ends_at: null });
       }
     }
     fetchProfile();
@@ -72,6 +73,10 @@ export default function ApiKeySettings() {
 
   if (!profile) return <div className="text-zinc-400">Loading settings...</div>;
 
+  const isPremium = profile.plan_level === 'PREMIUM';
+  const isTrialActive = profile.trial_ends_at && new Date(profile.trial_ends_at).getTime() > new Date().getTime();
+  const hasAccess = isPremium || isTrialActive;
+
   return (
     <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl backdrop-blur-md max-w-2xl">
       <h2 className="text-xl font-semibold text-foreground mb-2">MetaMetrics Live Sync API</h2>
@@ -79,7 +84,7 @@ export default function ApiKeySettings() {
         Use your unique API key to connect your MetaTrader 5 script with your dashboard for real-time syncing.
       </p>
 
-      {profile.plan_level === 'FREE' ? (
+      {!hasAccess ? (
         <div className="relative p-6 bg-zinc-950/40 border border-dashed border-zinc-800 rounded-lg overflow-hidden flex flex-col items-center text-center">
           <div className="absolute inset-0 bg-zinc-950/60 backdrop-blur-sm z-10" />
           <div className="relative z-20 flex flex-col items-center">
@@ -137,7 +142,7 @@ export default function ApiKeySettings() {
         </div>
       )}
 
-      {profile.plan_level === 'PREMIUM' && (
+      {hasAccess && (
         <LiveSyncGuide />
       )}
     </div>

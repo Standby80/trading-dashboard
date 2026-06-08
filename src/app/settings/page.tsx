@@ -25,6 +25,12 @@ export default async function SettingsPage() {
     apiKey = profile.api_key;
     fullName = profile.full_name || '';
     avatarUrl = profile.avatar_url || '';
+
+    if (!isPremium && profile.trial_ends_at) {
+      if (new Date(profile.trial_ends_at).getTime() < new Date().getTime()) {
+        redirect('/upgrade?expired=true');
+      }
+    }
   }
 
   return (

@@ -1,4 +1,5 @@
 import React from 'react';
+import { redirect } from 'next/navigation';
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
 import { getUserAccounts, getDashboardData } from "@/lib/data-service";
 import { createClient } from '@/lib/supabase/server';
@@ -25,9 +26,13 @@ export default async function AccountsPage() {
     fullName = profile?.full_name || '';
     avatarUrl = profile?.avatar_url || '';
     
-    // Check Trial Expiration (optional: maybe block accounts page too)
-    // We didn't block it before, so let's just pass trial_ends_at to the sidebar.
+    // Check Trial Expiration
     var trialEndsAt = profile?.trial_ends_at;
+    if (!isPremium && trialEndsAt) {
+      if (new Date(trialEndsAt).getTime() < new Date().getTime()) {
+        redirect('/upgrade?expired=true');
+      }
+    }
   }
 
   const accountNames = await getUserAccounts();
