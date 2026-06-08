@@ -12,7 +12,7 @@ export async function getDashboardData(period?: string, symbolsStr?: string, acc
   let userProfile = null;
   let reportMaxDrawdown = 0;
   if (userId) {
-     const { data: profile } = await supabase.from('users').select('subscription_tier, api_key').eq('id', userId).single();
+     const { data: profile } = await supabase.from('users').select('subscription_tier, api_key, trial_ends_at').eq('id', userId).single();
      userProfile = profile;
      
        let reportQuery = supabase.from('reports').select('*').eq('user_id', userId);
