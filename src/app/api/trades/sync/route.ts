@@ -20,7 +20,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing API Key' }, { status: 401 });
     }
 
-    const apiKey = authHeader.split(' ')[1];
+    const apiKey = authHeader.split(' ')[1]?.trim();
 
     // Verify API Key
     const { data: userProfile, error: profileError } = await supabaseAdmin
