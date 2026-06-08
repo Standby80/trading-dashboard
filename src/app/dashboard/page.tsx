@@ -87,7 +87,7 @@ export default async function DashboardPage({
               <LiveSyncIndicator currentAccount={currentAccount} />
             </div>
             <TemplateManager />
-            <DashboardFilters />
+            <DashboardFilters availableSymbols={data?.availableSymbols || []} />
           </div>
         </header>
 

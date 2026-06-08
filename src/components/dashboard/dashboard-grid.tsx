@@ -18,6 +18,7 @@ import { ExpectancyCurve } from "@/components/dashboard/expectancy-curve";
 import { TimeExtremesCards } from "@/components/dashboard/time-extremes-cards";
 import { MonthlyHeatmap } from "@/components/dashboard/monthly-heatmap";
 import { MetricCard } from "@/components/dashboard/metric-card";
+import { SymbolPerformanceWidget } from "@/components/dashboard/symbol-performance-widget";
 
 const ResponsiveGridLayout = WP(Responsive);
 
@@ -58,8 +59,9 @@ export function DashboardGrid({ data }: { data: any }) {
       { i: 'metric-worst', x: 36, y: 4, w: 12, h: 2, minW: 3, minH: 2 },
       { i: 'metric-growth', x: 48, y: 4, w: 12, h: 2, minW: 3, minH: 2 },
       
-      // Row 4: Calendar & MetaMetrics
-      { i: 'calendar', x: 0, y: 6, w: 40, h: 10, minW: 5, minH: 5 },
+      // Row 4: Symbol Performance, Calendar & MetaMetrics
+      { i: 'symbol-performance', x: 0, y: 6, w: 20, h: 10, minW: 5, minH: 5 },
+      { i: 'calendar', x: 20, y: 6, w: 20, h: 10, minW: 5, minH: 5 },
       { i: 'asset-performance', x: 40, y: 6, w: 20, h: 10, minW: 5, minH: 5 },
       
       // Row 5: Monthly P/L & Long vs Short
@@ -98,16 +100,17 @@ export function DashboardGrid({ data }: { data: any }) {
       { i: 'metric-worst', x: 1, y: 12, w: 1, h: 2, minW: 1, minH: 2 },
       { i: 'metric-growth', x: 0, y: 14, w: 2, h: 2, minW: 1, minH: 2 },
       
-      { i: 'calendar', x: 0, y: 16, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'asset-performance', x: 0, y: 26, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'performance-matrix', x: 0, y: 36, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'long-short', x: 0, y: 46, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'trade-execution', x: 0, y: 56, w: 2, h: 8, minW: 1, minH: 5 },
-      { i: 'trades-analysis', x: 0, y: 64, w: 2, h: 8, minW: 1, minH: 5 },
-      { i: 'expectancy-curve', x: 0, y: 72, w: 2, h: 9, minW: 1, minH: 5 },
-      { i: 'equity-curve', x: 0, y: 81, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'drawdown-chart', x: 0, y: 91, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'recent-trades', x: 0, y: 101, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'symbol-performance', x: 0, y: 16, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'calendar', x: 0, y: 26, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'asset-performance', x: 0, y: 36, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'performance-matrix', x: 0, y: 46, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'long-short', x: 0, y: 56, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'trade-execution', x: 0, y: 66, w: 2, h: 8, minW: 1, minH: 5 },
+      { i: 'trades-analysis', x: 0, y: 74, w: 2, h: 8, minW: 1, minH: 5 },
+      { i: 'expectancy-curve', x: 0, y: 82, w: 2, h: 9, minW: 1, minH: 5 },
+      { i: 'equity-curve', x: 0, y: 91, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'drawdown-chart', x: 0, y: 101, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'recent-trades', x: 0, y: 111, w: 2, h: 10, minW: 1, minH: 5 },
     ]
   };
 
@@ -285,7 +288,14 @@ export function DashboardGrid({ data }: { data: any }) {
         </div>
 
         {/* Larger Modules (Excluded from splitting) */}
-        <div key="calendar" data-grid={{ x: 0, y: 6, w: 40, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="symbol-performance" data-grid={{ x: 0, y: 6, w: 20, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+            <DragHandle />
+            <div className="flex-1 overflow-hidden h-full">
+               <SymbolPerformanceWidget data={data?.assetPerformance} />
+            </div>
+        </div>
+
+        <div key="calendar" data-grid={{ x: 20, y: 6, w: 20, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                <TradingCalendar data={data?.dailyData} availableSymbols={data?.availableSymbols} rawTrades={data?.rawTrades} />
