@@ -22,6 +22,8 @@ export async function login(formData: FormData) {
   redirect('/dashboard')
 }
 
+import { headers } from 'next/headers'
+
 export async function signup(formData: FormData) {
   const supabase = await createClient()
 
@@ -30,7 +32,18 @@ export async function signup(formData: FormData) {
     password: formData.get('password') as string,
   }
 
-  const { error } = await supabase.auth.signUp(data)
+  const headersList = await headers()
+  const country = headersList.get('x-vercel-ip-country') || 'Unknown'
+
+  const { error } = await supabase.auth.signUp({
+    email: data.email,
+    password: data.password,
+    options: {
+      data: {
+        country: country
+      }
+    }
+  })
 
   if (error) {
     return { error: error.message }

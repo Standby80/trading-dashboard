@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
@@ -8,7 +9,18 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient();
-    await supabase.auth.exchangeCodeForSession(code);
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    
+    if (!error) {
+      // Get country from Vercel headers
+      const headersList = await headers();
+      const country = headersList.get('x-vercel-ip-country') || 'Unknown';
+      
+      // Update user metadata with country
+      await supabase.auth.updateUser({
+        data: { country: country }
+      });
+    }
   }
 
   // URL to redirect to after sign in process completes
