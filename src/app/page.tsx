@@ -559,8 +559,15 @@ export default function LandingPage() {
       </section>
 
       {/* ─── FOOTER ──────────────────────────────────────────── */}
-      <footer className="py-10 border-t border-white/5 text-center">
-        <p className="text-white/20 text-sm">&copy; {new Date().getFullYear()} MetaMetrics. All rights reserved.</p>
+      <footer className="py-10 border-t border-white/5">
+        <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-white/20 text-sm">&copy; {new Date().getFullYear()} MetaMetrics. All rights reserved.</p>
+          <div className="flex gap-6 text-sm text-white/40">
+            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/refund" className="hover:text-white transition-colors">Refund Policy</Link>
+          </div>
+        </div>
       </footer>
     </div>
   );

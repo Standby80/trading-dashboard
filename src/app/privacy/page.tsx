@@ -1,0 +1,55 @@
+import React from 'react';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
+export const metadata = {
+  title: 'Privacy Policy | MetaMetrics',
+  description: 'Privacy Policy for MetaMetrics Trading Analytics',
+};
+
+export default function PrivacyPage() {
+  return (
+    <div className="min-h-screen bg-background text-foreground flex flex-col items-center py-16 px-4 sm:px-6">
+      <div className="max-w-3xl w-full">
+        <div className="mb-10">
+          <Link href="/">
+            <Button variant="ghost" className="pl-0 hover:bg-transparent text-muted-foreground hover:text-foreground">
+              <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
+            </Button>
+          </Link>
+        </div>
+        
+        <h1 className="text-4xl font-bold mb-8">Privacy Policy</h1>
+        <p className="text-muted-foreground mb-8">Last updated: {new Date().toLocaleDateString()}</p>
+        
+        <div className="space-y-8 text-white/80 leading-relaxed">
+          <section>
+            <h2 className="text-2xl font-semibold text-white mb-4">1. Summary</h2>
+            <p>Explains how we handle user data.</p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold text-white mb-4">2. Data Collected</h2>
+            <p>We collect trading data (via MT5 sync), email addresses for account management, and payment information (processed securely by Lemon Squeezy).</p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold text-white mb-4">3. Data Usage</h2>
+            <p>Trading history is used exclusively to populate your private dashboard and performance analytics.</p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold text-white mb-4">4. Data Protection</h2>
+            <p>We do not share your personal trading data with third parties.</p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold text-white mb-4">5. Cookies</h2>
+            <p>Used only for authentication and maintaining your user session on the dashboard.</p>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+}
