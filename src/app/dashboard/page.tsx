@@ -71,16 +71,21 @@ export default async function DashboardPage({
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Navbar */}
-        <header className="h-20 border-b border-border flex items-center justify-between px-4 sm:px-6 shrink-0 bg-background/80 backdrop-blur-md sticky top-0 z-40">
-          <div className="flex items-center gap-4">
-            <MobileNav userEmail={user?.email} profile={{ is_premium: isPremium, full_name: fullName, avatar_url: avatarUrl, trial_ends_at: trialEndsAt }} />
-            {/* Account Switcher & Live Sync Indicator */}
-            <AccountSwitcher accounts={accounts} currentAccount={currentAccount} />
-            <LiveSyncIndicator currentAccount={currentAccount} />
+        <header className="min-h-[4.5rem] sm:h-20 py-3 sm:py-0 border-b border-border flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-6 shrink-0 bg-background/80 backdrop-blur-md sticky top-0 z-40 gap-3 sm:gap-0">
+          <div className="flex items-center justify-between w-full sm:w-auto">
+            <div className="flex items-center gap-3">
+              <MobileNav userEmail={user?.email} profile={{ is_premium: isPremium, full_name: fullName, avatar_url: avatarUrl, trial_ends_at: trialEndsAt }} />
+              <AccountSwitcher accounts={accounts} currentAccount={currentAccount} />
+            </div>
+            <div className="sm:hidden shrink-0">
+              <LiveSyncIndicator currentAccount={currentAccount} />
+            </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] justify-start sm:justify-end">
+            <div className="hidden sm:block shrink-0">
+              <LiveSyncIndicator currentAccount={currentAccount} />
+            </div>
             <TemplateManager />
             <DashboardFilters />
           </div>
