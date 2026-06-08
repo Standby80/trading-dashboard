@@ -79,6 +79,35 @@ export function DashboardGrid({ data }: { data: any }) {
 
       // Row 9: Recent Trades
       { i: 'recent-trades', x: 0, y: 53, w: 60, h: 10, minW: 5, minH: 5 },
+    ],
+    xxs: [
+      // 2 columns mobile layout
+      { i: 'metric-equity', x: 0, y: 0, w: 1, h: 2, minW: 1, minH: 2 },
+      { i: 'metric-netpnl', x: 1, y: 0, w: 1, h: 2, minW: 1, minH: 2 },
+      { i: 'metric-winrate', x: 0, y: 2, w: 1, h: 2, minW: 1, minH: 2 },
+      { i: 'metric-pf', x: 1, y: 2, w: 1, h: 2, minW: 1, minH: 2 },
+      { i: 'metric-trades', x: 0, y: 4, w: 1, h: 2, minW: 1, minH: 2 },
+      { i: 'metric-avgwin', x: 1, y: 4, w: 1, h: 2, minW: 1, minH: 2 },
+      { i: 'metric-avgloss', x: 0, y: 6, w: 1, h: 2, minW: 1, minH: 2 },
+      { i: 'metric-sharpe', x: 1, y: 6, w: 1, h: 2, minW: 1, minH: 2 },
+      { i: 'metric-maxdd', x: 0, y: 8, w: 1, h: 2, minW: 1, minH: 2 },
+      { i: 'metric-commission', x: 1, y: 8, w: 1, h: 2, minW: 1, minH: 2 },
+      { i: 'metric-winning', x: 0, y: 10, w: 1, h: 2, minW: 1, minH: 2 },
+      { i: 'metric-losing', x: 1, y: 10, w: 1, h: 2, minW: 1, minH: 2 },
+      { i: 'metric-best', x: 0, y: 12, w: 1, h: 2, minW: 1, minH: 2 },
+      { i: 'metric-worst', x: 1, y: 12, w: 1, h: 2, minW: 1, minH: 2 },
+      { i: 'metric-growth', x: 0, y: 14, w: 2, h: 2, minW: 1, minH: 2 },
+      
+      { i: 'calendar', x: 0, y: 16, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'asset-performance', x: 0, y: 26, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'performance-matrix', x: 0, y: 36, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'long-short', x: 0, y: 46, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'trade-execution', x: 0, y: 56, w: 2, h: 8, minW: 1, minH: 5 },
+      { i: 'trades-analysis', x: 0, y: 64, w: 2, h: 8, minW: 1, minH: 5 },
+      { i: 'expectancy-curve', x: 0, y: 72, w: 2, h: 9, minW: 1, minH: 5 },
+      { i: 'equity-curve', x: 0, y: 81, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'drawdown-chart', x: 0, y: 91, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'recent-trades', x: 0, y: 101, w: 2, h: 10, minW: 1, minH: 5 },
     ]
   };
 
@@ -108,7 +137,7 @@ export function DashboardGrid({ data }: { data: any }) {
         className="layout"
         layouts={layoutState || defaultLayouts}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-        cols={{ lg: 60, md: 40, sm: 20, xs: 10, xxs: 5 }}
+        cols={{ lg: 60, md: 40, sm: 20, xs: 2, xxs: 2 }}
         rowHeight={60}
         onLayoutChange={handleLayoutChange}
         draggableHandle=".drag-handle"

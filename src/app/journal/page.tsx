@@ -1,5 +1,6 @@
 import React from 'react';
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
+import { MobileNav } from "@/components/dashboard/mobile-nav";
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { getDashboardData, getUserAccounts } from '@/lib/data-service';
@@ -72,11 +73,22 @@ export default async function JournalPage({
         
         {/* Header */}
         <div className="mb-6 shrink-0 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
-              Trading Journal
-            </h1>
-            <p className="text-muted-foreground text-sm mt-1">Review your trade notes, screenshots, and lessons learned.</p>
+          <div className="flex items-center gap-2">
+            <MobileNav 
+              userEmail={user.email} 
+              profile={{ 
+                is_premium: isPremium, 
+                full_name: fullName, 
+                avatar_url: avatarUrl,
+                trial_ends_at: profile?.trial_ends_at || null
+              }} 
+            />
+            <div>
+              <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+                Trading Journal
+              </h1>
+              <p className="text-muted-foreground text-sm mt-1">Review your trade notes, screenshots, and lessons learned.</p>
+            </div>
           </div>
           <div className="flex items-center gap-4">
             <AccountSwitcher accounts={accounts} currentAccount={currentAccount} />

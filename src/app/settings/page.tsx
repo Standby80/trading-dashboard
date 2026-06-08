@@ -1,5 +1,6 @@
 import React from 'react';
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
+import { MobileNav } from "@/components/dashboard/mobile-nav";
 import { createClient } from '@/lib/supabase/server';
 import { SettingsForm } from '@/components/dashboard/settings-form';
 import { redirect } from 'next/navigation';
@@ -49,12 +50,15 @@ export default async function SettingsPage() {
           
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
-                <SettingsIcon className="w-8 h-8 text-indigo-400" />
-                Settings
-              </h1>
-              <p className="text-white/80 text-lg mt-2 font-medium">Manage your account and integration keys</p>
+            <div className="flex items-center gap-2">
+              <MobileNav userEmail={user.email} profile={{ is_premium: isPremium, full_name: fullName, avatar_url: avatarUrl, trial_ends_at: profile?.trial_ends_at || null }} />
+              <div>
+                <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+                  <SettingsIcon className="w-8 h-8 text-indigo-400" />
+                  Settings
+                </h1>
+                <p className="text-white/80 text-lg mt-2 font-medium">Manage your account and integration keys</p>
+              </div>
             </div>
           </div>
 

@@ -22,6 +22,7 @@ import {
 
 import { redirect } from 'next/navigation';
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
+import { MobileNav } from "@/components/dashboard/mobile-nav";
 
 export default async function DashboardPage({ 
   searchParams 
@@ -72,6 +73,7 @@ export default async function DashboardPage({
         {/* Top Navbar */}
         <header className="h-20 border-b border-border flex items-center justify-between px-4 sm:px-6 shrink-0 bg-background/80 backdrop-blur-md sticky top-0 z-40">
           <div className="flex items-center gap-4">
+            <MobileNav userEmail={user?.email} profile={{ is_premium: isPremium, full_name: fullName, avatar_url: avatarUrl, trial_ends_at: trialEndsAt }} />
             {/* Account Switcher & Live Sync Indicator */}
             <AccountSwitcher accounts={accounts} currentAccount={currentAccount} />
             <LiveSyncIndicator currentAccount={currentAccount} />
