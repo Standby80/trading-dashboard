@@ -44,7 +44,7 @@ export function EquityCurveChart({ data }: { data: any[] }) {
             />
             
             <Tooltip 
-              contentStyle={{ backgroundColor: '#1a2130', borderColor: 'rgba(255,255,255,0.1)', color: '#fff' }} 
+              contentStyle={{ backgroundColor: 'var(--card)', borderColor: 'rgba(255,255,255,0.1)', color: '#fff' }} 
               itemStyle={{ color: '#fff' }}
               labelStyle={{ color: '#94a3b8' }}
               formatter={(value: any, name: any) => [`$${Number(value).toLocaleString()}`, name === 'balance' ? 'Balance' : name]}
@@ -57,6 +57,7 @@ export function EquityCurveChart({ data }: { data: any[] }) {
               fill="rgba(59, 130, 246, 0.1)" 
               stroke="#3b82f6" 
               strokeWidth={2} 
+              className="drop-shadow-none md:drop-shadow-[0_0_12px_rgba(59,130,246,0.5)]"
             />
           </ComposedChart>
         </ResponsiveContainer>

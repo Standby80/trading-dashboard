@@ -128,10 +128,18 @@ export function TradingCalendar({ data, availableSymbols = [], rawTrades = [] }:
                    const isLoss = d.pnl !== null && d.pnl < 0;
                    const isBigWin = isWin && d.pnl !== null && d.pnl > 50;
                    
-                   let bgClass = "bg-background";
-                   if (isBigWin) bgClass = "bg-[#10b981]/20";
-                   else if (isWin) bgClass = "bg-[#059669]/20";
-                   else if (isLoss) bgClass = "bg-[#f43f5e]/20";
+                   let bgClass = "bg-background border border-border/50";
+                   let glowClass = "";
+                   if (isBigWin) {
+                     bgClass = "bg-[#10b981]/20 border border-[#10b981]/40";
+                     glowClass = "md:shadow-[var(--shadow-glow-success)] z-10";
+                   } else if (isWin) {
+                     bgClass = "bg-[#059669]/20 border border-[#10b981]/30";
+                     glowClass = "md:shadow-[var(--shadow-glow-success)] z-10";
+                   } else if (isLoss) {
+                     bgClass = "bg-[#f43f5e]/20 border border-[#f43f5e]/30";
+                     glowClass = "md:shadow-[var(--shadow-glow-danger)] z-10";
+                   }
                    
                    const percent = (d.pnl !== null && d.balanceAtStartOfDay) ? (d.pnl / d.balanceAtStartOfDay) * 100 : 0;
                    const displayVal = displayMode === '$' ? d.pnl : percent;
@@ -139,7 +147,7 @@ export function TradingCalendar({ data, availableSymbols = [], rawTrades = [] }:
                    return (
                      <div 
                         key={i} 
-                        className={`flex flex-col items-center justify-center rounded-md ${bgClass} ${d.isCurrentMonth ? '' : 'opacity-30'} ${d.isCurrentMonth && d.trades > 0 ? 'cursor-pointer hover:brightness-125' : ''}`}
+                        className={`flex flex-col items-center justify-center rounded-md ${bgClass} ${glowClass} ${d.isCurrentMonth ? '' : 'opacity-30'} ${d.isCurrentMonth && d.trades > 0 ? 'cursor-pointer hover:brightness-125 hover:scale-105 transition-all duration-300' : 'transition-all duration-300'}`}
                         onClick={() => {
                           if (d.isCurrentMonth && d.trades > 0 && d.dateStr) {
                             const tradesForDay = rawTrades.filter(t => t.close_time.startsWith(d.dateStr));

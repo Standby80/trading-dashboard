@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getLocale } from 'next-intl/server';
 import { ThemeProvider } from "@/components/theme-provider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -32,10 +32,10 @@ export default async function RootLayout({
   return (
       <html
         lang={locale}
-        className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+        className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
         suppressHydrationWarning
       >
-        <body className="min-h-full flex flex-col selection:bg-indigo-500/30">
+        <body className="min-h-full flex flex-col selection:bg-indigo-500/30 font-sans">
           <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
             <NextIntlClientProvider messages={messages}>
               <TooltipProvider>
