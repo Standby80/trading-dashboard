@@ -239,7 +239,7 @@ export async function getDashboardData(period?: string, symbolsStr?: string, acc
 
     // Pusha till grafen per stängd trade
     drawdownData.push({
-      date: new Date(trade.close_time).toLocaleDateString('sv-SE'),
+      date: new Date(trade.close_time).toLocaleString('sv-SE', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
       balance: Number(currentBalance.toFixed(2)),
       drawdown: Number(currentDrawdown.toFixed(2)),
       drawdownPct: Number(currentDrawdownPct.toFixed(2))
