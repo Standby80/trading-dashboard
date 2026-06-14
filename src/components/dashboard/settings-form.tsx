@@ -10,7 +10,10 @@ export function SettingsForm({
   initialApiKey, 
   initialName, 
   initialEmail, 
-  initialAvatar 
+  initialAvatar,
+  initialUsername,
+  initialIsPublic,
+  initialDiscordWebhookUrl
 }: { 
   initialApiKey: string;
   initialName?: string;
