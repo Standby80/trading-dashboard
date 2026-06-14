@@ -7,7 +7,7 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 export function ExpectancyCurve({ data }: { data?: any[] }) {
   if (!data || data.length === 0) {
     return (
-      <Card className="bg-transparent border-transparent rounded-xl shadow-none">
+      <Card className="bg-transparent border-0 ring-0 rounded-xl shadow-none">
         <CardHeader>
           <CardTitle className="text-foreground text-lg">Expectancy Curve</CardTitle>
           <CardDescription className="text-muted-foreground">Not enough data to project</CardDescription>
@@ -17,15 +17,15 @@ export function ExpectancyCurve({ data }: { data?: any[] }) {
   }
 
   return (
-    <Card className="bg-transparent border-transparent rounded-xl shadow-none col-span-full">
+    <Card className="bg-transparent border-0 ring-0 shadow-none col-span-full h-full flex flex-col">
       <CardHeader>
         <CardTitle className="text-foreground text-lg">Expectancy Curve (Next 100 Trades)</CardTitle>
         <CardDescription className="text-muted-foreground">
           Projection based on your historical Win Rate, Average Win, and Average Loss.
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-5 pt-0">
-        <div className="w-full h-[350px] min-w-0">
+      <CardContent className="p-5 pt-0 flex-1 min-h-0">
+        <div className="w-full h-full min-w-0">
           <ResponsiveContainer width="100%" height="100%" minWidth={0}>
           <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <defs>

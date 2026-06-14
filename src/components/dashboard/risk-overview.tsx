@@ -24,7 +24,7 @@ export function RiskOverview({ kpis }: { kpis: any }) {
   const rrLossWidth = rrTotal > 0 ? (rrLoss / rrTotal) * 100 : 50;
 
   return (
-    <Card className="bg-transparent border-transparent rounded-xl shadow-none h-full overflow-hidden flex flex-col">
+    <Card className="bg-transparent border-0 ring-0 rounded-xl shadow-none h-full overflow-hidden flex flex-col">
       <CardHeader className="pb-2 pt-4 px-4 border-b border-border">
         <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
           Risk Overview

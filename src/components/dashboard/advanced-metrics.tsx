@@ -49,7 +49,7 @@ export function TradeExecutionWidget({ kpis, isPremium = false }: { kpis: any, i
 
   return (
     <>
-      <Card className="bg-transparent border-transparent rounded-xl shadow-none h-full overflow-hidden flex flex-col relative">
+      <Card className="bg-transparent border-0 ring-0 rounded-xl shadow-none h-full overflow-hidden flex flex-col relative">
         <CardHeader className="pb-2 pt-4 px-4 flex flex-row items-center justify-between border-b border-border">
           <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
             <Target className="w-4 h-4 text-indigo-400" />
@@ -226,7 +226,7 @@ export function TimeAnalyticsWidget({ hourlyData = [], weekdayData = [] }: { hou
   };
 
   return (
-    <Card className="bg-transparent border-transparent rounded-xl shadow-none flex flex-col h-full relative group/card overflow-hidden">
+    <Card className="bg-transparent border-0 ring-0 rounded-xl shadow-none flex flex-col h-full relative group/card overflow-hidden">
       <CardHeader className="pb-0 pt-5 px-5 shrink-0">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
@@ -383,7 +383,7 @@ export function TradeDistribution({ data }: { data: any }) {
   const tradesWinPct = kpis.totalTrades > 0 ? (kpis.winningTrades / kpis.totalTrades) * 100 : 0;
   
   return (
-    <Card className="bg-transparent border-transparent rounded-xl shadow-none h-full overflow-hidden flex flex-col">
+    <Card className="bg-transparent border-0 ring-0 rounded-xl shadow-none h-full overflow-hidden flex flex-col">
       <CardHeader className="pb-2 pt-4 px-4 flex flex-row items-center justify-between border-b border-border">
         <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
           Trade Distribution
@@ -431,7 +431,7 @@ export function DrawdownAnalysis({ kpis }: { kpis: any }) {
   const ddPct = ((kpis.maxDrawdownDol || 0) / (kpis.peakBalance || 1) * 100).toFixed(2);
   
   return (
-    <Card className="bg-transparent border-transparent rounded-xl shadow-none h-full overflow-hidden flex flex-col">
+    <Card className="bg-transparent border-0 ring-0 rounded-xl shadow-none h-full overflow-hidden flex flex-col">
       <CardHeader className="pb-2 pt-4 px-4 border-b border-border">
         <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
           Drawdown Analysis

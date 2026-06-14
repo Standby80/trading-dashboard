@@ -22,7 +22,7 @@ export function EquityCurveChart({ data }: { data: any[] }) {
   const formatMoney = (val: number) => Math.abs(val).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
   return (
-    <Card className="bg-transparent border-transparent rounded-xl p-6 shadow-none flex flex-col h-full">
+    <Card className="bg-transparent border-0 ring-0 rounded-xl p-6 shadow-none flex flex-col h-full">
       <div className="flex items-center justify-between mb-4">
         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Account Growth</span>
         <div className="flex bg-background rounded p-1 border border-border">

@@ -35,7 +35,7 @@ export function LongShortCharts({ kpis }: { kpis: any }) {
 
   return (
     <div className="h-full w-full">
-      <Card className="bg-transparent border-transparent rounded-xl shadow-none flex flex-col h-full p-5">
+      <Card className="bg-transparent border-0 ring-0 rounded-xl shadow-none flex flex-col h-full p-5">
         <div className="shrink-0 mb-6">
           <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-1">
             Long & Short Split

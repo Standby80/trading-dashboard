@@ -48,7 +48,7 @@ export function AnalyticsSidebar({ cumulativeData, kpis }: { cumulativeData?: an
   return (
     <>
       {/* MetaMetrics Score / Radar Chart */}
-      <Card className="bg-transparent border-transparent rounded-xl shadow-none flex-1 flex flex-col h-full min-h-0">
+      <Card className="bg-transparent border-0 ring-0 rounded-xl shadow-none flex-1 flex flex-col h-full min-h-0">
         <CardHeader className="pb-0 pt-5 px-5 shrink-0">
           <CardTitle className="text-sm font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
             {t('metaMetricsScore')}
