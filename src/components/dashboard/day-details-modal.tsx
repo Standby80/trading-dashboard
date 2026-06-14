@@ -46,6 +46,13 @@ function ExpandableTradeRow({ trade }: { trade: Trade & { netProfit: number } })
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const isWin = trade.netProfit >= 0;
+  
+  const tradeTypeRaw = trade.type ? trade.type.replace('DEAL_TYPE_', '').toUpperCase() : 'TRADE';
+  const isBuy = tradeTypeRaw.includes('BUY');
+  const isSell = tradeTypeRaw.includes('SELL');
+  let typeColor = 'bg-slate-500/20 text-slate-400';
+  if (isBuy) typeColor = 'bg-blue-500/20 text-blue-400';
+  if (isSell) typeColor = 'bg-rose-500/20 text-rose-400';
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -112,6 +119,9 @@ function ExpandableTradeRow({ trade }: { trade: Trade & { netProfit: number } })
           <div>
             <div className="font-semibold text-foreground flex items-center gap-2">
               {trade.symbol}
+              <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold tracking-wider ${typeColor}`}>
+                {tradeTypeRaw}
+              </span>
               {(notes || screenshotUrl) && (
                 <div className="w-2 h-2 rounded-full bg-indigo-500" title="Has journal entry"></div>
               )}
