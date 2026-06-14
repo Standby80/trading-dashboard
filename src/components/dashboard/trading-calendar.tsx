@@ -143,19 +143,24 @@ export function TradingCalendar({ data, availableSymbols = [], rawTrades = [] }:
                    
                    const percent = (d.pnl !== null && d.balanceAtStartOfDay) ? (d.pnl / d.balanceAtStartOfDay) * 100 : 0;
                    const displayVal = displayMode === '$' ? d.pnl : percent;
+                   
+                   const tradesForDay = d.isCurrentMonth && d.dateStr ? rawTrades.filter(t => t.close_time.startsWith(d.dateStr)) : [];
+                   const hasNotes = tradesForDay.some((t: any) => t.notes || t.screenshot_url);
 
                    return (
                      <div 
                         key={i} 
-                        className={`flex flex-col items-center justify-center rounded-md ${bgClass} ${glowClass} ${d.isCurrentMonth ? '' : 'opacity-30'} ${d.isCurrentMonth && d.trades > 0 ? 'cursor-pointer hover:brightness-125 hover:scale-105 transition-all duration-300' : 'transition-all duration-300'}`}
+                        className={`relative flex flex-col items-center justify-center rounded-md ${bgClass} ${glowClass} ${d.isCurrentMonth ? '' : 'opacity-30'} ${d.isCurrentMonth && d.trades > 0 ? 'cursor-pointer hover:brightness-125 hover:scale-105 transition-all duration-300' : 'transition-all duration-300'}`}
                         onClick={() => {
                           if (d.isCurrentMonth && d.trades > 0 && d.dateStr) {
-                            const tradesForDay = rawTrades.filter(t => t.close_time.startsWith(d.dateStr));
                             setDayTrades(tradesForDay);
                             setSelectedDate(d.dateStr);
                           }
                         }}
                       >
+                       {hasNotes && (
+                         <div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_5px_rgba(99,102,241,0.8)]" title="Has journal entry"></div>
+                       )}
                        <span className={`text-sm ${d.isCurrentMonth ? 'text-foreground' : 'text-muted-foreground opacity-50'}`}>{d.day}</span>
                        {d.pnl !== null && (
                          <span className={`text-xs font-bold ${isWin ? 'text-emerald-500' : 'text-rose-500'}`}>
