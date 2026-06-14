@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import { Download, FolderOpen, Globe, Play, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Download, FolderOpen, Globe, Play, ChevronRight, ChevronLeft, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function LiveSyncGuide() {
@@ -13,6 +13,7 @@ export default function LiveSyncGuide() {
     { id: 2, name: 'Install', icon: FolderOpen },
     { id: 3, name: 'Allow URL', icon: Globe },
     { id: 4, name: 'Activate', icon: Play },
+    { id: 5, name: 'Verify', icon: CheckCircle2 },
   ];
 
   return (
@@ -91,6 +92,22 @@ export default function LiveSyncGuide() {
               </ol>
             </div>
           )}
+
+          {step === 5 && (
+            <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
+              <p className="text-sm text-muted-foreground">
+                Check the <span className="text-foreground font-medium">Experts</span> tab in the MT5 Terminal window (at the bottom). You should see these logs:
+              </p>
+              <div className="p-3 bg-[#0d1117] border border-border/50 rounded-lg text-[11px] font-mono text-emerald-400/80 space-y-1">
+                <p>2026.06.14 11:23:15.380 MetaMetrics EA v1.03: Initierad. Synkar historik nu...</p>
+                <p>2026.06.14 11:23:15.390 MetaMetrics EA: Skickar 108 trades...</p>
+                <p>2026.06.14 11:23:29.507 MetaMetrics EA: Svar-kod = 200</p>
+              </div>
+              <div className="p-3 bg-indigo-500/10 border border-indigo-500/20 rounded-lg text-indigo-300 text-sm font-medium">
+                When you see response code 200, your data is synced! <strong>Refresh this page</strong> to see your new account in the menu.
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center justify-between pt-6 mt-2 border-t border-border">
@@ -104,8 +121,8 @@ export default function LiveSyncGuide() {
             Previous
           </Button>
           <Button
-            onClick={() => setStep(Math.min(4, step + 1))}
-            disabled={step === 4}
+            onClick={() => setStep(Math.min(5, step + 1))}
+            disabled={step === 5}
             className="bg-card hover:bg-muted text-indigo-400 border border-border"
           >
             Next Step
