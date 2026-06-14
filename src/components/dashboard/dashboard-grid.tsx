@@ -28,7 +28,7 @@ export function DashboardGrid({ data }: { data: any }) {
 
   useEffect(() => {
     setMounted(true);
-    const savedLayouts = localStorage.getItem('metametrics-layout-v5');
+    const savedLayouts = localStorage.getItem('metametrics-layout-v6');
     if (savedLayouts) {
       try {
         setLayoutState(JSON.parse(savedLayouts));
@@ -64,37 +64,35 @@ export function DashboardGrid({ data }: { data: any }) {
       { i: 'metric-recovery', x: 12, y: 6, w: 12, h: 2, minW: 1, minH: 1 },
       { i: 'metric-rr', x: 24, y: 6, w: 12, h: 2, minW: 1, minH: 1 },
       { i: 'metric-winstreak', x: 36, y: 6, w: 12, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-profitperhour', x: 48, y: 6, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-losestreak', x: 48, y: 6, w: 12, h: 2, minW: 1, minH: 1 },
       
       // Row 5: Hedge Fund KPIs 2
-      { i: 'metric-frequency', x: 0, y: 8, w: 12, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-ddduration', x: 12, y: 8, w: 12, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-holddiff', x: 24, y: 8, w: 12, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-topasset', x: 36, y: 8, w: 12, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-wlratio', x: 48, y: 8, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-profitperhour', x: 0, y: 8, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-frequency', x: 12, y: 8, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-ddduration', x: 24, y: 8, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-holddiff', x: 36, y: 8, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-topasset', x: 48, y: 8, w: 12, h: 2, minW: 1, minH: 1 },
       
-      // Row 6: Symbol Performance, Calendar & MetaMetrics
-      { i: 'symbol-performance', x: 0, y: 10, w: 20, h: 10, minW: 5, minH: 5 },
-      { i: 'calendar', x: 20, y: 10, w: 20, h: 10, minW: 5, minH: 5 },
-      { i: 'asset-performance', x: 40, y: 10, w: 20, h: 10, minW: 5, minH: 5 },
+      // Row 6: Hedge Fund KPIs 3
+      { i: 'metric-wlratio', x: 0, y: 10, w: 12, h: 2, minW: 1, minH: 1 },
       
-      // Row 7: Monthly P/L & Long vs Short
-      { i: 'performance-matrix', x: 0, y: 20, w: 40, h: 10, minW: 5, minH: 5 },
-      { i: 'long-short', x: 40, y: 20, w: 20, h: 10, minW: 5, minH: 5 },
+      // Larger widgets
+      { i: 'symbol-performance', x: 0, y: 12, w: 20, h: 10, minW: 5, minH: 5 },
+      { i: 'calendar', x: 20, y: 12, w: 20, h: 10, minW: 5, minH: 5 },
+      { i: 'asset-performance', x: 40, y: 12, w: 20, h: 10, minW: 5, minH: 5 },
       
-      // Row 8: Trade Execution & Time Analytics
-      { i: 'trade-execution', x: 0, y: 30, w: 30, h: 8, minW: 5, minH: 5 },
-      { i: 'trades-analysis', x: 30, y: 30, w: 30, h: 8, minW: 5, minH: 5 },
+      { i: 'performance-matrix', x: 0, y: 22, w: 40, h: 10, minW: 5, minH: 5 },
+      { i: 'long-short', x: 40, y: 22, w: 20, h: 10, minW: 5, minH: 5 },
       
-      // Row 9: Expectancy Curve
-      { i: 'expectancy-curve', x: 0, y: 38, w: 60, h: 9, minW: 5, minH: 5 },
+      { i: 'trade-execution', x: 0, y: 32, w: 30, h: 8, minW: 5, minH: 5 },
+      { i: 'trades-analysis', x: 30, y: 32, w: 30, h: 8, minW: 5, minH: 5 },
       
-      // Row 10: Equity & Drawdown Charts
-      { i: 'equity-curve', x: 0, y: 47, w: 30, h: 10, minW: 5, minH: 5 },
-      { i: 'drawdown-chart', x: 30, y: 47, w: 30, h: 10, minW: 5, minH: 5 },
+      { i: 'expectancy-curve', x: 0, y: 40, w: 60, h: 9, minW: 5, minH: 5 },
+      
+      { i: 'equity-curve', x: 0, y: 49, w: 30, h: 10, minW: 5, minH: 5 },
+      { i: 'drawdown-chart', x: 30, y: 49, w: 30, h: 10, minW: 5, minH: 5 },
 
-      // Row 11: Recent Trades
-      { i: 'recent-trades', x: 0, y: 57, w: 60, h: 10, minW: 5, minH: 5 },
+      { i: 'recent-trades', x: 0, y: 59, w: 60, h: 10, minW: 5, minH: 5 },
     ],
     md: [
       { i: 'metric-equity', x: 0, y: 0, w: 8, h: 2, minW: 1, minH: 1 },
@@ -119,25 +117,27 @@ export function DashboardGrid({ data }: { data: any }) {
       { i: 'metric-recovery', x: 8, y: 6, w: 8, h: 2, minW: 1, minH: 1 },
       { i: 'metric-rr', x: 16, y: 6, w: 8, h: 2, minW: 1, minH: 1 },
       { i: 'metric-winstreak', x: 24, y: 6, w: 8, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-profitperhour', x: 32, y: 6, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-losestreak', x: 32, y: 6, w: 8, h: 2, minW: 1, minH: 1 },
       
-      { i: 'metric-frequency', x: 0, y: 8, w: 8, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-ddduration', x: 8, y: 8, w: 8, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-holddiff', x: 16, y: 8, w: 8, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-topasset', x: 24, y: 8, w: 8, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-wlratio', x: 32, y: 8, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-profitperhour', x: 0, y: 8, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-frequency', x: 8, y: 8, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-ddduration', x: 16, y: 8, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-holddiff', x: 24, y: 8, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-topasset', x: 32, y: 8, w: 8, h: 2, minW: 1, minH: 1 },
 
-      { i: 'symbol-performance', x: 0, y: 10, w: 20, h: 10, minW: 5, minH: 5 },
-      { i: 'calendar', x: 20, y: 10, w: 20, h: 10, minW: 5, minH: 5 },
-      { i: 'asset-performance', x: 0, y: 20, w: 20, h: 10, minW: 5, minH: 5 },
-      { i: 'long-short', x: 20, y: 20, w: 20, h: 10, minW: 5, minH: 5 },
-      { i: 'performance-matrix', x: 0, y: 30, w: 40, h: 10, minW: 5, minH: 5 },
-      { i: 'trade-execution', x: 0, y: 40, w: 20, h: 8, minW: 5, minH: 5 },
-      { i: 'trades-analysis', x: 20, y: 40, w: 20, h: 8, minW: 5, minH: 5 },
-      { i: 'expectancy-curve', x: 0, y: 48, w: 40, h: 9, minW: 5, minH: 5 },
-      { i: 'equity-curve', x: 0, y: 57, w: 20, h: 10, minW: 5, minH: 5 },
-      { i: 'drawdown-chart', x: 20, y: 57, w: 20, h: 10, minW: 5, minH: 5 },
-      { i: 'recent-trades', x: 0, y: 67, w: 40, h: 10, minW: 5, minH: 5 }
+      { i: 'metric-wlratio', x: 0, y: 10, w: 8, h: 2, minW: 1, minH: 1 },
+
+      { i: 'symbol-performance', x: 0, y: 12, w: 20, h: 10, minW: 5, minH: 5 },
+      { i: 'calendar', x: 20, y: 12, w: 20, h: 10, minW: 5, minH: 5 },
+      { i: 'asset-performance', x: 0, y: 22, w: 20, h: 10, minW: 5, minH: 5 },
+      { i: 'long-short', x: 20, y: 22, w: 20, h: 10, minW: 5, minH: 5 },
+      { i: 'performance-matrix', x: 0, y: 32, w: 40, h: 10, minW: 5, minH: 5 },
+      { i: 'trade-execution', x: 0, y: 42, w: 20, h: 8, minW: 5, minH: 5 },
+      { i: 'trades-analysis', x: 20, y: 42, w: 20, h: 8, minW: 5, minH: 5 },
+      { i: 'expectancy-curve', x: 0, y: 50, w: 40, h: 9, minW: 5, minH: 5 },
+      { i: 'equity-curve', x: 0, y: 59, w: 20, h: 10, minW: 5, minH: 5 },
+      { i: 'drawdown-chart', x: 20, y: 59, w: 20, h: 10, minW: 5, minH: 5 },
+      { i: 'recent-trades', x: 0, y: 69, w: 40, h: 10, minW: 5, minH: 5 }
     ],
     sm: [
       { i: 'metric-equity', x: 0, y: 0, w: 5, h: 2, minW: 1, minH: 1 },
@@ -162,13 +162,15 @@ export function DashboardGrid({ data }: { data: any }) {
       { i: 'metric-recovery', x: 0, y: 8, w: 5, h: 2, minW: 1, minH: 1 },
       { i: 'metric-rr', x: 5, y: 8, w: 5, h: 2, minW: 1, minH: 1 },
       { i: 'metric-winstreak', x: 10, y: 8, w: 5, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-profitperhour', x: 15, y: 8, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-losestreak', x: 15, y: 8, w: 5, h: 2, minW: 1, minH: 1 },
       
-      { i: 'metric-frequency', x: 0, y: 10, w: 5, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-ddduration', x: 5, y: 10, w: 5, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-holddiff', x: 10, y: 10, w: 5, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-topasset', x: 15, y: 10, w: 5, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-wlratio', x: 0, y: 12, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-profitperhour', x: 0, y: 10, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-frequency', x: 5, y: 10, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-ddduration', x: 10, y: 10, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-holddiff', x: 15, y: 10, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-topasset', x: 0, y: 12, w: 5, h: 2, minW: 1, minH: 1 },
+
+      { i: 'metric-wlratio', x: 5, y: 12, w: 5, h: 2, minW: 1, minH: 1 },
 
       { i: 'symbol-performance', x: 0, y: 14, w: 20, h: 10, minW: 2, minH: 5 },
       { i: 'calendar', x: 0, y: 24, w: 20, h: 10, minW: 2, minH: 5 },
@@ -203,24 +205,26 @@ export function DashboardGrid({ data }: { data: any }) {
       { i: 'metric-recovery', x: 1, y: 16, w: 1, h: 2, minW: 1, minH: 1 },
       { i: 'metric-rr', x: 0, y: 18, w: 1, h: 2, minW: 1, minH: 1 },
       { i: 'metric-winstreak', x: 1, y: 18, w: 1, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-profitperhour', x: 0, y: 20, w: 1, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-frequency', x: 1, y: 20, w: 1, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-ddduration', x: 0, y: 22, w: 1, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-holddiff', x: 1, y: 22, w: 1, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-topasset', x: 0, y: 24, w: 1, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-wlratio', x: 1, y: 24, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-losestreak', x: 0, y: 20, w: 1, h: 2, minW: 1, minH: 1 },
       
-      { i: 'symbol-performance', x: 0, y: 26, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'calendar', x: 0, y: 36, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'asset-performance', x: 0, y: 46, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'performance-matrix', x: 0, y: 56, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'long-short', x: 0, y: 66, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'trade-execution', x: 0, y: 76, w: 2, h: 8, minW: 1, minH: 5 },
-      { i: 'trades-analysis', x: 0, y: 84, w: 2, h: 8, minW: 1, minH: 5 },
-      { i: 'expectancy-curve', x: 0, y: 92, w: 2, h: 9, minW: 1, minH: 5 },
-      { i: 'equity-curve', x: 0, y: 101, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'drawdown-chart', x: 0, y: 111, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'recent-trades', x: 0, y: 121, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'metric-profitperhour', x: 1, y: 20, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-frequency', x: 0, y: 22, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-ddduration', x: 1, y: 22, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-holddiff', x: 0, y: 24, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-topasset', x: 1, y: 24, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-wlratio', x: 0, y: 26, w: 1, h: 2, minW: 1, minH: 1 },
+      
+      { i: 'symbol-performance', x: 0, y: 28, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'calendar', x: 0, y: 38, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'asset-performance', x: 0, y: 48, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'performance-matrix', x: 0, y: 58, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'long-short', x: 0, y: 68, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'trade-execution', x: 0, y: 78, w: 2, h: 8, minW: 1, minH: 5 },
+      { i: 'trades-analysis', x: 0, y: 86, w: 2, h: 8, minW: 1, minH: 5 },
+      { i: 'expectancy-curve', x: 0, y: 94, w: 2, h: 9, minW: 1, minH: 5 },
+      { i: 'equity-curve', x: 0, y: 103, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'drawdown-chart', x: 0, y: 113, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'recent-trades', x: 0, y: 123, w: 2, h: 10, minW: 1, minH: 5 },
     ],
     xxs: [
       { i: 'metric-equity', x: 0, y: 0, w: 1, h: 2, minW: 1, minH: 1 },
@@ -243,34 +247,36 @@ export function DashboardGrid({ data }: { data: any }) {
       { i: 'metric-recovery', x: 1, y: 16, w: 1, h: 2, minW: 1, minH: 1 },
       { i: 'metric-rr', x: 0, y: 18, w: 1, h: 2, minW: 1, minH: 1 },
       { i: 'metric-winstreak', x: 1, y: 18, w: 1, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-profitperhour', x: 0, y: 20, w: 1, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-frequency', x: 1, y: 20, w: 1, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-ddduration', x: 0, y: 22, w: 1, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-holddiff', x: 1, y: 22, w: 1, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-topasset', x: 0, y: 24, w: 1, h: 2, minW: 1, minH: 1 },
-      { i: 'metric-wlratio', x: 1, y: 24, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-losestreak', x: 0, y: 20, w: 1, h: 2, minW: 1, minH: 1 },
       
-      { i: 'symbol-performance', x: 0, y: 26, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'calendar', x: 0, y: 36, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'asset-performance', x: 0, y: 46, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'performance-matrix', x: 0, y: 56, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'long-short', x: 0, y: 66, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'trade-execution', x: 0, y: 76, w: 2, h: 8, minW: 1, minH: 5 },
-      { i: 'trades-analysis', x: 0, y: 84, w: 2, h: 8, minW: 1, minH: 5 },
-      { i: 'expectancy-curve', x: 0, y: 92, w: 2, h: 9, minW: 1, minH: 5 },
-      { i: 'equity-curve', x: 0, y: 101, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'drawdown-chart', x: 0, y: 111, w: 2, h: 10, minW: 1, minH: 5 },
-      { i: 'recent-trades', x: 0, y: 121, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'metric-profitperhour', x: 1, y: 20, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-frequency', x: 0, y: 22, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-ddduration', x: 1, y: 22, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-holddiff', x: 0, y: 24, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-topasset', x: 1, y: 24, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-wlratio', x: 0, y: 26, w: 1, h: 2, minW: 1, minH: 1 },
+      
+      { i: 'symbol-performance', x: 0, y: 28, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'calendar', x: 0, y: 38, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'asset-performance', x: 0, y: 48, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'performance-matrix', x: 0, y: 58, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'long-short', x: 0, y: 68, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'trade-execution', x: 0, y: 78, w: 2, h: 8, minW: 1, minH: 5 },
+      { i: 'trades-analysis', x: 0, y: 86, w: 2, h: 8, minW: 1, minH: 5 },
+      { i: 'expectancy-curve', x: 0, y: 94, w: 2, h: 9, minW: 1, minH: 5 },
+      { i: 'equity-curve', x: 0, y: 103, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'drawdown-chart', x: 0, y: 113, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'recent-trades', x: 0, y: 123, w: 2, h: 10, minW: 1, minH: 5 },
     ]
   };
 
   const handleLayoutChange = (layout: any, layouts: any) => {
     setLayoutState(layouts);
-    localStorage.setItem('metametrics-layout-v5', JSON.stringify(layouts));
+    localStorage.setItem('metametrics-layout-v6', JSON.stringify(layouts));
   };
 
   const resetLayout = () => {
-    localStorage.removeItem('metametrics-layout-v5');
+    localStorage.removeItem('metametrics-layout-v6');
     setLayoutState(null); // Force it to use defaultLayouts on next render
   };
 
@@ -474,7 +480,16 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Maximum consecutive winning trades."
             />
         </div>
-        <div key="metric-profitperhour" data-grid={{ x: 48, y: 6, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-losestreak" data-grid={{ x: 48, y: 6, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
+            <DragHandle />
+            <MetricCard 
+                title="Longest Losing Streak" 
+                value={data?.streakMetrics?.maxLossStreakCount || 0}
+                trend="negative"
+                tooltip="Maximum consecutive losing trades."
+            />
+        </div>
+        <div key="metric-profitperhour" data-grid={{ x: 0, y: 8, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Profit per Hour" 
@@ -485,7 +500,7 @@ export function DashboardGrid({ data }: { data: any }) {
         </div>
 
         {/* Metric Cards Row 5 */}
-        <div key="metric-frequency" data-grid={{ x: 0, y: 8, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-frequency" data-grid={{ x: 12, y: 8, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Trade Frequency" 
@@ -494,7 +509,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Average number of trades taken per active trading day."
             />
         </div>
-        <div key="metric-ddduration" data-grid={{ x: 12, y: 8, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-ddduration" data-grid={{ x: 24, y: 8, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Drawdown Duration" 
@@ -503,7 +518,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Longest period the account remained below an All-Time High."
             />
         </div>
-        <div key="metric-holddiff" data-grid={{ x: 24, y: 8, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-holddiff" data-grid={{ x: 36, y: 8, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Hold Time Diff" 
@@ -512,7 +527,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Difference in holding time between winning and losing trades."
             />
         </div>
-        <div key="metric-topasset" data-grid={{ x: 36, y: 8, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-topasset" data-grid={{ x: 48, y: 8, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Top Asset" 
@@ -521,7 +536,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip={`Most profitable symbol with $${(data?.kpis?.topAssetProfit || 0).toFixed(2)} in profit.`}
             />
         </div>
-        <div key="metric-wlratio" data-grid={{ x: 48, y: 8, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-wlratio" data-grid={{ x: 0, y: 10, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="W/L Ratio" 
@@ -532,52 +547,52 @@ export function DashboardGrid({ data }: { data: any }) {
         </div>
 
         {/* Larger Modules (Excluded from splitting) */}
-        <div key="symbol-performance" data-grid={{ x: 0, y: 10, w: 20, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="symbol-performance" data-grid={{ x: 0, y: 12, w: 20, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden h-full">
                <SymbolPerformanceWidget data={data?.assetPerformance} />
             </div>
         </div>
 
-        <div key="calendar" data-grid={{ x: 20, y: 10, w: 20, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="calendar" data-grid={{ x: 20, y: 12, w: 20, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                <TradingCalendar data={data?.dailyData} availableSymbols={data?.availableSymbols} rawTrades={data?.rawTrades} />
             </div>
         </div>
 
-        <div key="asset-performance" data-grid={{ x: 40, y: 10, w: 20, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="asset-performance" data-grid={{ x: 40, y: 12, w: 20, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                <AnalyticsSidebar cumulativeData={data?.cumulativeData} kpis={data?.kpis} />
             </div>
         </div>
 
-        <div key="trade-execution" data-grid={{ x: 0, y: 30, w: 30, h: 8, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="trade-execution" data-grid={{ x: 0, y: 32, w: 30, h: 8, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <TradeExecutionWidget kpis={data?.kpis} isPremium={data?.profile?.subscription_tier === 'premium' || (data?.profile?.trial_ends_at && new Date(data.profile.trial_ends_at).getTime() > new Date().getTime())} />
         </div>
 
-        <div key="trades-analysis" data-grid={{ x: 30, y: 30, w: 30, h: 8, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="trades-analysis" data-grid={{ x: 30, y: 32, w: 30, h: 8, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <TimeAnalyticsWidget hourlyData={data?.hourlyData} weekdayData={data?.weekdayData} />
         </div>
 
-        <div key="long-short" data-grid={{ x: 40, y: 20, w: 20, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="long-short" data-grid={{ x: 40, y: 22, w: 20, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                <LongShortCharts kpis={data?.kpis} />
             </div>
         </div>
 
-        <div key="expectancy-curve" data-grid={{ x: 0, y: 38, w: 60, h: 9, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="expectancy-curve" data-grid={{ x: 0, y: 40, w: 60, h: 9, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                 <ExpectancyCurve data={data?.expectancyData} />
             </div>
         </div>
 
-        <div key="performance-matrix" data-grid={{ x: 0, y: 20, w: 40, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="performance-matrix" data-grid={{ x: 0, y: 22, w: 40, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-6">
                 <TimeExtremesCards kpis={data?.kpis} />
@@ -586,21 +601,21 @@ export function DashboardGrid({ data }: { data: any }) {
             </div>
         </div>
 
-        <div key="equity-curve" data-grid={{ x: 0, y: 47, w: 30, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="equity-curve" data-grid={{ x: 0, y: 49, w: 30, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                 <EquityCurveChart data={data?.drawdownData} />
             </div>
         </div>
 
-        <div key="drawdown-chart" data-grid={{ x: 30, y: 47, w: 30, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="drawdown-chart" data-grid={{ x: 30, y: 49, w: 30, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden">
                 <DrawdownChart data={data?.drawdownData} />
             </div>
         </div>
 
-        <div key="recent-trades" data-grid={{ x: 0, y: 57, w: 60, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
+        <div key="recent-trades" data-grid={{ x: 0, y: 59, w: 60, h: 10, minW: 5, minH: 5 }} className="flex flex-col bg-card border border-border rounded-xl shadow-2xl shadow-black/50 h-full relative transition-all duration-300 hover:-translate-y-0.5 hover:shadow-black/70">
             <DragHandle />
             <div className="flex-1 overflow-hidden flex flex-col">
                <TradeHistoryTable trades={data?.rawTrades} />
