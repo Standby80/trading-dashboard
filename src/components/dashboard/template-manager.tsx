@@ -48,7 +48,7 @@ export function TemplateManager() {
     const name = window.prompt('Enter a name for this dashboard template:');
     if (!name || !name.trim()) return;
 
-    const currentLayout = localStorage.getItem('metametrics-layout-v3');
+    const currentLayout = localStorage.getItem('metametrics-layout-v8');
     if (!currentLayout) {
       alert('No custom layout to save! Move some cards first.');
       return;
@@ -69,7 +69,7 @@ export function TemplateManager() {
   const handleUpdateCurrent = () => {
     if (!activeTemplateId) return;
     
-    const currentLayout = localStorage.getItem('metametrics-layout-v3');
+    const currentLayout = localStorage.getItem('metametrics-layout-v8');
     if (!currentLayout) return;
 
     const newTemplates = templates.map(t => 
@@ -80,7 +80,7 @@ export function TemplateManager() {
   };
 
   const handleLoadTemplate = (template: Template) => {
-    localStorage.setItem('metametrics-layout-v3', template.layout);
+    localStorage.setItem('metametrics-layout-v8', template.layout);
     localStorage.setItem('metametrics-current-template', template.id);
     setActiveTemplateId(template.id);
     window.location.reload();
@@ -99,7 +99,7 @@ export function TemplateManager() {
   };
 
   const handleReset = () => {
-    localStorage.removeItem('metametrics-layout-v3');
+    localStorage.removeItem('metametrics-layout-v8');
     localStorage.removeItem('metametrics-current-template');
     window.location.reload();
   };
