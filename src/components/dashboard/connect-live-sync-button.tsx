@@ -21,8 +21,8 @@ export function ConnectLiveSyncButton({ profile, trigger }: { profile?: any, tri
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger 
-        render={trigger || (
+      <DialogTrigger asChild>
+        {trigger || (
           <button className="w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg text-sm font-medium text-foreground hover:text-foreground hover:bg-white/5 transition-colors">
             {hasAccess ? (
               <span className="relative flex h-2 w-2 shrink-0">
@@ -35,7 +35,7 @@ export function ConnectLiveSyncButton({ profile, trigger }: { profile?: any, tri
             Connect Live Sync
           </button>
         )}
-      />
+      </DialogTrigger>
       
       <DialogContent className="sm:max-w-2xl bg-transparent border-none p-0 shadow-none">
         <ApiKeySettings />

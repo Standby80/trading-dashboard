@@ -6,6 +6,7 @@ import { getUserAccounts, getDashboardData } from "@/lib/data-service";
 import { createClient } from '@/lib/supabase/server';
 import { Plus } from "lucide-react";
 import { AccountCard } from "@/components/dashboard/account-card";
+import { ConnectLiveSyncButton } from "@/components/dashboard/connect-live-sync-button";
 
 const COLORS = [
   'bg-gradient-to-br from-emerald-900 to-teal-950',
@@ -85,10 +86,15 @@ export default async function AccountsPage() {
               </div>
             </div>
             
-            <button className="flex items-center gap-2 bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 transition-colors px-4 py-2.5 rounded-lg font-medium text-sm self-start sm:self-auto border border-indigo-500/30">
-              <Plus size={16} />
-              Add Account
-            </button>
+            <ConnectLiveSyncButton
+              profile={{ subscription_tier: isPremium ? 'premium' : 'free', trial_ends_at: trialEndsAt }}
+              trigger={
+                <button className="flex items-center gap-2 bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 transition-colors px-4 py-2.5 rounded-lg font-medium text-sm self-start sm:self-auto border border-indigo-500/30">
+                  <Plus size={16} />
+                  Add Account
+                </button>
+              }
+            />
           </div>
 
           {/* Cards Grid */}
