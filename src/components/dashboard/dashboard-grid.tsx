@@ -28,7 +28,7 @@ export function DashboardGrid({ data }: { data: any }) {
 
   useEffect(() => {
     setMounted(true);
-    const savedLayouts = localStorage.getItem('metametrics-layout-v4');
+    const savedLayouts = localStorage.getItem('metametrics-layout-v5');
     if (savedLayouts) {
       try {
         setLayoutState(JSON.parse(savedLayouts));
@@ -96,8 +96,133 @@ export function DashboardGrid({ data }: { data: any }) {
       // Row 11: Recent Trades
       { i: 'recent-trades', x: 0, y: 57, w: 60, h: 10, minW: 5, minH: 5 },
     ],
+    md: [
+      { i: 'metric-equity', x: 0, y: 0, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-netpnl', x: 8, y: 0, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-winrate', x: 16, y: 0, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-pf', x: 24, y: 0, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-trades', x: 32, y: 0, w: 8, h: 2, minW: 1, minH: 1 },
+      
+      { i: 'metric-avgwin', x: 0, y: 2, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-avgloss', x: 8, y: 2, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-sharpe', x: 16, y: 2, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-maxdd', x: 24, y: 2, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-commission', x: 32, y: 2, w: 8, h: 2, minW: 1, minH: 1 },
+      
+      { i: 'metric-winning', x: 0, y: 4, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-losing', x: 8, y: 4, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-best', x: 16, y: 4, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-worst', x: 24, y: 4, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-growth', x: 32, y: 4, w: 8, h: 2, minW: 1, minH: 1 },
+      
+      { i: 'metric-expectancy', x: 0, y: 6, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-recovery', x: 8, y: 6, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-rr', x: 16, y: 6, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-winstreak', x: 24, y: 6, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-profitperhour', x: 32, y: 6, w: 8, h: 2, minW: 1, minH: 1 },
+      
+      { i: 'metric-frequency', x: 0, y: 8, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-ddduration', x: 8, y: 8, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-holddiff', x: 16, y: 8, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-topasset', x: 24, y: 8, w: 8, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-wlratio', x: 32, y: 8, w: 8, h: 2, minW: 1, minH: 1 },
+
+      { i: 'symbol-performance', x: 0, y: 10, w: 20, h: 10, minW: 5, minH: 5 },
+      { i: 'calendar', x: 20, y: 10, w: 20, h: 10, minW: 5, minH: 5 },
+      { i: 'asset-performance', x: 0, y: 20, w: 20, h: 10, minW: 5, minH: 5 },
+      { i: 'long-short', x: 20, y: 20, w: 20, h: 10, minW: 5, minH: 5 },
+      { i: 'performance-matrix', x: 0, y: 30, w: 40, h: 10, minW: 5, minH: 5 },
+      { i: 'trade-execution', x: 0, y: 40, w: 20, h: 8, minW: 5, minH: 5 },
+      { i: 'trades-analysis', x: 20, y: 40, w: 20, h: 8, minW: 5, minH: 5 },
+      { i: 'expectancy-curve', x: 0, y: 48, w: 40, h: 9, minW: 5, minH: 5 },
+      { i: 'equity-curve', x: 0, y: 57, w: 20, h: 10, minW: 5, minH: 5 },
+      { i: 'drawdown-chart', x: 20, y: 57, w: 20, h: 10, minW: 5, minH: 5 },
+      { i: 'recent-trades', x: 0, y: 67, w: 40, h: 10, minW: 5, minH: 5 }
+    ],
+    sm: [
+      { i: 'metric-equity', x: 0, y: 0, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-netpnl', x: 5, y: 0, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-winrate', x: 10, y: 0, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-pf', x: 15, y: 0, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-trades', x: 0, y: 2, w: 5, h: 2, minW: 1, minH: 1 },
+      
+      { i: 'metric-avgwin', x: 5, y: 2, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-avgloss', x: 10, y: 2, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-sharpe', x: 15, y: 2, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-maxdd', x: 0, y: 4, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-commission', x: 5, y: 4, w: 5, h: 2, minW: 1, minH: 1 },
+      
+      { i: 'metric-winning', x: 10, y: 4, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-losing', x: 15, y: 4, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-best', x: 0, y: 6, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-worst', x: 5, y: 6, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-growth', x: 10, y: 6, w: 5, h: 2, minW: 1, minH: 1 },
+      
+      { i: 'metric-expectancy', x: 15, y: 6, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-recovery', x: 0, y: 8, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-rr', x: 5, y: 8, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-winstreak', x: 10, y: 8, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-profitperhour', x: 15, y: 8, w: 5, h: 2, minW: 1, minH: 1 },
+      
+      { i: 'metric-frequency', x: 0, y: 10, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-ddduration', x: 5, y: 10, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-holddiff', x: 10, y: 10, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-topasset', x: 15, y: 10, w: 5, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-wlratio', x: 0, y: 12, w: 5, h: 2, minW: 1, minH: 1 },
+
+      { i: 'symbol-performance', x: 0, y: 14, w: 20, h: 10, minW: 2, minH: 5 },
+      { i: 'calendar', x: 0, y: 24, w: 20, h: 10, minW: 2, minH: 5 },
+      { i: 'asset-performance', x: 0, y: 34, w: 20, h: 10, minW: 2, minH: 5 },
+      { i: 'long-short', x: 0, y: 44, w: 20, h: 10, minW: 2, minH: 5 },
+      { i: 'performance-matrix', x: 0, y: 54, w: 20, h: 10, minW: 2, minH: 5 },
+      { i: 'trade-execution', x: 0, y: 64, w: 20, h: 8, minW: 2, minH: 5 },
+      { i: 'trades-analysis', x: 0, y: 72, w: 20, h: 8, minW: 2, minH: 5 },
+      { i: 'expectancy-curve', x: 0, y: 80, w: 20, h: 9, minW: 2, minH: 5 },
+      { i: 'equity-curve', x: 0, y: 89, w: 20, h: 10, minW: 2, minH: 5 },
+      { i: 'drawdown-chart', x: 0, y: 99, w: 20, h: 10, minW: 2, minH: 5 },
+      { i: 'recent-trades', x: 0, y: 109, w: 20, h: 10, minW: 2, minH: 5 }
+    ],
+    xs: [
+      { i: 'metric-equity', x: 0, y: 0, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-netpnl', x: 1, y: 0, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-winrate', x: 0, y: 2, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-pf', x: 1, y: 2, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-trades', x: 0, y: 4, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-avgwin', x: 1, y: 4, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-avgloss', x: 0, y: 6, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-sharpe', x: 1, y: 6, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-maxdd', x: 0, y: 8, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-commission', x: 1, y: 8, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-winning', x: 0, y: 10, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-losing', x: 1, y: 10, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-best', x: 0, y: 12, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-worst', x: 1, y: 12, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-growth', x: 0, y: 14, w: 2, h: 2, minW: 1, minH: 1 },
+      
+      { i: 'metric-expectancy', x: 0, y: 16, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-recovery', x: 1, y: 16, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-rr', x: 0, y: 18, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-winstreak', x: 1, y: 18, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-profitperhour', x: 0, y: 20, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-frequency', x: 1, y: 20, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-ddduration', x: 0, y: 22, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-holddiff', x: 1, y: 22, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-topasset', x: 0, y: 24, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-wlratio', x: 1, y: 24, w: 1, h: 2, minW: 1, minH: 1 },
+      
+      { i: 'symbol-performance', x: 0, y: 26, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'calendar', x: 0, y: 36, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'asset-performance', x: 0, y: 46, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'performance-matrix', x: 0, y: 56, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'long-short', x: 0, y: 66, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'trade-execution', x: 0, y: 76, w: 2, h: 8, minW: 1, minH: 5 },
+      { i: 'trades-analysis', x: 0, y: 84, w: 2, h: 8, minW: 1, minH: 5 },
+      { i: 'expectancy-curve', x: 0, y: 92, w: 2, h: 9, minW: 1, minH: 5 },
+      { i: 'equity-curve', x: 0, y: 101, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'drawdown-chart', x: 0, y: 111, w: 2, h: 10, minW: 1, minH: 5 },
+      { i: 'recent-trades', x: 0, y: 121, w: 2, h: 10, minW: 1, minH: 5 },
+    ],
     xxs: [
-      // 2 columns mobile layout
       { i: 'metric-equity', x: 0, y: 0, w: 1, h: 2, minW: 1, minH: 1 },
       { i: 'metric-netpnl', x: 1, y: 0, w: 1, h: 2, minW: 1, minH: 1 },
       { i: 'metric-winrate', x: 0, y: 2, w: 1, h: 2, minW: 1, minH: 1 },
@@ -141,11 +266,11 @@ export function DashboardGrid({ data }: { data: any }) {
 
   const handleLayoutChange = (layout: any, layouts: any) => {
     setLayoutState(layouts);
-    localStorage.setItem('metametrics-layout-v4', JSON.stringify(layouts));
+    localStorage.setItem('metametrics-layout-v5', JSON.stringify(layouts));
   };
 
   const resetLayout = () => {
-    localStorage.removeItem('metametrics-layout-v4');
+    localStorage.removeItem('metametrics-layout-v5');
     setLayoutState(null); // Force it to use defaultLayouts on next render
   };
 
