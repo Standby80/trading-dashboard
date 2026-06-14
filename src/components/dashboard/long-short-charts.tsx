@@ -15,6 +15,11 @@ export function LongShortCharts({ kpis }: { kpis: any }) {
   const longPct = kpis.totalTrades > 0 ? ((kpis.longTrades / kpis.totalTrades) * 100).toFixed(0) : 0;
   const shortPct = kpis.totalTrades > 0 ? ((kpis.shortTrades / kpis.totalTrades) * 100).toFixed(0) : 0;
 
+  const longWinRate = kpis.longTrades > 0 ? ((kpis.longWins / kpis.longTrades) * 100).toFixed(0) : 0;
+  const longLossRate = kpis.longTrades > 0 ? (((kpis.longTrades - kpis.longWins) / kpis.longTrades) * 100).toFixed(0) : 0;
+  const shortWinRate = kpis.shortTrades > 0 ? ((kpis.shortWins / kpis.shortTrades) * 100).toFixed(0) : 0;
+  const shortLossRate = kpis.shortTrades > 0 ? (((kpis.shortTrades - kpis.shortWins) / kpis.shortTrades) * 100).toFixed(0) : 0;
+
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
@@ -22,10 +27,10 @@ export function LongShortCharts({ kpis }: { kpis: any }) {
           <p className="font-semibold text-foreground mb-1">{payload[0].name}</p>
           <p className="text-muted-foreground">Total: {payload[0].value} trades</p>
           {payload[0].name === 'Longs' && (
-            <p className="text-emerald-400 mt-1">Win Rate: {kpis.longTrades > 0 ? ((kpis.longWins / kpis.longTrades) * 100).toFixed(1) : 0}%</p>
+            <p className="text-emerald-400 mt-1">Win Rate: {longWinRate}%</p>
           )}
           {payload[0].name === 'Shorts' && (
-            <p className="text-emerald-400 mt-1">Win Rate: {kpis.shortTrades > 0 ? ((kpis.shortWins / kpis.shortTrades) * 100).toFixed(1) : 0}%</p>
+            <p className="text-emerald-400 mt-1">Win Rate: {shortWinRate}%</p>
           )}
         </div>
       );
@@ -89,11 +94,17 @@ export function LongShortCharts({ kpis }: { kpis: any }) {
                   <div className="flex flex-col gap-1">
                      <div className="flex justify-between items-center">
                         <span className="text-muted-foreground">Wins</span>
-                        <span className="text-emerald-400 font-bold">{kpis.longWins}</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-emerald-400/60 font-normal text-[10px]">{longWinRate}%</span>
+                          <span className="text-emerald-400 font-bold">{kpis.longWins}</span>
+                        </div>
                      </div>
                      <div className="flex justify-between items-center">
                         <span className="text-muted-foreground">Losses</span>
-                        <span className="text-rose-500 font-bold">{kpis.longTrades - kpis.longWins}</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-rose-500/60 font-normal text-[10px]">{longLossRate}%</span>
+                          <span className="text-rose-500 font-bold">{kpis.longTrades - kpis.longWins}</span>
+                        </div>
                      </div>
                   </div>
                </div>
@@ -103,11 +114,17 @@ export function LongShortCharts({ kpis }: { kpis: any }) {
                   <div className="flex flex-col gap-1">
                      <div className="flex justify-between items-center">
                         <span className="text-muted-foreground">Wins</span>
-                        <span className="text-emerald-400 font-bold">{kpis.shortWins}</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-emerald-400/60 font-normal text-[10px]">{shortWinRate}%</span>
+                          <span className="text-emerald-400 font-bold">{kpis.shortWins}</span>
+                        </div>
                      </div>
                      <div className="flex justify-between items-center">
                         <span className="text-muted-foreground">Losses</span>
-                        <span className="text-rose-500 font-bold">{kpis.shortTrades - kpis.shortWins}</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-rose-500/60 font-normal text-[10px]">{shortLossRate}%</span>
+                          <span className="text-rose-500 font-bold">{kpis.shortTrades - kpis.shortWins}</span>
+                        </div>
                      </div>
                   </div>
                </div>
