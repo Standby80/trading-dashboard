@@ -127,6 +127,9 @@ function ExpandableTradeRow({ trade }: { trade: Trade & { netProfit: number } })
               )}
             </div>
             <div className="text-xs text-muted-foreground mt-0.5 flex gap-3">
+              {trade.volume !== undefined && trade.volume > 0 && (
+                <span>Vol: <span className="text-foreground font-mono">{trade.volume}</span></span>
+              )}
               <span>Entry: <span className="text-foreground font-mono">{trade.open_price}</span></span>
               <span>Exit: <span className="text-foreground font-mono">{trade.close_price}</span></span>
             </div>
