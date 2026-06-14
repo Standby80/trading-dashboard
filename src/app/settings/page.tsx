@@ -18,14 +18,20 @@ export default async function SettingsPage() {
   let apiKey = '';
   let fullName = '';
   let avatarUrl = '';
+  let username = '';
+  let isPublic = false;
+  let discordWebhookUrl = '';
 
-  const { data: profile } = await supabase.from('users').select('subscription_tier, api_key, full_name, avatar_url, trial_ends_at').eq('id', user.id).single();
+  const { data: profile } = await supabase.from('users').select('subscription_tier, api_key, full_name, avatar_url, trial_ends_at, username, is_public, discord_webhook_url').eq('id', user.id).single();
   
   if (profile) {
     isPremium = profile.subscription_tier === 'premium';
     apiKey = profile.api_key;
     fullName = profile.full_name || '';
     avatarUrl = profile.avatar_url || '';
+    username = profile.username || '';
+    isPublic = profile.is_public || false;
+    discordWebhookUrl = profile.discord_webhook_url || '';
 
     if (!isPremium && profile.trial_ends_at) {
       if (new Date(profile.trial_ends_at).getTime() < new Date().getTime()) {
@@ -68,6 +74,9 @@ export default async function SettingsPage() {
             initialName={fullName} 
             initialEmail={user.email} 
             initialAvatar={avatarUrl} 
+            initialUsername={username}
+            initialIsPublic={isPublic}
+            initialDiscordWebhookUrl={discordWebhookUrl}
           />
 
         </div>

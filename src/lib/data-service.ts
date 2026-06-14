@@ -1,12 +1,23 @@
 import { createClient } from './supabase/server';
 import { redis } from './redis';
 
-export async function getDashboardData(period?: string, symbolsStr?: string, accountName: string = 'Default') {
-  const supabase = await createClient();
-  
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return null;
-  const userId = user.id;
+import { createAdminClient } from './supabase/admin';
+
+export async function getDashboardData(period?: string, symbolsStr?: string, accountName: string = 'Default', publicUsername?: string) {
+  let supabase = await createClient();
+  let userId = null;
+
+  if (publicUsername) {
+    const adminSupabase = createAdminClient();
+    const { data: profile } = await adminSupabase.from('users').select('id, is_public').eq('username', publicUsername).single();
+    if (!profile || !profile.is_public) return null;
+    userId = profile.id;
+    supabase = adminSupabase;
+  } else {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return null;
+    userId = user.id;
+  }
 
   // 1. Fetch user profile (always fresh)
   let userProfile = null;
@@ -732,22 +743,33 @@ export function calculateMetaMetricsScore(trades: any[], initialBalance: number 
     };
 }
 
-export async function getUserAccounts() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return [{ id: 'Default', label: 'Default' }];
+export async function getUserAccounts(publicUsername?: string) {
+  let supabase = await createClient();
+  let userId = null;
+
+  if (publicUsername) {
+    const adminSupabase = createAdminClient();
+    const { data: profile } = await adminSupabase.from('users').select('id, is_public').eq('username', publicUsername).single();
+    if (!profile || !profile.is_public) return [{ id: 'Default', label: 'Default' }];
+    userId = profile.id;
+    supabase = adminSupabase;
+  } else {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return [{ id: 'Default', label: 'Default' }];
+    userId = user.id;
+  }
 
   // Hämta manuellt uppladdade konton
   const { data: reportsData, error: reportsError } = await supabase
     .from('reports')
     .select('account_name')
-    .eq('user_id', user.id);
+    .eq('user_id', userId);
 
   // Hämta inkopplade live-konton
   const { data: mt5Data, error: mt5Error } = await supabase
     .from('mt5_accounts')
     .select('account_number, client_name, broker_server')
-    .eq('user_id', user.id);
+    .eq('user_id', userId);
 
   const reportAccounts = reportsData ? reportsData.map(r => ({
     id: r.account_name || 'Default',

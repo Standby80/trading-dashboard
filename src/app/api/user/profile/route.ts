@@ -44,11 +44,14 @@ export async function PUT(req: Request) {
     }
 
     const body = await req.json();
-    const { full_name, email, avatar_url } = body;
+    const { full_name, email, avatar_url, username, is_public, discord_webhook_url } = body;
 
     const updates: any = {};
     if (full_name !== undefined) updates.full_name = full_name;
     if (avatar_url !== undefined) updates.avatar_url = avatar_url;
+    if (username !== undefined) updates.username = username;
+    if (is_public !== undefined) updates.is_public = is_public;
+    if (discord_webhook_url !== undefined) updates.discord_webhook_url = discord_webhook_url;
 
     // Update custom profile table
     if (Object.keys(updates).length > 0) {

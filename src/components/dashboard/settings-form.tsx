@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Key, Copy, RefreshCw, Check, User, Mail, Camera, AlertTriangle, Trash2 } from 'lucide-react';
+import { Key, Copy, RefreshCw, Check, User, Mail, Camera, AlertTriangle, Trash2, Share2, MessageSquare } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
@@ -16,6 +16,9 @@ export function SettingsForm({
   initialName?: string;
   initialEmail?: string;
   initialAvatar?: string;
+  initialUsername?: string;
+  initialIsPublic?: boolean;
+  initialDiscordWebhookUrl?: string;
 }) {
   const supabase = createClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -25,6 +28,9 @@ export function SettingsForm({
   const [name, setName] = useState(initialName || '');
   const [email, setEmail] = useState(initialEmail || '');
   const [avatarUrl, setAvatarUrl] = useState(initialAvatar || '');
+  const [username, setUsername] = useState(initialUsername || '');
+  const [isPublic, setIsPublic] = useState(initialIsPublic || false);
+  const [discordWebhookUrl, setDiscordWebhookUrl] = useState(initialDiscordWebhookUrl || '');
 
   // Loading states
   const [isRotating, setIsRotating] = useState(false);
@@ -102,7 +108,13 @@ export function SettingsForm({
       const res = await fetch('/api/user/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ full_name: name, email })
+        body: JSON.stringify({ 
+          full_name: name, 
+          email,
+          username: username || null,
+          is_public: isPublic,
+          discord_webhook_url: discordWebhookUrl || null
+        })
       });
       const data = await res.json();
       if (data.success) {
@@ -201,6 +213,61 @@ export function SettingsForm({
               {isSaving ? 'Saving...' : 'Save Profile'}
             </Button>
           </div>
+        </div>
+      </div>
+
+      {/* Social & Sharing Section */}
+      <div className="bg-card border border-border rounded-xl p-6 shadow-xl">
+        <h3 className="text-xl font-bold text-foreground flex items-center gap-2 mb-6">
+          <Share2 className="w-5 h-5 text-indigo-400" />
+          Social & Sharing
+        </h3>
+
+        <div className="space-y-6">
+          <div className="flex items-center justify-between p-4 bg-muted/30 border border-border rounded-lg">
+            <div>
+              <p className="font-medium text-white">Public Profile</p>
+              <p className="text-sm text-muted-foreground">Allow others to view your dashboard via a public link.</p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" className="sr-only peer" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} />
+              <div className="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500"></div>
+            </label>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-muted-foreground mb-1">Username (for public link)</label>
+            <div className="flex items-center">
+              <span className="bg-muted px-3 py-2 text-muted-foreground border border-r-0 border-border rounded-l-md text-sm">metametrics.com/u/</span>
+              <Input 
+                value={username} 
+                onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, ''))} 
+                placeholder="trader123" 
+                className="bg-background rounded-l-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <MessageSquare className="w-4 h-4" />
+              Discord Webhook URL
+            </label>
+            <Input 
+              value={discordWebhookUrl} 
+              onChange={(e) => setDiscordWebhookUrl(e.target.value)} 
+              placeholder="https://discord.com/api/webhooks/..." 
+              className="bg-background"
+            />
+            <p className="text-xs text-muted-foreground mt-2">We'll automatically post a notification to your Discord server when a trade is closed.</p>
+          </div>
+
+          <Button 
+            onClick={handleSaveProfile} 
+            disabled={isSaving}
+          >
+            {isSaving ? 'Saving...' : 'Save Social Settings'}
+          </Button>
         </div>
       </div>
 

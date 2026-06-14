@@ -7,6 +7,7 @@ import { DashboardFilters } from "@/components/dashboard/dashboard-filters";
 import { AccountSwitcher } from "@/components/dashboard/account-switcher";
 import { LiveSyncIndicator } from "@/components/dashboard/live-sync-indicator";
 import { TemplateManager } from "@/components/dashboard/template-manager";
+import { ExportDashboardButton } from "@/components/dashboard/export-dashboard-button";
 import { getDashboardData, getUserAccounts } from "@/lib/data-service";
 import { createClient } from '@/lib/supabase/server';
 import { logout } from '@/app/login/actions';
@@ -86,14 +87,14 @@ export default async function DashboardPage({
             <div className="hidden sm:block shrink-0">
               <LiveSyncIndicator currentAccount={currentAccount} />
             </div>
+            <ExportDashboardButton />
             <TemplateManager />
             <DashboardFilters availableSymbols={data?.availableSymbols || []} />
           </div>
         </header>
 
-        {/* Scrollable Dashboard */}
         <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6">
-          <div className="w-full">
+          <div className="w-full" id="dashboard-grid-container">
             <DashboardGrid data={data} />
           </div>
         </div>

@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     // Verify API Key
     const { data: userProfile, error: profileError } = await supabaseAdmin
       .from('users')
-      .select('id, subscription_tier, trial_ends_at')
+      .select('id, subscription_tier, trial_ends_at, discord_webhook_url')
       .eq('api_key', apiKey)
       .single();
 
@@ -103,6 +103,17 @@ export async function POST(req: Request) {
       close_price: t.closePrice || t.close_price || 0
     }));
 
+    // Diff trades to find truly NEW trades for Discord Webhooks
+    const incomingTicketIds = tradesToInsert.map((t: any) => t.ticket_id);
+    const { data: existingTrades } = await supabaseAdmin
+      .from('trades')
+      .select('ticket_id')
+      .eq('user_id', userProfile.id)
+      .in('ticket_id', incomingTicketIds);
+      
+    const existingSet = new Set(existingTrades?.map((t: any) => t.ticket_id) || []);
+    const newTrades = tradesToInsert.filter((t: any) => !existingSet.has(t.ticket_id));
+
     // Insert to database (upsert by ticket_id and user_id to avoid duplicates)
     const { error: insertError } = await supabaseAdmin
       .from('trades')
@@ -111,6 +122,46 @@ export async function POST(req: Request) {
     if (insertError) {
       console.error('Insert error:', insertError);
       return NextResponse.json({ error: 'Failed to insert trades' }, { status: 500 });
+    }
+
+    // Trigger Discord Webhook for newly closed trades (limit to 5 to avoid spam during initial sync)
+    if (userProfile.discord_webhook_url && newTrades.length > 0 && newTrades.length <= 5) {
+      for (const trade of newTrades) {
+        const profit = Number(trade.profit) || 0;
+        const symbol = trade.symbol || 'Unknown';
+        const type = trade.type || 'TRADE';
+        
+        // Only notify about actual market trades, not deposits/withdrawals
+        if (type === 'DEPOSIT' || type === 'BALANCE' || type === 'DEAL_TYPE_BALANCE' || symbol === 'DEPOSIT') {
+          continue;
+        }
+
+        const isWin = profit > 0;
+        const color = isWin ? 3066993 : 15158332; // Green : Red
+
+        const embed = {
+          title: `${isWin ? '✅ Winning Trade' : '❌ Losing Trade'} Closed!`,
+          color: color,
+          fields: [
+            { name: 'Symbol', value: symbol, inline: true },
+            { name: 'Type', value: type.replace('DEAL_TYPE_', ''), inline: true },
+            { name: 'Net Profit', value: `$${profit.toFixed(2)}`, inline: true },
+            { name: 'Account', value: account_name, inline: false },
+          ],
+          footer: { text: 'MetaMetrics Automated Sync' },
+          timestamp: new Date().toISOString()
+        };
+
+        try {
+          await fetch(userProfile.discord_webhook_url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [embed] })
+          });
+        } catch (e) {
+          console.error("Failed to trigger Discord webhook", e);
+        }
+      }
     }
 
     // Clear cache for this user so the dashboard updates live
