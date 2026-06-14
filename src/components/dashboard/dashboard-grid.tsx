@@ -39,39 +39,39 @@ export function DashboardGrid({ data }: { data: any }) {
   const defaultLayouts = {
     lg: [
       // Row 1: Top 5 KPIs
-      { i: 'metric-equity', x: 0, y: 0, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-netpnl', x: 12, y: 0, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-winrate', x: 24, y: 0, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-pf', x: 36, y: 0, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-trades', x: 48, y: 0, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-equity', x: 0, y: 0, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-netpnl', x: 12, y: 0, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-winrate', x: 24, y: 0, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-pf', x: 36, y: 0, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-trades', x: 48, y: 0, w: 12, h: 2, minW: 1, minH: 1 },
       
       // Row 2: Secondary KPIs
-      { i: 'metric-avgwin', x: 0, y: 2, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-avgloss', x: 12, y: 2, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-sharpe', x: 24, y: 2, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-maxdd', x: 36, y: 2, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-commission', x: 48, y: 2, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-avgwin', x: 0, y: 2, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-avgloss', x: 12, y: 2, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-sharpe', x: 24, y: 2, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-maxdd', x: 36, y: 2, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-commission', x: 48, y: 2, w: 12, h: 2, minW: 1, minH: 1 },
       
       // Row 3: Additional KPIs
-      { i: 'metric-winning', x: 0, y: 4, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-losing', x: 12, y: 4, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-best', x: 24, y: 4, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-worst', x: 36, y: 4, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-growth', x: 48, y: 4, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-winning', x: 0, y: 4, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-losing', x: 12, y: 4, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-best', x: 24, y: 4, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-worst', x: 36, y: 4, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-growth', x: 48, y: 4, w: 12, h: 2, minW: 1, minH: 1 },
       
       // Row 4: Hedge Fund KPIs 1
-      { i: 'metric-expectancy', x: 0, y: 6, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-recovery', x: 12, y: 6, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-rr', x: 24, y: 6, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-winstreak', x: 36, y: 6, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-profitperhour', x: 48, y: 6, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-expectancy', x: 0, y: 6, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-recovery', x: 12, y: 6, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-rr', x: 24, y: 6, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-winstreak', x: 36, y: 6, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-profitperhour', x: 48, y: 6, w: 12, h: 2, minW: 1, minH: 1 },
       
       // Row 5: Hedge Fund KPIs 2
-      { i: 'metric-frequency', x: 0, y: 8, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-ddduration', x: 12, y: 8, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-holddiff', x: 24, y: 8, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-topasset', x: 36, y: 8, w: 12, h: 2, minW: 3, minH: 2 },
-      { i: 'metric-wlratio', x: 48, y: 8, w: 12, h: 2, minW: 3, minH: 2 },
+      { i: 'metric-frequency', x: 0, y: 8, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-ddduration', x: 12, y: 8, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-holddiff', x: 24, y: 8, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-topasset', x: 36, y: 8, w: 12, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-wlratio', x: 48, y: 8, w: 12, h: 2, minW: 1, minH: 1 },
       
       // Row 6: Symbol Performance, Calendar & MetaMetrics
       { i: 'symbol-performance', x: 0, y: 10, w: 20, h: 10, minW: 5, minH: 5 },
@@ -98,32 +98,32 @@ export function DashboardGrid({ data }: { data: any }) {
     ],
     xxs: [
       // 2 columns mobile layout
-      { i: 'metric-equity', x: 0, y: 0, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-netpnl', x: 1, y: 0, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-winrate', x: 0, y: 2, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-pf', x: 1, y: 2, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-trades', x: 0, y: 4, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-avgwin', x: 1, y: 4, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-avgloss', x: 0, y: 6, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-sharpe', x: 1, y: 6, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-maxdd', x: 0, y: 8, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-commission', x: 1, y: 8, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-winning', x: 0, y: 10, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-losing', x: 1, y: 10, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-best', x: 0, y: 12, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-worst', x: 1, y: 12, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-growth', x: 0, y: 14, w: 2, h: 2, minW: 1, minH: 2 },
+      { i: 'metric-equity', x: 0, y: 0, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-netpnl', x: 1, y: 0, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-winrate', x: 0, y: 2, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-pf', x: 1, y: 2, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-trades', x: 0, y: 4, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-avgwin', x: 1, y: 4, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-avgloss', x: 0, y: 6, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-sharpe', x: 1, y: 6, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-maxdd', x: 0, y: 8, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-commission', x: 1, y: 8, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-winning', x: 0, y: 10, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-losing', x: 1, y: 10, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-best', x: 0, y: 12, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-worst', x: 1, y: 12, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-growth', x: 0, y: 14, w: 2, h: 2, minW: 1, minH: 1 },
       
-      { i: 'metric-expectancy', x: 0, y: 16, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-recovery', x: 1, y: 16, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-rr', x: 0, y: 18, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-winstreak', x: 1, y: 18, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-profitperhour', x: 0, y: 20, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-frequency', x: 1, y: 20, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-ddduration', x: 0, y: 22, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-holddiff', x: 1, y: 22, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-topasset', x: 0, y: 24, w: 1, h: 2, minW: 1, minH: 2 },
-      { i: 'metric-wlratio', x: 1, y: 24, w: 1, h: 2, minW: 1, minH: 2 },
+      { i: 'metric-expectancy', x: 0, y: 16, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-recovery', x: 1, y: 16, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-rr', x: 0, y: 18, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-winstreak', x: 1, y: 18, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-profitperhour', x: 0, y: 20, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-frequency', x: 1, y: 20, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-ddduration', x: 0, y: 22, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-holddiff', x: 1, y: 22, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-topasset', x: 0, y: 24, w: 1, h: 2, minW: 1, minH: 1 },
+      { i: 'metric-wlratio', x: 1, y: 24, w: 1, h: 2, minW: 1, minH: 1 },
       
       { i: 'symbol-performance', x: 0, y: 26, w: 2, h: 10, minW: 1, minH: 5 },
       { i: 'calendar', x: 0, y: 36, w: 2, h: 10, minW: 1, minH: 5 },
@@ -172,7 +172,7 @@ export function DashboardGrid({ data }: { data: any }) {
         margin={[24, 24]}
       >
         {/* Metric Cards Row 1 */}
-        <div key="metric-netpnl" data-grid={{ x: 0, y: 0, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-netpnl" data-grid={{ x: 0, y: 0, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Net P&L" 
@@ -181,7 +181,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Total realized profit or loss across all trades."
             />
         </div>
-        <div key="metric-pf" data-grid={{ x: 12, y: 0, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-pf" data-grid={{ x: 12, y: 0, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Profit Factor" 
@@ -190,7 +190,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Gross profit divided by gross loss. A value above 1 indicates profitability."
             />
         </div>
-        <div key="metric-winrate" data-grid={{ x: 24, y: 0, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-winrate" data-grid={{ x: 24, y: 0, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Win Rate" 
@@ -199,7 +199,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Percentage of winning trades out of total trades."
             />
         </div>
-        <div key="metric-commission" data-grid={{ x: 36, y: 0, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-commission" data-grid={{ x: 36, y: 0, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Total Commission" 
@@ -208,7 +208,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Total commissions paid to the broker."
             />
         </div>
-        <div key="metric-trades" data-grid={{ x: 48, y: 0, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-trades" data-grid={{ x: 48, y: 0, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Total Trades" 
@@ -219,7 +219,7 @@ export function DashboardGrid({ data }: { data: any }) {
         </div>
 
         {/* Metric Cards Row 2 */}
-        <div key="metric-equity" data-grid={{ x: 0, y: 2, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-equity" data-grid={{ x: 0, y: 2, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Account Value" 
@@ -228,7 +228,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Current total balance of your account."
             />
         </div>
-        <div key="metric-maxdd" data-grid={{ x: 12, y: 2, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-maxdd" data-grid={{ x: 12, y: 2, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Max Drawdown" 
@@ -237,7 +237,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Largest percentage drop from a peak to a trough in equity."
             />
         </div>
-        <div key="metric-avgwin" data-grid={{ x: 24, y: 2, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-avgwin" data-grid={{ x: 24, y: 2, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Average Win" 
@@ -246,7 +246,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Average profit amount per winning trade."
             />
         </div>
-        <div key="metric-avgloss" data-grid={{ x: 36, y: 2, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-avgloss" data-grid={{ x: 36, y: 2, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Average Loss" 
@@ -255,7 +255,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Average loss amount per losing trade."
             />
         </div>
-        <div key="metric-sharpe" data-grid={{ x: 48, y: 2, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-sharpe" data-grid={{ x: 48, y: 2, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Sharpe Ratio" 
@@ -266,7 +266,7 @@ export function DashboardGrid({ data }: { data: any }) {
         </div>
 
         {/* Metric Cards Row 3 */}
-        <div key="metric-winning" data-grid={{ x: 0, y: 4, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-winning" data-grid={{ x: 0, y: 4, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Winning Trades" 
@@ -275,7 +275,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Total number of trades that resulted in a profit."
             />
         </div>
-        <div key="metric-losing" data-grid={{ x: 12, y: 4, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-losing" data-grid={{ x: 12, y: 4, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Losing Trades" 
@@ -284,7 +284,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Total number of trades that resulted in a loss."
             />
         </div>
-        <div key="metric-best" data-grid={{ x: 24, y: 4, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-best" data-grid={{ x: 24, y: 4, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Best Trade" 
@@ -293,7 +293,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="The single trade with the highest profit."
             />
         </div>
-        <div key="metric-worst" data-grid={{ x: 36, y: 4, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-worst" data-grid={{ x: 36, y: 4, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Worst Trade" 
@@ -302,7 +302,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="The single trade with the largest loss."
             />
         </div>
-        <div key="metric-growth" data-grid={{ x: 48, y: 4, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-growth" data-grid={{ x: 48, y: 4, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Total Growth" 
@@ -313,7 +313,7 @@ export function DashboardGrid({ data }: { data: any }) {
         </div>
 
         {/* Metric Cards Row 4 */}
-        <div key="metric-expectancy" data-grid={{ x: 0, y: 6, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-expectancy" data-grid={{ x: 0, y: 6, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Expectancy" 
@@ -322,7 +322,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Statistical average profit or loss per trade over time."
             />
         </div>
-        <div key="metric-recovery" data-grid={{ x: 12, y: 6, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-recovery" data-grid={{ x: 12, y: 6, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Recovery Factor" 
@@ -331,7 +331,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Absolute Net Profit divided by Max Drawdown."
             />
         </div>
-        <div key="metric-rr" data-grid={{ x: 24, y: 6, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-rr" data-grid={{ x: 24, y: 6, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Avg. Risk:Reward" 
@@ -340,7 +340,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Ratio of Average Win to Average Loss."
             />
         </div>
-        <div key="metric-winstreak" data-grid={{ x: 36, y: 6, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-winstreak" data-grid={{ x: 36, y: 6, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Longest Win Streak" 
@@ -349,7 +349,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Maximum consecutive winning trades."
             />
         </div>
-        <div key="metric-profitperhour" data-grid={{ x: 48, y: 6, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-profitperhour" data-grid={{ x: 48, y: 6, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Profit per Hour" 
@@ -360,7 +360,7 @@ export function DashboardGrid({ data }: { data: any }) {
         </div>
 
         {/* Metric Cards Row 5 */}
-        <div key="metric-frequency" data-grid={{ x: 0, y: 8, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-frequency" data-grid={{ x: 0, y: 8, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Trade Frequency" 
@@ -369,7 +369,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Average number of trades taken per active trading day."
             />
         </div>
-        <div key="metric-ddduration" data-grid={{ x: 12, y: 8, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-ddduration" data-grid={{ x: 12, y: 8, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Drawdown Duration" 
@@ -378,7 +378,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Longest period the account remained below an All-Time High."
             />
         </div>
-        <div key="metric-holddiff" data-grid={{ x: 24, y: 8, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-holddiff" data-grid={{ x: 24, y: 8, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Hold Time Diff" 
@@ -387,7 +387,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip="Difference in holding time between winning and losing trades."
             />
         </div>
-        <div key="metric-topasset" data-grid={{ x: 36, y: 8, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-topasset" data-grid={{ x: 36, y: 8, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="Top Asset" 
@@ -396,7 +396,7 @@ export function DashboardGrid({ data }: { data: any }) {
                 tooltip={`Most profitable symbol with $${(data?.kpis?.topAssetProfit || 0).toFixed(2)} in profit.`}
             />
         </div>
-        <div key="metric-wlratio" data-grid={{ x: 48, y: 8, w: 12, h: 2, minW: 3, minH: 2 }} className="flex flex-col h-full relative transition-all duration-300">
+        <div key="metric-wlratio" data-grid={{ x: 48, y: 8, w: 12, h: 2, minW: 1, minH: 1 }} className="flex flex-col h-full relative transition-all duration-300">
             <DragHandle />
             <MetricCard 
                 title="W/L Ratio" 
