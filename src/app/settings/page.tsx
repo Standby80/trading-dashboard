@@ -22,8 +22,21 @@ export default async function SettingsPage() {
   let isPublic = false;
   let discordWebhookUrl = '';
 
-  const { data: profile } = await supabase.from('users').select('subscription_tier, api_key, full_name, avatar_url, trial_ends_at, username, is_public, discord_webhook_url').eq('id', user.id).single();
-  
+  let { data: profile, error } = await supabase
+    .from('users')
+    .select('subscription_tier, api_key, full_name, avatar_url, trial_ends_at, username, is_public, discord_webhook_url')
+    .eq('id', user.id)
+    .single();
+    
+  // Graceful fallback if the user hasn't run the SQL migration yet
+  if (error) {
+    const fallback = await supabase
+      .from('users')
+      .select('subscription_tier, api_key, full_name, avatar_url, trial_ends_at')
+      .eq('id', user.id)
+      .single();
+    profile = fallback.data;
+  }  
   if (profile) {
     isPremium = profile.subscription_tier === 'premium';
     apiKey = profile.api_key;
