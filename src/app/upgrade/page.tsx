@@ -1,40 +1,14 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { Suspense } from 'react';
 import { Check, ChevronLeft, Loader2, ShieldCheck, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
-import { getCheckoutURL } from './actions';
+
 import { useSearchParams } from 'next/navigation';
 
 function UpgradeContent() {
   const searchParams = useSearchParams();
   const isExpired = searchParams.get('expired') === 'true';
-
-  const [isLoadingMonthly, setIsLoadingMonthly] = useState(false);
-  const [isLoadingAnnually, setIsLoadingAnnually] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleCheckout = async (plan: 'monthly' | 'annually') => {
-    if (plan === 'monthly') setIsLoadingMonthly(true);
-    else setIsLoadingAnnually(true);
-    setError(null);
-
-    try {
-      const result = await getCheckoutURL(plan);
-      if (result.error) {
-        setError(result.error);
-        setIsLoadingMonthly(false);
-        setIsLoadingAnnually(false);
-      } else if (result.url) {
-        // Redirect to Lemon Squeezy Checkout
-        window.location.href = result.url;
-      }
-    } catch (err: any) {
-      setError(err.message || 'Something went wrong. Please try again.');
-      setIsLoadingMonthly(false);
-      setIsLoadingAnnually(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-background text-slate-50 font-sans selection:bg-indigo-500/30 overflow-y-auto">
@@ -68,12 +42,6 @@ function UpgradeContent() {
               </p>
             </>
           )}
-          
-          {error && (
-            <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 px-4 py-3 rounded-lg max-w-md mx-auto text-sm">
-              {error}
-            </div>
-          )}
         </div>
 
         {/* Pricing Cards */}
@@ -91,13 +59,12 @@ function UpgradeContent() {
               <li className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> Advanced Expectancy Curves</li>
               <li className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> Premium Support</li>
             </ul>
-            <button 
-              onClick={() => handleCheckout('monthly')}
-              disabled={isLoadingMonthly || isLoadingAnnually}
-              className="w-full bg-white/5 hover:bg-white/10 border border-border text-white font-medium py-3 rounded-xl transition-colors disabled:opacity-50 flex items-center justify-center gap-2 mt-auto"
+            <a 
+              href="https://www.paypal.com/ncp/payment/ZXJ3WQK2WJJ3U"
+              className="w-full bg-white/5 hover:bg-white/10 border border-border text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2 mt-auto"
             >
-              {isLoadingMonthly ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Subscribe Monthly'}
-            </button>
+              Subscribe Monthly
+            </a>
           </div>
 
           <div className="bg-gradient-to-b from-indigo-600/20 to-[#131823] border border-indigo-500/30 rounded-2xl p-8 relative overflow-hidden group hover:border-indigo-400/50 transition-colors flex flex-col">
@@ -115,19 +82,18 @@ function UpgradeContent() {
               <li className="flex items-center gap-2"><Check className="w-4 h-4 text-indigo-400" /> Priority Feature Requests</li>
               <li className="flex items-center gap-2"><Check className="w-4 h-4 text-indigo-400" /> Lock in this price forever</li>
             </ul>
-            <button 
-              onClick={() => handleCheckout('annually')}
-              disabled={isLoadingMonthly || isLoadingAnnually}
-              className="w-full bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-400 hover:to-cyan-400 text-white font-semibold py-3 rounded-xl transition-colors shadow-lg shadow-indigo-500/25 disabled:opacity-50 flex items-center justify-center gap-2 mt-auto"
+            <a 
+              href="https://www.paypal.com/ncp/payment/CHN5QDV6D27D2"
+              className="w-full bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-400 hover:to-cyan-400 text-white font-semibold py-3 rounded-xl transition-colors shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-2 mt-auto"
             >
-              {isLoadingAnnually ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Subscribe Annually'}
-            </button>
+              Subscribe Annually
+            </a>
           </div>
         </div>
         
         <div className="text-center flex items-center justify-center gap-2 text-sm text-slate-500">
           <ShieldCheck className="w-4 h-4" />
-          Payments securely processed by Lemon Squeezy
+          Payments securely processed by PayPal
         </div>
       </main>
     </div>
