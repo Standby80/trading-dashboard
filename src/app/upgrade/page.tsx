@@ -3,15 +3,16 @@
 import { Suspense } from 'react';
 import { Check, ChevronLeft, Loader2, ShieldCheck, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
-
 import { useSearchParams } from 'next/navigation';
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 function UpgradeContent() {
   const searchParams = useSearchParams();
   const isExpired = searchParams.get('expired') === 'true';
 
   return (
-    <div className="min-h-screen bg-background text-slate-50 font-sans selection:bg-indigo-500/30 overflow-y-auto">
+    <PayPalScriptProvider options={{ clientId: "BAAXdIdaSac-FDFgQ38Is_2gkZkDz3c5k0PUWb0tX42e-h8cTUj8gLNu6Mkv3rW7BuEfT9bN7DIVVincVk", vault: true, intent: "subscription" }}>
+      <div className="min-h-screen bg-background text-slate-50 font-sans selection:bg-indigo-500/30 overflow-y-auto">
       {/* Navbar */}
       <header className="h-14 border-b border-border flex items-center px-6 sticky top-0 bg-background/80 backdrop-blur-md z-50">
         <Link href="/" className="text-slate-400 hover:text-white flex items-center gap-2 text-sm transition-colors">
@@ -59,12 +60,19 @@ function UpgradeContent() {
               <li className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> Advanced Expectancy Curves</li>
               <li className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> Premium Support</li>
             </ul>
-            <a 
-              href="https://www.paypal.com/ncp/payment/ZXJ3WQK2WJJ3U"
-              className="w-full bg-white/5 hover:bg-white/10 border border-border text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2 mt-auto"
-            >
-              Subscribe Monthly
-            </a>
+            <div className="mt-auto w-full z-10 relative">
+              <PayPalButtons 
+                style={{ shape: 'rect', color: 'gold', layout: 'vertical', label: 'subscribe' }}
+                createSubscription={(data, actions) => {
+                  return actions.subscription.create({
+                    plan_id: 'P-4FP451555C9879116NI2U2QA'
+                  });
+                }}
+                onApprove={async (data, actions) => {
+                  alert("Subscription successful! Your subscription ID is: " + data.subscriptionID);
+                }}
+              />
+            </div>
           </div>
 
           <div className="bg-gradient-to-b from-indigo-600/20 to-[#131823] border border-indigo-500/30 rounded-2xl p-8 relative overflow-hidden group hover:border-indigo-400/50 transition-colors flex flex-col">
@@ -82,12 +90,19 @@ function UpgradeContent() {
               <li className="flex items-center gap-2"><Check className="w-4 h-4 text-indigo-400" /> Priority Feature Requests</li>
               <li className="flex items-center gap-2"><Check className="w-4 h-4 text-indigo-400" /> Lock in this price forever</li>
             </ul>
-            <a 
-              href="https://www.paypal.com/ncp/payment/CHN5QDV6D27D2"
-              className="w-full bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-400 hover:to-cyan-400 text-white font-semibold py-3 rounded-xl transition-colors shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-2 mt-auto"
-            >
-              Subscribe Annually
-            </a>
+            <div className="mt-auto w-full z-10 relative">
+              <PayPalButtons 
+                style={{ shape: 'rect', color: 'gold', layout: 'vertical', label: 'subscribe' }}
+                createSubscription={(data, actions) => {
+                  return actions.subscription.create({
+                    plan_id: 'P-0JX28952ML079574WNI2U5FQ'
+                  });
+                }}
+                onApprove={async (data, actions) => {
+                  alert("Subscription successful! Your subscription ID is: " + data.subscriptionID);
+                }}
+              />
+            </div>
           </div>
         </div>
         
@@ -97,6 +112,7 @@ function UpgradeContent() {
         </div>
       </main>
     </div>
+    </PayPalScriptProvider>
   );
 }
 
