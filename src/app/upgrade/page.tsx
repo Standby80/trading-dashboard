@@ -11,7 +11,7 @@ function UpgradeContent() {
   const isExpired = searchParams.get('expired') === 'true';
 
   return (
-    <PayPalScriptProvider options={{ clientId: "BAAXdIdaSac-FDFgQ38Is_2gkZkDz3c5k0PUWb0tX42e-h8cTUj8gLNu6Mkv3rW7BuEfT9bN7DIVVincVk", vault: true, intent: "subscription" }}>
+    <PayPalScriptProvider options={{ clientId: "Afp2m71NojWa9CguxcnhVqNmf-q1L8Zw4u86tbwZka-ZYuoGXj9FEChWGVyhZBJ3F01QEg7QxHtyEHV9", vault: true, intent: "subscription" }}>
       <div className="min-h-screen bg-background text-slate-50 font-sans selection:bg-indigo-500/30 overflow-y-auto">
       {/* Navbar */}
       <header className="h-14 border-b border-border flex items-center px-6 sticky top-0 bg-background/80 backdrop-blur-md z-50">
@@ -66,7 +66,7 @@ function UpgradeContent() {
                 style={{ shape: 'rect', color: 'blue', label: 'subscribe' }}
                 createSubscription={(data, actions) => {
                   return actions.subscription.create({
-                    plan_id: 'P-4FP451555C9879116NI2U2QA'
+                    plan_id: 'P-8FA454415H9997837NI2VSQA'
                   });
                 }}
                 onApprove={async (data, actions) => {
@@ -97,7 +97,7 @@ function UpgradeContent() {
                 style={{ shape: 'rect', color: 'blue', label: 'subscribe' }}
                 createSubscription={(data, actions) => {
                   return actions.subscription.create({
-                    plan_id: 'P-0JX28952ML079574WNI2U5FQ'
+                    plan_id: 'P-21543582T3327210JNI2VR2I'
                   });
                 }}
                 onApprove={async (data, actions) => {
