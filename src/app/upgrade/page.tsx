@@ -3,11 +3,12 @@
 import { Suspense } from 'react';
 import { Check, ChevronLeft, Loader2, ShieldCheck, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 function UpgradeContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const isExpired = searchParams.get('expired') === 'true';
 
   return (
@@ -70,7 +71,20 @@ function UpgradeContent() {
                   });
                 }}
                 onApprove={async (data, actions) => {
-                  alert("Subscription successful! Your subscription ID is: " + data.subscriptionID);
+                  try {
+                    const response = await fetch('/api/user/upgrade', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ subscriptionID: data.subscriptionID })
+                    });
+                    if (response.ok) {
+                      router.push('/dashboard?upgraded=true');
+                    } else {
+                      alert('Payment successful, but failed to update profile. Please contact support.');
+                    }
+                  } catch (error) {
+                    alert('Payment successful, but an error occurred updating your profile.');
+                  }
                 }}
               />
             </div>
@@ -101,7 +115,20 @@ function UpgradeContent() {
                   });
                 }}
                 onApprove={async (data, actions) => {
-                  alert("Subscription successful! Your subscription ID is: " + data.subscriptionID);
+                  try {
+                    const response = await fetch('/api/user/upgrade', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ subscriptionID: data.subscriptionID })
+                    });
+                    if (response.ok) {
+                      router.push('/dashboard?upgraded=true');
+                    } else {
+                      alert('Payment successful, but failed to update profile. Please contact support.');
+                    }
+                  } catch (error) {
+                    alert('Payment successful, but an error occurred updating your profile.');
+                  }
                 }}
               />
             </div>
