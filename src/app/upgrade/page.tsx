@@ -62,7 +62,8 @@ function UpgradeContent() {
             </ul>
             <div className="mt-auto w-full z-10 relative">
               <PayPalButtons 
-                style={{ shape: 'rect', color: 'gold', layout: 'vertical', label: 'subscribe' }}
+                fundingSource="paypal"
+                style={{ shape: 'rect', color: 'blue', label: 'subscribe' }}
                 createSubscription={(data, actions) => {
                   return actions.subscription.create({
                     plan_id: 'P-4FP451555C9879116NI2U2QA'
@@ -92,7 +93,8 @@ function UpgradeContent() {
             </ul>
             <div className="mt-auto w-full z-10 relative">
               <PayPalButtons 
-                style={{ shape: 'rect', color: 'gold', layout: 'vertical', label: 'subscribe' }}
+                fundingSource="paypal"
+                style={{ shape: 'rect', color: 'blue', label: 'subscribe' }}
                 createSubscription={(data, actions) => {
                   return actions.subscription.create({
                     plan_id: 'P-0JX28952ML079574WNI2U5FQ'
