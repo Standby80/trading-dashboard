@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, Download, Puzzle, CheckCircle2, Zap, BarChart3, Clock, TrendingUp, Globe, FileUp } from "lucide-react";
+import { ArrowRight, ShieldCheck, Download, Puzzle, CheckCircle2, Zap, BarChart3, Clock, TrendingUp, Globe, FileUp, LineChart, BookOpen, Layers, CandlestickChart, Cpu, DollarSign, Rocket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -138,13 +138,13 @@ export default function LandingPage() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
             <Link href="/signup">
-              <Button size="lg" className="h-13 px-8 text-base bg-indigo-600 hover:bg-indigo-500 text-white font-bold shadow-xl shadow-indigo-500/20 rounded-xl">
-                Start for Free
-                <ArrowRight className="ml-2 w-4 h-4" />
+              <Button size="lg" className="h-14 px-8 text-base bg-indigo-600 hover:bg-indigo-500 text-white font-bold shadow-[0_0_40px_-10px_rgba(99,102,241,0.5)] rounded-xl hover:-translate-y-1 hover:shadow-[0_0_50px_-10px_rgba(99,102,241,0.7)] transition-all duration-300">
+                Start 7-Day Free Trial
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
             <Link href="/login">
-              <Button size="lg" variant="ghost" className="h-13 px-8 text-base text-white/50 hover:text-white hover:bg-white/5 rounded-xl">
+              <Button size="lg" variant="ghost" className="h-14 px-8 text-base text-white/50 hover:text-white hover:bg-white/5 rounded-xl transition-colors">
                 Sign in →
               </Button>
             </Link>
@@ -329,27 +329,45 @@ export default function LandingPage() {
           })}
         </div>
 
-        {/* Feature callouts */}
-        <div className="grid md:grid-cols-3 gap-4">
+        {/* Core Selling Points */}
+        <div className="grid md:grid-cols-3 gap-6 mt-16">
           {[
-            { icon: TrendingUp, color: "indigo", title: "Growth over time", desc: "Your balance curve shows exactly when you started winning — and when you gave it back." },
-            { icon: BarChart3, color: "purple", title: "Win/Loss breakdown", desc: "Average win, average loss, best and worst trade. Know your edge before you put on the next position." },
-            { icon: Zap, color: "emerald", title: "Risk metrics", desc: "Sharpe ratio, max drawdown, profit factor and expectancy — the stats professional traders live by." },
+            { icon: LineChart, color: "indigo", title: "Built for MT4 & MT5 Lovers", desc: "Native support for the world's most popular trading platforms. Flawless integration." },
+            { icon: Zap, color: "amber", title: "Lightning Fast Live-Sync", desc: "No delays. Your trades sync automatically in real-time as soon as you close a position." },
+            { icon: BarChart3, color: "emerald", title: "Know Your Data Metrics", desc: "Stop guessing. Understand your edge with deep, institutional-grade analytics." },
+            { icon: BookOpen, color: "blue", title: "Journal Every Single Trade", desc: "Combine hard numbers with trading psychology. Document your thoughts seamlessly." },
+            { icon: Layers, color: "purple", title: "Multi-Account Dashboard", desc: "Manage prop-firms, challenges, and personal accounts all from one single unified view." },
+            { icon: CandlestickChart, color: "rose", title: "Multi-Symbol Analytics", desc: "Break down your performance by asset. Find out which pairs make you money and which you should drop." },
+            { icon: Cpu, color: "cyan", title: "Our Custom Built Expert (EA)", desc: "Secure, lightweight, and highly optimized Expert Advisor for instantaneous data transfer." },
+            { icon: DollarSign, color: "green", title: "Most Affordable on the Market", desc: "Unmatched value. Premium features at a fraction of the cost of our competitors." },
+            { icon: Rocket, color: "orange", title: "Small Investment, Massive Potential", desc: "The insights you gain will pay for the software on your very next successful trade." },
           ].map(({ icon: Icon, color, title, desc }) => (
-            <div key={title} className="p-6 rounded-2xl border border-white/8 bg-[#0d1117] hover:border-white/15 transition-colors">
-              <div className={`w-10 h-10 rounded-xl mb-4 flex items-center justify-center ${
-                color === "indigo" ? "bg-indigo-500/10 border border-indigo-500/20" :
-                color === "purple" ? "bg-purple-500/10 border border-purple-500/20" :
-                "bg-emerald-500/10 border border-emerald-500/20"
+            <div key={title} className="p-8 rounded-2xl border border-white/8 bg-[#0d1117]/80 hover:bg-[#161b22] hover:-translate-y-2 hover:border-indigo-500/40 hover:shadow-[0_10px_40px_-15px_rgba(99,102,241,0.2)] transition-all duration-300 group cursor-default">
+              <div className={`w-14 h-14 rounded-2xl mb-6 flex items-center justify-center transition-colors duration-300 ${
+                color === "indigo" ? "bg-indigo-500/10 border border-indigo-500/20 group-hover:bg-indigo-500/20" :
+                color === "amber" ? "bg-amber-500/10 border border-amber-500/20 group-hover:bg-amber-500/20" :
+                color === "emerald" ? "bg-emerald-500/10 border border-emerald-500/20 group-hover:bg-emerald-500/20" :
+                color === "blue" ? "bg-blue-500/10 border border-blue-500/20 group-hover:bg-blue-500/20" :
+                color === "purple" ? "bg-purple-500/10 border border-purple-500/20 group-hover:bg-purple-500/20" :
+                color === "rose" ? "bg-rose-500/10 border border-rose-500/20 group-hover:bg-rose-500/20" :
+                color === "cyan" ? "bg-cyan-500/10 border border-cyan-500/20 group-hover:bg-cyan-500/20" :
+                color === "green" ? "bg-green-500/10 border border-green-500/20 group-hover:bg-green-500/20" :
+                "bg-orange-500/10 border border-orange-500/20 group-hover:bg-orange-500/20"
               }`}>
-                <Icon className={`w-5 h-5 ${
+                <Icon className={`w-7 h-7 transition-transform duration-300 group-hover:scale-110 ${
                   color === "indigo" ? "text-indigo-400" :
+                  color === "amber" ? "text-amber-400" :
+                  color === "emerald" ? "text-emerald-400" :
+                  color === "blue" ? "text-blue-400" :
                   color === "purple" ? "text-purple-400" :
-                  "text-emerald-400"
+                  color === "rose" ? "text-rose-400" :
+                  color === "cyan" ? "text-cyan-400" :
+                  color === "green" ? "text-green-400" :
+                  "text-orange-400"
                 }`} />
               </div>
-              <h3 className="text-white font-bold mb-1.5 text-base">{title}</h3>
-              <p className="text-white/40 text-sm leading-relaxed">{desc}</p>
+              <h3 className="text-white font-extrabold mb-3 text-xl tracking-tight">{title}</h3>
+              <p className="text-white/50 text-sm leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>
@@ -484,50 +502,50 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* Monthly */}
-            <div className="p-8 rounded-2xl border border-white/10 bg-[#161b22] flex flex-col hover:border-white/20 transition-colors">
+            <div className="p-8 rounded-3xl border border-white/10 bg-[#161b22] flex flex-col hover:border-white/20 hover:-translate-y-1 transition-all duration-300 shadow-xl">
               <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-4">Monthly</p>
               <div className="flex items-end gap-2 mb-2">
                 <span className="text-5xl font-extrabold text-white">$9</span>
                 <span className="text-white/30 text-base mb-1.5">/month</span>
               </div>
-              <p className="text-white/25 text-sm mb-8">Billed monthly. Cancel anytime.</p>
-              <ul className="space-y-3 mb-8 flex-1">
-                {["Automatic EA Live-Sync", "Full Trade History Import", "MetaMetrics Score", "Time & Risk Analytics", "Long/Short Split Analysis", "Performance Calendar", "25+ Key Dashboard Metrics"].map(f => (
-                  <li key={f} className="flex items-center gap-3 text-white/55 text-sm">
-                    <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />{f}
+              <p className="text-emerald-400 font-medium text-sm mb-8">7-Day Free Trial included.</p>
+              <ul className="space-y-4 mb-10 flex-1">
+                {["Built for MT4 & MT5 Lovers", "Lightning Fast Live-Sync", "Journal Every Single Trade", "Multi-Account Dashboard", "Multi-Symbol Analytics", "25+ Key Dashboard Metrics"].map(f => (
+                  <li key={f} className="flex items-center gap-3 text-white/70 text-sm font-medium">
+                    <CheckCircle2 className="w-5 h-5 text-indigo-400 shrink-0" />{f}
                   </li>
                 ))}
               </ul>
               <Link href="/signup">
-                <Button variant="outline" className="w-full h-12 font-semibold border-white/10 text-white hover:bg-white/5 hover:border-white/20 rounded-xl bg-transparent">
-                  Get Started — $9/mo
+                <Button variant="outline" className="w-full h-14 font-bold border-white/10 text-white hover:bg-white/5 hover:border-white/20 rounded-xl bg-transparent transition-colors text-base">
+                  Start Free Trial
                 </Button>
               </Link>
             </div>
 
             {/* Yearly */}
-            <div className="p-8 rounded-2xl border border-indigo-500/40 bg-gradient-to-b from-indigo-950/40 to-[#161b22] flex flex-col relative shadow-2xl shadow-indigo-500/10">
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-full tracking-wider whitespace-nowrap">
-                BEST VALUE — SAVE 27%
+            <div className="p-8 rounded-3xl border border-indigo-500/40 bg-gradient-to-b from-indigo-950/40 to-[#161b22] flex flex-col relative shadow-[0_0_50px_-15px_rgba(99,102,241,0.3)] hover:-translate-y-1 hover:shadow-[0_0_60px_-15px_rgba(99,102,241,0.4)] transition-all duration-300">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-4 py-1.5 rounded-full tracking-widest whitespace-nowrap shadow-lg">
+                BEST VALUE — SAVE 17%
               </div>
               <p className="text-indigo-400 text-xs font-bold uppercase tracking-widest mb-4">Yearly</p>
               <div className="flex items-end gap-2 mb-1">
-                <span className="text-5xl font-extrabold text-white">$79</span>
+                <span className="text-5xl font-extrabold text-white">$89</span>
                 <span className="text-white/30 text-base mb-1.5">/year</span>
               </div>
-              <p className="text-white/30 text-sm mb-0.5">That&apos;s just <span className="text-indigo-400 font-semibold">$6.58/month</span>.</p>
-              <p className="text-white/20 text-xs mb-8">Billed annually.</p>
-              <ul className="space-y-3 mb-8 flex-1">
-                {["Automatic EA Live-Sync", "Full Trade History Import", "MetaMetrics Score", "Time & Risk Analytics", "Long/Short Split Analysis", "Performance Calendar", "25+ Key Dashboard Metrics"].map(f => (
-                  <li key={f} className="flex items-center gap-3 text-white/80 text-sm">
-                    <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />{f}
+              <p className="text-white/30 text-sm mb-1">That&apos;s just <span className="text-indigo-400 font-semibold">$7.41/month</span>.</p>
+              <p className="text-emerald-400 font-medium text-xs mb-8">7-Day Free Trial included.</p>
+              <ul className="space-y-4 mb-10 flex-1">
+                {["Built for MT4 & MT5 Lovers", "Lightning Fast Live-Sync", "Journal Every Single Trade", "Multi-Account Dashboard", "Multi-Symbol Analytics", "25+ Key Dashboard Metrics", "Premium Priority Support"].map(f => (
+                  <li key={f} className="flex items-center gap-3 text-white/90 text-sm font-medium">
+                    <CheckCircle2 className="w-5 h-5 text-indigo-400 shrink-0" />{f}
                   </li>
                 ))}
               </ul>
               <Link href="/signup">
-                <Button className="w-full h-12 font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-500/20">
-                  Get Started — $79/yr
-                  <ArrowRight className="ml-2 w-4 h-4" />
+                <Button className="w-full h-14 font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-500/20 text-base transition-all">
+                  Start 7-Day Free Trial
+                  <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
             </div>
@@ -573,9 +591,9 @@ export default function LandingPage() {
               Join traders who use MetaMetrics to cut losing habits and compound their edge.
             </p>
             <Link href="/signup">
-              <Button size="lg" className="h-13 px-10 text-base font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-xl shadow-indigo-500/20">
-                Start Free Today
-                <ArrowRight className="ml-2 w-4 h-4" />
+              <Button size="lg" className="h-14 px-10 text-lg font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-[0_0_40px_-10px_rgba(99,102,241,0.5)] hover:-translate-y-1 hover:shadow-[0_0_50px_-10px_rgba(99,102,241,0.7)] transition-all duration-300">
+                Start 7-Day Free Trial
+                <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>
           </div>
