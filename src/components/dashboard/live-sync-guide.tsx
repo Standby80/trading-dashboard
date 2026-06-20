@@ -71,7 +71,7 @@ export default function LiveSyncGuide() {
                 <li>Click on <span className="text-foreground">File</span> and select <span className="text-foreground">Open Data Folder</span>.</li>
                 <li>Navigate to <span className="font-mono text-indigo-400">MQL4 \ Experts</span> or <span className="font-mono text-indigo-400">MQL5 \ Experts</span>.</li>
                 <li>Paste the downloaded <span className="font-mono text-indigo-400">.ex4</span> or <span className="font-mono text-indigo-400">.ex5</span> file there.</li>
-                <li>Right-click "Expert Advisors" in your Navigator in MT5 and select <span className="text-foreground">Refresh</span>.</li>
+                <li>Right-click "Expert Advisors" in your Navigator in MT4/MT5 and select <span className="text-foreground">Refresh</span>.</li>
               </ol>
             </div>
           )}
@@ -93,6 +93,7 @@ export default function LiveSyncGuide() {
           {step === 4 && (
             <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
               <ol className="list-decimal list-inside space-y-3 text-sm text-muted-foreground">
+                <li>Right-click "Expert Advisors" in the Navigator window and select <span className="text-foreground">Refresh</span>.</li>
                 <li>Drag <span className="text-foreground">MetaMetricsSync</span> from the Navigator window to any chart.</li>
                 <li>Under the <span className="text-foreground">Inputs</span> tab, double-click <span className="text-foreground">InpApiKey</span> and paste your key.</li>
                 <li>Under the <span className="text-foreground">Common</span> tab, ensure <span className="text-foreground">Allow Algo Trading</span> is checked.</li>
