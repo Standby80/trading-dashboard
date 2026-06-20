@@ -278,27 +278,55 @@ export default function LandingPage() {
 
         {/* Large alternating showcase sections */}
         <div className="flex flex-col gap-24 mb-24 mt-16">
-          {showcaseFeatures.map((feature, index) => (
-            <div key={feature.id} className={`flex flex-col md:flex-row items-center gap-12 ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
-              <div className="flex-1 w-full relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-1000" />
-                <div className="relative rounded-2xl border border-white/10 bg-[#161b22] p-2 shadow-2xl overflow-hidden">
-                  <img 
-                    src={`/images/showcase/${feature.filename}`} 
-                    alt={feature.title} 
-                    className="w-full h-auto rounded-xl shadow-inner"
-                  />
+          {showcaseFeatures.map((feature, index) => {
+            // Special layout for 25 KPI (Full width)
+            if (feature.id === "25KPI") {
+              return (
+                <div key={feature.id} className="flex flex-col items-center gap-10">
+                  <div className="text-center space-y-4 max-w-3xl mx-auto">
+                    <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mx-auto mb-4">
+                      <span className="text-indigo-400 font-bold text-lg">{index + 1}</span>
+                    </div>
+                    <h3 className="text-3xl md:text-5xl font-bold text-white tracking-tight">{feature.title}</h3>
+                    <p className="text-white/50 text-lg leading-relaxed">{feature.desc}</p>
+                  </div>
+                  <div className="w-full relative group max-w-6xl mx-auto">
+                    <div className="absolute -inset-2 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-1000" />
+                    <div className="relative rounded-2xl border border-white/10 bg-[#161b22] p-2 shadow-2xl overflow-hidden">
+                      <img 
+                        src={`/images/showcase/${feature.filename}`} 
+                        alt={feature.title} 
+                        className="w-full h-auto rounded-xl shadow-inner"
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
+            // Standard alternating layout
+            return (
+              <div key={feature.id} className={`flex flex-col md:flex-row items-center gap-12 ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
+                <div className="flex-1 w-full relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-1000" />
+                  <div className="relative rounded-2xl border border-white/10 bg-[#161b22] p-2 shadow-2xl overflow-hidden">
+                    <img 
+                      src={`/images/showcase/${feature.filename}`} 
+                      alt={feature.title} 
+                      className="w-full h-auto rounded-xl shadow-inner"
+                    />
+                  </div>
+                </div>
+                <div className="flex-1 space-y-4">
+                  <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6">
+                    <span className="text-indigo-400 font-bold text-lg">{index + 1}</span>
+                  </div>
+                  <h3 className="text-3xl font-bold text-white tracking-tight">{feature.title}</h3>
+                  <p className="text-white/50 text-lg leading-relaxed max-w-lg">{feature.desc}</p>
                 </div>
               </div>
-              <div className="flex-1 space-y-4">
-                <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6">
-                  <span className="text-indigo-400 font-bold text-lg">{index + 1}</span>
-                </div>
-                <h3 className="text-3xl font-bold text-white tracking-tight">{feature.title}</h3>
-                <p className="text-white/50 text-lg leading-relaxed max-w-lg">{feature.desc}</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Feature callouts */}
