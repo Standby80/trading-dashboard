@@ -55,7 +55,7 @@ export function AppSidebar({ userEmail, profile }: SidebarProps & { profile?: an
 
       {/* Logo */}
       <div className={`flex items-center h-20 px-6 shrink-0 ${isCollapsed ? 'justify-center px-0' : 'gap-3'}`}>
-        <img src="/download/logo.jpg" alt="MetaMetrics Logo" className="w-10 h-10 object-contain rounded-full border border-white/10 shrink-0 shadow-lg" />
+        <img src="/downloads/logo.jpg" alt="MetaMetrics Logo" className="w-10 h-10 object-contain rounded-full border border-white/10 shrink-0 shadow-lg" />
         {!isCollapsed && (
           <span className="text-foreground font-bold tracking-wide text-lg">MetaMetrics</span>
         )}
