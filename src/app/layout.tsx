@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getLocale } from 'next-intl/server';
 import { ThemeProvider } from "@/components/theme-provider";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -43,6 +44,7 @@ export default async function RootLayout({
               </TooltipProvider>
             </NextIntlClientProvider>
           </ThemeProvider>
+          <Analytics />
         </body>
       </html>
   );
