@@ -94,11 +94,9 @@ export default function LandingPage() {
       {/* Navigation */}
       <nav className="border-b border-white/5 bg-[#0d1117]/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center border border-indigo-500/40">
-              <span className="text-indigo-400 font-bold text-xs">MM</span>
-            </div>
-            <span className="font-bold text-lg tracking-tight text-white">MetaMetrics</span>
+          <div className="flex items-center gap-3">
+            <img src="/download/logo.jpg" alt="MetaMetrics Logo" className="w-10 h-10 object-contain rounded-full border border-white/10 shadow-lg" />
+            <span className="font-bold text-xl tracking-tight text-white">MetaMetrics</span>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/login" className="text-sm font-medium text-white/50 hover:text-white transition-colors">
