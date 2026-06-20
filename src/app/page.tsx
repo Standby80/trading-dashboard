@@ -72,14 +72,19 @@ const days = [
 ];
 
 const showcaseFeatures = [
-  { id: 3, title: "Long vs Short Split", desc: "Analyze performance by direction. Know instantly if you're better at buying or selling." },
-  { id: 4, title: "Monthly Heatmap", desc: "Spot seasonal trends and track your P&L month-by-month in a clear, visual format." },
-  { id: 5, title: "Win Rate & Averages", desc: "Crucial stats like Profit Factor, Expectancy, and Average Win/Loss." },
-  { id: 6, title: "Risk & Drawdown", desc: "Monitor Max Drawdown and Recovery Factor to protect your trading capital." },
-  { id: 7, title: "Streaks & Consistency", desc: "Track consecutive wins and losses to better manage your trading psychology." },
-  { id: 8, title: "Hold Time Impact", desc: "Does holding longer mean more profit? Compare average hold times for winners vs losers." },
-  { id: 9, title: "Symbol Performance", desc: "Break down your results by asset. Stop trading the pairs that lose you money." },
-  { id: 10, title: "Hidden Fees", desc: "Uncover exactly how much commissions and swaps are dragging down your net profit." }
+  { id: "25KPI", filename: "25KPI.png", title: "25 Key Performance Indicators", desc: "Få stenkoll på varje detalj av din trading. Med över 25 nyckeltal (KPI:er) samlade på ett ställe kan du direkt identifiera dina styrkor och svagheter." },
+  { id: "drawdown", filename: "Drawdown chart.png", title: "Drawdown Chart", desc: "Visualisera exakt hur djupa och långa dina förlustperioder (drawdowns) är. Agera snabbare när du närmar dig din smärtgräns." },
+  { id: "expectancy", filename: "Expectancy Curve (Next 100 Trades).png", title: "Expectancy Curve (Next 100 Trades)", desc: "Se framtiden baserat på din nuvarande data. Vår expectancy-kurva simulerar hur ditt konto kommer utvecklas under dina nästa 100 affärer." },
+  { id: "sync", filename: "MetaMetrics Live Sync API.png", title: "MetaMetrics Live Sync API", desc: "Inga fler manuella uppladdningar. Koppla vårt blixtsnabba Live Sync API till din plattform och få data i realtid." },
+  { id: "monthly", filename: "Monthly and Symbol Performance.png", title: "Monthly and Symbol Performance", desc: "Vilken månad är din bästa? Vilket valutapar kostar dig pengar? Vår heatmap ger dig svaret omedelbart." },
+  { id: "multi", filename: "Slide Multi account.png", title: "Multi Account Dashboard", desc: "Hantera och övervaka flera olika tradingkonton (t.ex. prop-firmor eller personliga) från exakt samma vy." },
+  { id: "calender", filename: "Slide calender.png", title: "Performance Calendar", desc: "Dina vinster och förluster, elegant uppmålade i en kalendervy. Hitta mönster i dina handelsdagar." },
+  { id: "time_day", filename: "Time Analytics Day.png", title: "Time Analytics Day", desc: "Är du en vinnare på måndagar men en förlorare på fredagar? Time Analytics visar exakt vilka veckodagar du bör undvika." },
+  { id: "time_hour", filename: "Time Analytics Hour.png", title: "Time Analytics Hour", desc: "Optimera dina handelstider. Se svart på vitt exakt vilken timme på dygnet som ger dig störst edge på marknaden." },
+  { id: "trade_exec", filename: "Trade Execution and Time Analytics.png", title: "Trade Execution and Time Analytics", desc: "Bryt ner dina exakta entry- och exit-tider för att förstå hur din timing påverkar dina resultat." },
+  { id: "history", filename: "Trade history.png", title: "Full Trade History", desc: "Glöm gamla klumpiga listor. Vi ger dig din fullständiga handelshistorik vackert och överskådligt paketerad." },
+  { id: "journal", filename: "Trading Day History and day journal.png", title: "Trading Day History and Day Journal", desc: "Din dagliga historik och journal på ett och samma ställe. Utvärdera dina känslor tillsammans med den kalla statistiken." },
+  { id: "upload", filename: "Upload MT5 MT4 Report.png", title: "Upload MT5/MT4 Report", desc: "Vill du inte använda Live Sync? Inga problem. Ladda upp din MT4/MT5-rapport på 5 sekunder och få all data serverad." }
 ];
 
 export default function LandingPage() {
@@ -149,7 +154,7 @@ export default function LandingPage() {
           <div className="mt-16 relative mx-auto w-full max-w-5xl rounded-2xl border border-white/10 bg-[#161b22]/50 p-2 shadow-2xl backdrop-blur-sm overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117] via-transparent to-transparent opacity-80 z-10 pointer-events-none" />
             <img 
-              src="/images/showcase/1.png" 
+              src="/images/showcase/Slide dashbord.png" 
               alt="MetaMetrics Dashboard" 
               className="w-full h-auto rounded-xl shadow-2xl transition-transform duration-700 group-hover:scale-[1.02]"
             />
@@ -185,7 +190,7 @@ export default function LandingPage() {
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
             <div className="relative rounded-2xl border border-white/10 bg-[#161b22] p-2 shadow-2xl">
               <img 
-                src="/images/showcase/2.png" 
+                src="/images/showcase/Drawdown chart.png" 
                 alt="Account Growth Curve" 
                 className="w-full h-auto rounded-xl"
               />
@@ -279,7 +284,7 @@ export default function LandingPage() {
                 <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-1000" />
                 <div className="relative rounded-2xl border border-white/10 bg-[#161b22] p-2 shadow-2xl overflow-hidden">
                   <img 
-                    src={`/images/showcase/${feature.id}.png`} 
+                    src={`/images/showcase/${feature.filename}`} 
                     alt={feature.title} 
                     className="w-full h-auto rounded-xl shadow-inner"
                   />
@@ -291,16 +296,6 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-3xl font-bold text-white tracking-tight">{feature.title}</h3>
                 <p className="text-white/50 text-lg leading-relaxed max-w-lg">{feature.desc}</p>
-                <ul className="space-y-3 pt-4">
-                  <li className="flex items-center gap-3 text-white/60 text-sm">
-                    <CheckCircle2 className="w-5 h-5 text-indigo-500 shrink-0" />
-                    Deep dive into your raw data
-                  </li>
-                  <li className="flex items-center gap-3 text-white/60 text-sm">
-                    <CheckCircle2 className="w-5 h-5 text-indigo-500 shrink-0" />
-                    Find your true edge
-                  </li>
-                </ul>
               </div>
             </div>
           ))}
