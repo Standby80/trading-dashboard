@@ -71,6 +71,17 @@ const days = [
   { day: "Sun", val: 0 },
 ];
 
+const showcaseFeatures = [
+  { id: 3, title: "Long vs Short Split", desc: "Analyze performance by direction. Know instantly if you're better at buying or selling." },
+  { id: 4, title: "Monthly Heatmap", desc: "Spot seasonal trends and track your P&L month-by-month in a clear, visual format." },
+  { id: 5, title: "Win Rate & Averages", desc: "Crucial stats like Profit Factor, Expectancy, and Average Win/Loss." },
+  { id: 6, title: "Risk & Drawdown", desc: "Monitor Max Drawdown and Recovery Factor to protect your trading capital." },
+  { id: 7, title: "Streaks & Consistency", desc: "Track consecutive wins and losses to better manage your trading psychology." },
+  { id: 8, title: "Hold Time Impact", desc: "Does holding longer mean more profit? Compare average hold times for winners vs losers." },
+  { id: 9, title: "Symbol Performance", desc: "Break down your results by asset. Stop trading the pairs that lose you money." },
+  { id: 10, title: "Hidden Fees", desc: "Uncover exactly how much commissions and swaps are dragging down your net profit." }
+];
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#0d1117] text-white font-sans selection:bg-indigo-500/30 overflow-x-hidden">
@@ -260,15 +271,21 @@ export default function LandingPage() {
           </p>
         </div>
 
-        {/* Image Grid showcasing all the data points */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-          {[3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-            <div key={num} className="rounded-xl border border-white/10 bg-[#161b22] p-1.5 shadow-xl hover:border-white/30 transition-colors">
-              <img 
-                src={`/images/showcase/${num}.png`} 
-                alt={`Data point ${num}`} 
-                className="w-full h-auto rounded-lg"
-              />
+        {/* Image Grid showcasing all the data points with explanations */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {showcaseFeatures.map((feature) => (
+            <div key={feature.id} className="rounded-2xl border border-white/10 bg-[#161b22] shadow-xl hover:border-indigo-500/30 transition-all duration-300 group overflow-hidden flex flex-col">
+              <div className="p-2 border-b border-white/5 bg-[#0d1117]/50">
+                <img 
+                  src={`/images/showcase/${feature.id}.png`} 
+                  alt={feature.title} 
+                  className="w-full h-auto rounded-lg group-hover:scale-[1.03] transition-transform duration-500"
+                />
+              </div>
+              <div className="p-5 flex-1 flex flex-col">
+                <h3 className="text-white font-bold text-sm mb-2">{feature.title}</h3>
+                <p className="text-white/40 text-xs leading-relaxed">{feature.desc}</p>
+              </div>
             </div>
           ))}
         </div>
