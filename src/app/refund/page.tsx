@@ -31,7 +31,7 @@ export default function RefundPage() {
 
           <section>
             <h2 className="text-2xl font-semibold text-white mb-4">2. 7-Day Free Trial</h2>
-            <p>Since we offer a 7-day free trial, users have ample time to test the functionality of our MetaMetrics dashboard and MT5 sync before committing to a subscription.</p>
+            <p>Since we offer a 7-day free trial, users have ample time to test the functionality of our MetaMetrics dashboard and MT4 & MT5 sync before committing to a subscription.</p>
           </section>
 
           <section>

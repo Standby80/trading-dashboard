@@ -31,7 +31,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-2xl font-semibold text-white mb-4">2. Service</h2>
-            <p>Access to the MetaMetrics dashboard, MT5 sync, and journaling tools.</p>
+            <p>Access to the MetaMetrics dashboard, MT4 & MT5 sync, and journaling tools.</p>
           </section>
 
           <section>

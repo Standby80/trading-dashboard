@@ -31,7 +31,7 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="text-2xl font-semibold text-white mb-4">2. Data Collected</h2>
-            <p>We collect trading data (via MT5 sync), email addresses for account management, and payment information (processed securely by Lemon Squeezy).</p>
+            <p>We collect trading data (via MT4 & MT5 sync), email addresses for account management, and payment information (processed securely by Lemon Squeezy).</p>
           </section>
 
           <section>

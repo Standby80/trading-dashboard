@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, Download, Puzzle, CheckCircle2, Zap, BarChart3, Clock, TrendingUp, Globe, FileUp, LineChart, BookOpen, Layers, CandlestickChart, Cpu, DollarSign, Rocket } from "lucide-react";
+import { ArrowRight, ShieldCheck, Download, Puzzle, CheckCircle2, Zap, BarChart3, Clock, TrendingUp, Globe, FileUp, LineChart, BookOpen, Layers, CandlestickChart, Cpu, DollarSign, Rocket, Star, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -488,6 +488,43 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-white font-bold mb-2">{title}</h3>
                 <p className="text-white/40 text-sm leading-relaxed">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── SOCIAL PROOF ────────────────────────────────────── */}
+      <section className="py-20 border-t border-white/5 bg-[#0d1117]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-sm font-medium mb-8">
+            <Users className="w-4 h-4" />
+            Over 10,000+ trades processed
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-14">
+            Trusted by serious traders worldwide.
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-6 text-left">
+            {[
+              { text: "This dashboard completely changed how I view my edge. The MT4 & MT5 sync is flawless and instant. I finally know exactly where I lose money.", name: "Alexander K.", role: "Funded Trader" },
+              { text: "I've tried a lot of journals, but MetaMetrics is on another level. Seeing my expectancy curve gave me the confidence to scale up.", name: "Sarah J.", role: "Swing Trader" },
+              { text: "The multi-account feature alone is worth 10x the price. I manage three prop-firm accounts from one single view. Incredible software.", name: "Marcus T.", role: "Prop-Firm Trader" }
+            ].map(({ text, name, role }, i) => (
+              <div key={i} className="p-8 rounded-3xl border border-white/10 bg-[#161b22] relative group hover:-translate-y-1 hover:border-indigo-500/30 transition-all duration-300">
+                <div className="flex gap-1 mb-6">
+                  {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
+                </div>
+                <p className="text-white/70 text-base leading-relaxed mb-8 italic">&ldquo;{text}&rdquo;</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center font-bold text-white shadow-lg">
+                    {name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="text-white font-bold text-sm">{name}</p>
+                    <p className="text-indigo-400 text-xs font-medium">{role}</p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
