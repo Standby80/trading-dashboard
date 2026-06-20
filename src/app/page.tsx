@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, Download, Puzzle, CheckCircle2, Zap, BarChart3, Clock, TrendingUp, Globe, FileUp, LineChart, BookOpen, Layers, CandlestickChart, Cpu, DollarSign, Rocket, Star, Users } from "lucide-react";
+import { ArrowRight, ShieldCheck, Download, Puzzle, CheckCircle2, Zap, BarChart3, Clock, TrendingUp, Globe, FileUp, LineChart, BookOpen, Layers, CandlestickChart, Cpu, DollarSign, Rocket, Star, Users, LayoutDashboard, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -174,6 +174,9 @@ export default function LandingPage() {
             { icon: CandlestickChart, color: "rose", title: "Multi-Symbol Analytics", desc: "Break down your performance by asset. Find out which pairs make you money and which you should drop." },
             { icon: Cpu, color: "cyan", title: "Our Custom Built Expert (EA)", desc: "Secure, lightweight, and highly optimized Expert Advisor for instantaneous data transfer." },
             { icon: DollarSign, color: "green", title: "Most Affordable on the Market", desc: "Unmatched value. Premium features at a fraction of the cost of our competitors." },
+            { icon: LayoutDashboard, color: "fuchsia", title: "Drag & Drop Dashboard", desc: "Build your perfect view. Move, resize, and arrange all widgets exactly how you want them and save your layout." },
+            { icon: ShieldCheck, color: "teal", title: "Bank-Grade Security", desc: "Your data is encrypted. We only require a read-only API key and never ask for your broker passwords." },
+            { icon: Monitor, color: "sky", title: "Works on Mac & Windows", desc: "Our lightweight Expert Advisor is compiled for both operating systems. No compatibility issues." },
             { icon: Rocket, color: "orange", title: "Small Investment, Massive Potential", desc: "The insights you gain will pay for the software on your very next successful trade." },
           ].map(({ icon: Icon, color, title, desc }) => (
             <div key={title} className="p-8 rounded-2xl border border-white/8 bg-[#0d1117]/80 hover:bg-[#161b22] hover:-translate-y-2 hover:border-indigo-500/40 hover:shadow-[0_10px_40px_-15px_rgba(99,102,241,0.2)] transition-all duration-300 group cursor-default">
@@ -186,6 +189,9 @@ export default function LandingPage() {
                 color === "rose" ? "bg-rose-500/10 border border-rose-500/20 group-hover:bg-rose-500/20" :
                 color === "cyan" ? "bg-cyan-500/10 border border-cyan-500/20 group-hover:bg-cyan-500/20" :
                 color === "green" ? "bg-green-500/10 border border-green-500/20 group-hover:bg-green-500/20" :
+                color === "fuchsia" ? "bg-fuchsia-500/10 border border-fuchsia-500/20 group-hover:bg-fuchsia-500/20" :
+                color === "teal" ? "bg-teal-500/10 border border-teal-500/20 group-hover:bg-teal-500/20" :
+                color === "sky" ? "bg-sky-500/10 border border-sky-500/20 group-hover:bg-sky-500/20" :
                 "bg-orange-500/10 border border-orange-500/20 group-hover:bg-orange-500/20"
               }`}>
                 <Icon className={`w-7 h-7 transition-transform duration-300 group-hover:scale-110 ${
@@ -197,6 +203,9 @@ export default function LandingPage() {
                   color === "rose" ? "text-rose-400" :
                   color === "cyan" ? "text-cyan-400" :
                   color === "green" ? "text-green-400" :
+                  color === "fuchsia" ? "text-fuchsia-400" :
+                  color === "teal" ? "text-teal-400" :
+                  color === "sky" ? "text-sky-400" :
                   "text-orange-400"
                 }`} />
               </div>
