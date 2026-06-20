@@ -93,7 +93,6 @@ export default function LiveSyncGuide() {
           {step === 4 && (
             <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
               <ol className="list-decimal list-inside space-y-3 text-sm text-muted-foreground">
-                <li>Right-click "Expert Advisors" in the Navigator window and select <span className="text-foreground">Refresh</span>.</li>
                 <li>Drag <span className="text-foreground">MetaMetricsSync</span> from the Navigator window to any chart.</li>
                 <li>Under the <span className="text-foreground">Inputs</span> tab, double-click <span className="text-foreground">InpApiKey</span> and paste your key.</li>
                 <li>Under the <span className="text-foreground">Common</span> tab, ensure <span className="text-foreground">Allow Algo Trading</span> is checked.</li>
