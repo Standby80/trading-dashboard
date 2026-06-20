@@ -264,12 +264,12 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ─── 15 METRICS SECTION ─────────────────────────────── */}
+      {/* ─── 25+ METRICS SECTION ─────────────────────────────── */}
       <section className="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <p className="text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-3">Dashboard Overview</p>
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
-            15 key metrics. One dashboard. Zero spreadsheets.
+            25+ key metrics. One dashboard. Zero spreadsheets.
           </h2>
           <p className="text-white/40 text-base max-w-2xl mx-auto">
             Every number your broker hides from you — surfaced instantly. Know your real performance, not just your last trade.
@@ -492,7 +492,7 @@ export default function LandingPage() {
               </div>
               <p className="text-white/25 text-sm mb-8">Billed monthly. Cancel anytime.</p>
               <ul className="space-y-3 mb-8 flex-1">
-                {["Automatic EA Live-Sync", "Full Trade History Import", "MetaMetrics Score", "Time & Risk Analytics", "Long/Short Split Analysis", "Performance Calendar", "15 Key Dashboard Metrics"].map(f => (
+                {["Automatic EA Live-Sync", "Full Trade History Import", "MetaMetrics Score", "Time & Risk Analytics", "Long/Short Split Analysis", "Performance Calendar", "25+ Key Dashboard Metrics"].map(f => (
                   <li key={f} className="flex items-center gap-3 text-white/55 text-sm">
                     <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />{f}
                   </li>
@@ -518,7 +518,7 @@ export default function LandingPage() {
               <p className="text-white/30 text-sm mb-0.5">That&apos;s just <span className="text-indigo-400 font-semibold">$6.58/month</span>.</p>
               <p className="text-white/20 text-xs mb-8">Billed annually.</p>
               <ul className="space-y-3 mb-8 flex-1">
-                {["Automatic EA Live-Sync", "Full Trade History Import", "MetaMetrics Score", "Time & Risk Analytics", "Long/Short Split Analysis", "Performance Calendar", "15 Key Dashboard Metrics"].map(f => (
+                {["Automatic EA Live-Sync", "Full Trade History Import", "MetaMetrics Score", "Time & Risk Analytics", "Long/Short Split Analysis", "Performance Calendar", "25+ Key Dashboard Metrics"].map(f => (
                   <li key={f} className="flex items-center gap-3 text-white/80 text-sm">
                     <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />{f}
                   </li>
