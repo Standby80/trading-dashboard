@@ -20,7 +20,7 @@ export default function LiveSyncGuide() {
     <Card className="bg-background border-border">
       <CardContent className="p-6">
         <div className="mb-6">
-          <h3 className="text-lg font-medium text-foreground mb-4">How to enable Live Sync in MT5</h3>
+          <h3 className="text-lg font-medium text-foreground mb-4">How to enable Live Sync in MT4/MT5</h3>
           
           <div className="flex items-center justify-between relative mb-8">
             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-0.5 bg-muted -z-10"></div>
@@ -47,22 +47,30 @@ export default function LiveSyncGuide() {
               <p className="text-sm text-foreground">
                 Start by downloading our custom sync script (Expert Advisor) to your computer.
               </p>
-              <a href="/api/download/ex5" download>
-                <Button className="mt-4 gap-2 bg-[#F97316] hover:bg-[#F97316]/90 text-white">
-                  <Download className="w-4 h-4" />
-                  Ladda ner MetaMetricsSync.ex5
-                </Button>
-              </a>
+              <div className="flex flex-col sm:flex-row gap-3 mt-4">
+                <a href="/api/download/ex4" download>
+                  <Button className="w-full sm:w-auto gap-2 bg-[#F97316] hover:bg-[#F97316]/90 text-white">
+                    <Download className="w-4 h-4" />
+                    Download for MT4 (.ex4)
+                  </Button>
+                </a>
+                <a href="/api/download/ex5" download>
+                  <Button className="w-full sm:w-auto gap-2 bg-[#F97316] hover:bg-[#F97316]/90 text-white">
+                    <Download className="w-4 h-4" />
+                    Download for MT5 (.ex5)
+                  </Button>
+                </a>
+              </div>
             </div>
           )}
 
           {step === 2 && (
             <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
               <ol className="list-decimal list-inside space-y-3 text-sm text-muted-foreground">
-                <li>Open MetaTrader 5 on your computer.</li>
+                <li>Open MetaTrader 4 or 5 on your computer.</li>
                 <li>Click on <span className="text-foreground">File</span> and select <span className="text-foreground">Open Data Folder</span>.</li>
-                <li>Navigate to <span className="font-mono text-indigo-400">MQL5 \ Experts</span>.</li>
-                <li>Paste the downloaded <span className="font-mono text-indigo-400">.ex5</span> file there.</li>
+                <li>Navigate to <span className="font-mono text-indigo-400">MQL4 \ Experts</span> or <span className="font-mono text-indigo-400">MQL5 \ Experts</span>.</li>
+                <li>Paste the downloaded <span className="font-mono text-indigo-400">.ex4</span> or <span className="font-mono text-indigo-400">.ex5</span> file there.</li>
                 <li>Right-click "Expert Advisors" in your Navigator in MT5 and select <span className="text-foreground">Refresh</span>.</li>
               </ol>
             </div>
@@ -96,7 +104,7 @@ export default function LiveSyncGuide() {
           {step === 5 && (
             <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
               <p className="text-sm text-muted-foreground">
-                Check the <span className="text-foreground font-medium">Experts</span> tab in the MT5 Terminal window (at the bottom). You should see these logs:
+                Check the <span className="text-foreground font-medium">Experts</span> tab in the Terminal window (at the bottom). You should see these logs:
               </p>
               <div className="p-3 bg-[#0d1117] border border-border/50 rounded-lg text-[11px] font-mono text-emerald-400/80 space-y-1">
                 <p>2026.06.14 11:23:15.380 MetaMetrics EA v1.03: Initierad. Synkar historik nu...</p>

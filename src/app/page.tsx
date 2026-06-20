@@ -104,7 +104,7 @@ export default function LandingPage() {
         <div className="relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-sm font-medium mb-8">
             <span className="flex h-1.5 w-1.5 rounded-full bg-indigo-400 animate-pulse" />
-            Real-time MT5 sync — zero manual work
+            Real-time MT4 & MT5 sync — zero manual work
           </div>
 
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-[1.05]">
@@ -116,7 +116,7 @@ export default function LandingPage() {
           </h1>
 
           <p className="text-lg md:text-xl text-white/50 mb-10 max-w-2xl mx-auto leading-relaxed">
-            MetaMetrics connects directly to MetaTrader 5 and turns your raw trade data into
+            MetaMetrics connects directly to MetaTrader 4 and MetaTrader 5 and turns your raw trade data into
             actionable insights — instantly. No spreadsheets. No guesswork. Just clarity.
           </p>
 
@@ -358,13 +358,13 @@ export default function LandingPage() {
                 </div>
               </div>
               <p className="text-white/40 text-sm leading-relaxed mb-6">
-                Download our pre-compiled Expert Advisor, drop it onto your MT5 chart, paste your API key — and your entire history syncs in seconds. New trades appear automatically as you close them.
+                Download our pre-compiled Expert Advisor, drop it onto your MT4 or MT5 chart, paste your API key — and your entire history syncs in seconds. New trades appear automatically as you close them.
               </p>
 
               {/* Modal mockup */}
               <div className="rounded-xl border border-white/8 bg-[#0d1117] p-5 text-sm flex-1">
                 <p className="text-white font-bold mb-1 text-base">MetaMetrics Live Sync API</p>
-                <p className="text-white/30 text-xs mb-4">Use your unique API key to connect your MT5 script with your dashboard.</p>
+                <p className="text-white/30 text-xs mb-4">Use your unique API key to connect your MT4/MT5 script with your dashboard.</p>
                 <div className="flex gap-2 mb-3">
                   <div className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 flex items-center">
                     <span className="text-white/20 text-sm tracking-wider">••••••••••••••••••••••••••</span>
@@ -396,13 +396,13 @@ export default function LandingPage() {
                 </div>
               </div>
               <p className="text-white/40 text-sm leading-relaxed mb-6">
-                Already have a trade history in MT5? Export it as an HTML report (takes 10 seconds), upload it here, and your full history appears immediately. No EA required.
+                Already have a trade history in MetaTrader? Export it as an HTML report (takes 10 seconds), upload it here, and your full history appears immediately. No EA required.
               </p>
 
               {/* Upload mockup */}
               <div className="rounded-xl border border-white/8 bg-[#0d1117] p-5 flex-1">
-                <p className="text-white font-bold mb-1 text-base">Upload MT5 Report</p>
-                <p className="text-white/30 text-xs mb-4">Export your history as an HTML report from MetaTrader 5 and upload it here.</p>
+                <p className="text-white font-bold mb-1 text-base">Upload HTML Report</p>
+                <p className="text-white/30 text-xs mb-4">Export your history as an HTML report from MetaTrader and upload it here.</p>
                 <div className="mb-3">
                   <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Account Name</p>
                   <div className="bg-white/5 border border-indigo-500/30 rounded-lg px-3 py-2">
@@ -432,8 +432,8 @@ export default function LandingPage() {
           </p>
           <div className="grid md:grid-cols-3 gap-5">
             {[
-              { icon: Download, step: "01", title: "Download the EA", desc: "Get the pre-compiled MetaMetricsSync.ex5 from your dashboard. No coding. No compilation." },
-              { icon: Puzzle, step: "02", title: "Drop onto your chart", desc: "Open MT5, drag the file onto any chart. The EA installs and loads your full history instantly." },
+              { icon: Download, step: "01", title: "Download the EA", desc: "Get the pre-compiled MetaMetricsSync.ex4 or .ex5 from your dashboard. No coding. No compilation." },
+              { icon: Puzzle, step: "02", title: "Drop onto your chart", desc: "Open MetaTrader, drag the file onto any chart. The EA installs and loads your full history instantly." },
               { icon: ShieldCheck, step: "03", title: "Paste your API key", desc: "Copy your key from the dashboard, paste it in the EA Inputs tab. Your data is live." },
             ].map(({ icon: Icon, step, title, desc }) => (
               <div key={step} className="p-7 rounded-2xl border border-white/8 bg-[#161b22] text-left relative group hover:border-indigo-500/30 transition-colors">
@@ -518,9 +518,9 @@ export default function LandingPage() {
           <Accordion type="single" collapsible className="w-full space-y-2">
             {[
               { q: "Do I need to import data manually?", a: "No. Our EA automatically fetches your full account history the moment you install it, and syncs new trades in real-time as they close. Alternatively you can upload an HTML report in seconds." },
-              { q: "What if I already have years of trade history?", a: "No problem. The EA performs a full history scan on first load — every single trade, going back as far as your MT5 account has records." },
-              { q: "Is my trading data secure?", a: "Yes. We use encrypted API keys and Supabase for secure storage. We never ask for your MT5 password or broker credentials." },
-              { q: "Does it work on Mac and Windows?", a: "Yes. The MetaMetricsSync.ex5 file works in all MetaTrader 5 terminals regardless of operating system." },
+              { q: "What if I already have years of trade history?", a: "No problem. The EA performs a full history scan on first load — every single trade, going back as far as your MetaTrader account has records." },
+              { q: "Is my trading data secure?", a: "Yes. We use encrypted API keys and Supabase for secure storage. We never ask for your MetaTrader password or broker credentials." },
+              { q: "Does it work on Mac and Windows?", a: "Yes. We provide both .ex4 and .ex5 files that work in all MetaTrader 4 and 5 terminals regardless of operating system." },
               { q: "Can I cancel my subscription?", a: "Absolutely. Cancel at any time from your account settings. No questions asked, no cancellation fees." },
             ].map(({ q, a }) => (
               <AccordionItem key={q} value={q} className="border border-white/8 rounded-xl px-6 bg-[#161b22]">
