@@ -72,19 +72,19 @@ const days = [
 ];
 
 const showcaseFeatures = [
-  { id: "25KPI", filename: "25KPI.png", title: "25 Key Performance Indicators", desc: "Få stenkoll på varje detalj av din trading. Med över 25 nyckeltal (KPI:er) samlade på ett ställe kan du direkt identifiera dina styrkor och svagheter." },
-  { id: "drawdown", filename: "Drawdown chart.png", title: "Drawdown Chart", desc: "Visualisera exakt hur djupa och långa dina förlustperioder (drawdowns) är. Agera snabbare när du närmar dig din smärtgräns." },
-  { id: "expectancy", filename: "Expectancy Curve (Next 100 Trades).png", title: "Expectancy Curve (Next 100 Trades)", desc: "Se framtiden baserat på din nuvarande data. Vår expectancy-kurva simulerar hur ditt konto kommer utvecklas under dina nästa 100 affärer." },
-  { id: "sync", filename: "MetaMetrics Live Sync API.png", title: "MetaMetrics Live Sync API", desc: "Inga fler manuella uppladdningar. Koppla vårt blixtsnabba Live Sync API till din plattform och få data i realtid." },
-  { id: "monthly", filename: "Monthly and Symbol Performance.png", title: "Monthly and Symbol Performance", desc: "Vilken månad är din bästa? Vilket valutapar kostar dig pengar? Vår heatmap ger dig svaret omedelbart." },
-  { id: "multi", filename: "Slide Multi account.png", title: "Multi Account Dashboard", desc: "Hantera och övervaka flera olika tradingkonton (t.ex. prop-firmor eller personliga) från exakt samma vy." },
-  { id: "calender", filename: "Slide calender.png", title: "Performance Calendar", desc: "Dina vinster och förluster, elegant uppmålade i en kalendervy. Hitta mönster i dina handelsdagar." },
-  { id: "time_day", filename: "Time Analytics Day.png", title: "Time Analytics Day", desc: "Är du en vinnare på måndagar men en förlorare på fredagar? Time Analytics visar exakt vilka veckodagar du bör undvika." },
-  { id: "time_hour", filename: "Time Analytics Hour.png", title: "Time Analytics Hour", desc: "Optimera dina handelstider. Se svart på vitt exakt vilken timme på dygnet som ger dig störst edge på marknaden." },
-  { id: "trade_exec", filename: "Trade Execution and Time Analytics.png", title: "Trade Execution and Time Analytics", desc: "Bryt ner dina exakta entry- och exit-tider för att förstå hur din timing påverkar dina resultat." },
-  { id: "history", filename: "Trade history.png", title: "Full Trade History", desc: "Glöm gamla klumpiga listor. Vi ger dig din fullständiga handelshistorik vackert och överskådligt paketerad." },
-  { id: "journal", filename: "Trading Day History and day journal.png", title: "Trading Day History and Day Journal", desc: "Din dagliga historik och journal på ett och samma ställe. Utvärdera dina känslor tillsammans med den kalla statistiken." },
-  { id: "upload", filename: "Upload MT5 MT4 Report.png", title: "Upload MT5/MT4 Report", desc: "Vill du inte använda Live Sync? Inga problem. Ladda upp din MT4/MT5-rapport på 5 sekunder och få all data serverad." }
+  { id: "25KPI", filename: "25KPI.png", title: "25 Key Performance Indicators", desc: "Get full control over every detail of your trading. With over 25 KPIs gathered in one place, you can instantly identify your strengths and weaknesses." },
+  { id: "drawdown", filename: "Drawdown chart.png", title: "Drawdown Chart", desc: "Visualize exactly how deep and long your losing streaks (drawdowns) are. Act faster when you approach your pain threshold." },
+  { id: "expectancy", filename: "Expectancy Curve (Next 100 Trades).png", title: "Expectancy Curve (Next 100 Trades)", desc: "See the future based on your current data. Our expectancy curve simulates how your account will perform over your next 100 trades." },
+  { id: "sync", filename: "MetaMetrics Live Sync API.png", title: "MetaMetrics Live Sync API", desc: "No more manual uploads. Connect our lightning-fast Live Sync API to your platform and get data in real-time." },
+  { id: "monthly", filename: "Monthly and Symbol Performance.png", title: "Monthly and Symbol Performance", desc: "Which month is your best? Which currency pair is costing you money? Our heatmap gives you the answer instantly." },
+  { id: "multi", filename: "Slide Multi account.png", title: "Multi Account Dashboard", desc: "Manage and monitor multiple different trading accounts (e.g. prop-firms or personal) from the exact same view." },
+  { id: "calender", filename: "Slide calender.png", title: "Performance Calendar", desc: "Your wins and losses, elegantly painted in a calendar view. Find patterns in your trading days." },
+  { id: "time_day", filename: "Time Analytics Day.png", title: "Time Analytics Day", desc: "Are you a winner on Mondays but a loser on Fridays? Time Analytics shows you exactly which days of the week you should avoid." },
+  { id: "time_hour", filename: "Time Analytics Hour.png", title: "Time Analytics Hour", desc: "Optimize your trading times. See in black and white exactly which hour of the day gives you the biggest edge in the market." },
+  { id: "trade_exec", filename: "Trade Execution and Time Analytics.png", title: "Trade Execution and Time Analytics", desc: "Break down your exact entry and exit times to understand how your timing affects your results." },
+  { id: "history", filename: "Trade history.png", title: "Full Trade History", desc: "Forget old clumsy lists. We give you your complete trading history beautifully and clearly packaged." },
+  { id: "journal", filename: "Trading Day History and day journal.png", title: "Trading Day History and Day Journal", desc: "Your daily history and journal in one place. Evaluate your emotions along with the cold statistics." },
+  { id: "upload", filename: "Upload MT5 MT4 Report.png", title: "Upload MT5/MT4 Report", desc: "Don't want to use Live Sync? No problem. Upload your MT4/MT5 report in 5 seconds and get all data served." }
 ];
 
 export default function LandingPage() {
