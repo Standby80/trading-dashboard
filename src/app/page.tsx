@@ -271,20 +271,36 @@ export default function LandingPage() {
           </p>
         </div>
 
-        {/* Image Grid showcasing all the data points with explanations */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {showcaseFeatures.map((feature) => (
-            <div key={feature.id} className="rounded-2xl border border-white/10 bg-[#161b22] shadow-xl hover:border-indigo-500/30 transition-all duration-300 group overflow-hidden flex flex-col">
-              <div className="p-2 border-b border-white/5 bg-[#0d1117]/50">
-                <img 
-                  src={`/images/showcase/${feature.id}.png`} 
-                  alt={feature.title} 
-                  className="w-full h-auto rounded-lg group-hover:scale-[1.03] transition-transform duration-500"
-                />
+        {/* Large alternating showcase sections */}
+        <div className="flex flex-col gap-24 mb-24 mt-16">
+          {showcaseFeatures.map((feature, index) => (
+            <div key={feature.id} className={`flex flex-col md:flex-row items-center gap-12 ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
+              <div className="flex-1 w-full relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-1000" />
+                <div className="relative rounded-2xl border border-white/10 bg-[#161b22] p-2 shadow-2xl overflow-hidden">
+                  <img 
+                    src={`/images/showcase/${feature.id}.png`} 
+                    alt={feature.title} 
+                    className="w-full h-auto rounded-xl shadow-inner"
+                  />
+                </div>
               </div>
-              <div className="p-5 flex-1 flex flex-col">
-                <h3 className="text-white font-bold text-sm mb-2">{feature.title}</h3>
-                <p className="text-white/40 text-xs leading-relaxed">{feature.desc}</p>
+              <div className="flex-1 space-y-4">
+                <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6">
+                  <span className="text-indigo-400 font-bold text-lg">{index + 1}</span>
+                </div>
+                <h3 className="text-3xl font-bold text-white tracking-tight">{feature.title}</h3>
+                <p className="text-white/50 text-lg leading-relaxed max-w-lg">{feature.desc}</p>
+                <ul className="space-y-3 pt-4">
+                  <li className="flex items-center gap-3 text-white/60 text-sm">
+                    <CheckCircle2 className="w-5 h-5 text-indigo-500 shrink-0" />
+                    Deep dive into your raw data
+                  </li>
+                  <li className="flex items-center gap-3 text-white/60 text-sm">
+                    <CheckCircle2 className="w-5 h-5 text-indigo-500 shrink-0" />
+                    Find your true edge
+                  </li>
+                </ul>
               </div>
             </div>
           ))}
