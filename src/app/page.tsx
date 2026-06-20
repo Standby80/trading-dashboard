@@ -134,17 +134,14 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          {/* ── Stats grid mockup ── */}
-          <div className="rounded-2xl border border-white/8 bg-[#161b22] p-1 shadow-2xl">
-            <div className="grid grid-cols-5 gap-1">
-              {stats.map((s) => (
-                <div key={s.label} className="bg-[#0d1117] rounded-xl p-3 text-left overflow-hidden">
-                  <p className="text-white/30 text-[10px] mb-1 truncate">{s.label}</p>
-                  <p className={`text-base font-extrabold mb-1 ${s.textColor}`}>{s.value}</p>
-                  <Sparkline color={s.color} />
-                </div>
-              ))}
-            </div>
+          {/* Showcase Hero Image */}
+          <div className="mt-16 relative mx-auto w-full max-w-5xl rounded-2xl border border-white/10 bg-[#161b22]/50 p-2 shadow-2xl backdrop-blur-sm overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117] via-transparent to-transparent opacity-80 z-10 pointer-events-none" />
+            <img 
+              src="/images/showcase/1.png" 
+              alt="MetaMetrics Dashboard" 
+              className="w-full h-auto rounded-xl shadow-2xl transition-transform duration-700 group-hover:scale-[1.02]"
+            />
           </div>
         </div>
       </section>
@@ -172,44 +169,15 @@ export default function LandingPage() {
             </ul>
           </div>
 
-          {/* Chart mockup */}
-          <div className="rounded-2xl border border-white/8 bg-[#161b22] p-6 shadow-2xl">
-            <p className="text-2xl font-extrabold text-white mb-0.5">$10,623</p>
-            <p className="text-white/40 text-xs mb-4 flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-400 inline-block"/>Account Balance</p>
-            {/* SVG chart */}
-            <div className="relative h-40">
-              <svg viewBox="0 0 400 120" className="w-full h-full" preserveAspectRatio="none">
-                {/* Grid lines */}
-                {[0,30,60,90].map(y => (
-                  <line key={y} x1="0" y1={y} x2="400" y2={y} stroke="rgba(255,255,255,0.04)" strokeWidth="1"/>
-                ))}
-                {/* Balance path */}
-                <path
-                  d="M0,95 C10,97 20,100 30,98 C40,96 50,100 60,102 C70,104 80,98 90,96 C100,94 110,85 120,82 C130,79 140,88 150,86 C155,85 160,100 170,92 C180,84 190,95 200,85 C210,75 220,72 230,68 C240,64 245,80 250,75 C255,70 260,65 270,58 C280,52 285,54 290,48 C295,42 300,46 310,42 C320,38 330,40 340,35 C350,30 360,32 370,28 C380,24 390,22 400,18"
-                  fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinejoin="round"
-                />
-                <path
-                  d="M0,95 C10,97 20,100 30,98 C40,96 50,100 60,102 C70,104 80,98 90,96 C100,94 110,85 120,82 C130,79 140,88 150,86 C155,85 160,100 170,92 C180,84 190,95 200,85 C210,75 220,72 230,68 C240,64 245,80 250,75 C255,70 260,65 270,58 C280,52 285,54 290,48 C295,42 300,46 310,42 C320,38 330,40 340,35 C350,30 360,32 370,28 C380,24 390,22 400,18 L400,120 L0,120 Z"
-                  fill="url(#blueGrad)"
-                />
-                <defs>
-                  <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.15"/>
-                    <stop offset="100%" stopColor="#3b82f6" stopOpacity="0"/>
-                  </linearGradient>
-                </defs>
-                {/* Hover point */}
-                <circle cx="200" cy="85" r="4" fill="#3b82f6" stroke="#161b22" strokeWidth="2"/>
-                <line x1="200" y1="0" x2="200" y2="120" stroke="rgba(255,255,255,0.15)" strokeWidth="1" strokeDasharray="3,3"/>
-              </svg>
-              {/* Tooltip */}
-              <div className="absolute top-12 left-1/2 ml-4 bg-[#1c2230] border border-white/10 rounded-xl p-3 shadow-xl pointer-events-none">
-                <p className="text-white/40 text-[10px] mb-1">2026-05-05</p>
-                <p className="text-white font-bold text-sm">Balance : $10 298,47</p>
-              </div>
-            </div>
-            <div className="flex justify-between text-white/20 text-[10px] mt-2">
-              <span>2026-04-29</span><span>2026-05-05</span><span>2026-05-18</span><span>2026-05-28</span>
+          {/* Real Screenshot */}
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
+            <div className="relative rounded-2xl border border-white/10 bg-[#161b22] p-2 shadow-2xl">
+              <img 
+                src="/images/showcase/2.png" 
+                alt="Account Growth Curve" 
+                className="w-full h-auto rounded-xl"
+              />
             </div>
           </div>
         </div>
@@ -292,17 +260,17 @@ export default function LandingPage() {
           </p>
         </div>
 
-        {/* Stats grid */}
-        <div className="rounded-2xl border border-white/8 bg-[#161b22] p-1 shadow-2xl mb-12">
-          <div className="grid grid-cols-5 gap-1">
-            {stats.map((s) => (
-              <div key={s.label} className="bg-[#0d1117] rounded-xl p-3 text-left overflow-hidden hover:bg-[#0f1419] transition-colors group cursor-default">
-                <p className="text-white/30 text-[10px] mb-1 truncate group-hover:text-white/50 transition-colors">{s.label}</p>
-                <p className={`text-base font-extrabold mb-1 ${s.textColor}`}>{s.value}</p>
-                <Sparkline color={s.color} />
-              </div>
-            ))}
-          </div>
+        {/* Image Grid showcasing all the data points */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+          {[3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+            <div key={num} className="rounded-xl border border-white/10 bg-[#161b22] p-1.5 shadow-xl hover:border-white/30 transition-colors">
+              <img 
+                src={`/images/showcase/${num}.png`} 
+                alt={`Data point ${num}`} 
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
+          ))}
         </div>
 
         {/* Feature callouts */}
