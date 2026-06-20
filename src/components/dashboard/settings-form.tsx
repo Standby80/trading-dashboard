@@ -241,7 +241,7 @@ export function SettingsForm({
           <div>
             <label className="block text-sm font-medium text-muted-foreground mb-1">Username (for public link)</label>
             <div className="flex items-center">
-              <span className="bg-muted px-3 py-2 text-muted-foreground border border-r-0 border-border rounded-l-md text-sm">metametrics.com/u/</span>
+              <span className="bg-muted px-3 py-2 text-muted-foreground border border-r-0 border-border rounded-l-md text-sm">metametrics.app/u/</span>
               <Input 
                 value={username} 
                 onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, ''))} 
