@@ -162,6 +162,50 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ─── CORE SELLING POINTS ─────────────────────────────── */}
+      <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
+        <div className="grid md:grid-cols-3 gap-6">
+          {[
+            { icon: LineChart, color: "indigo", title: "Built for MT4 & MT5 Lovers", desc: "Native support for the world's most popular trading platforms. Flawless integration." },
+            { icon: Zap, color: "amber", title: "Lightning Fast Live-Sync", desc: "No delays. Your trades sync automatically in real-time as soon as you close a position." },
+            { icon: BarChart3, color: "emerald", title: "Know Your Data Metrics", desc: "Stop guessing. Understand your edge with deep, institutional-grade analytics." },
+            { icon: BookOpen, color: "blue", title: "Journal Every Single Trade", desc: "Combine hard numbers with trading psychology. Document your thoughts seamlessly." },
+            { icon: Layers, color: "purple", title: "Multi-Account Dashboard", desc: "Manage prop-firms, challenges, and personal accounts all from one single unified view." },
+            { icon: CandlestickChart, color: "rose", title: "Multi-Symbol Analytics", desc: "Break down your performance by asset. Find out which pairs make you money and which you should drop." },
+            { icon: Cpu, color: "cyan", title: "Our Custom Built Expert (EA)", desc: "Secure, lightweight, and highly optimized Expert Advisor for instantaneous data transfer." },
+            { icon: DollarSign, color: "green", title: "Most Affordable on the Market", desc: "Unmatched value. Premium features at a fraction of the cost of our competitors." },
+            { icon: Rocket, color: "orange", title: "Small Investment, Massive Potential", desc: "The insights you gain will pay for the software on your very next successful trade." },
+          ].map(({ icon: Icon, color, title, desc }) => (
+            <div key={title} className="p-8 rounded-2xl border border-white/8 bg-[#0d1117]/80 hover:bg-[#161b22] hover:-translate-y-2 hover:border-indigo-500/40 hover:shadow-[0_10px_40px_-15px_rgba(99,102,241,0.2)] transition-all duration-300 group cursor-default">
+              <div className={`w-14 h-14 rounded-2xl mb-6 flex items-center justify-center transition-colors duration-300 ${
+                color === "indigo" ? "bg-indigo-500/10 border border-indigo-500/20 group-hover:bg-indigo-500/20" :
+                color === "amber" ? "bg-amber-500/10 border border-amber-500/20 group-hover:bg-amber-500/20" :
+                color === "emerald" ? "bg-emerald-500/10 border border-emerald-500/20 group-hover:bg-emerald-500/20" :
+                color === "blue" ? "bg-blue-500/10 border border-blue-500/20 group-hover:bg-blue-500/20" :
+                color === "purple" ? "bg-purple-500/10 border border-purple-500/20 group-hover:bg-purple-500/20" :
+                color === "rose" ? "bg-rose-500/10 border border-rose-500/20 group-hover:bg-rose-500/20" :
+                color === "cyan" ? "bg-cyan-500/10 border border-cyan-500/20 group-hover:bg-cyan-500/20" :
+                color === "green" ? "bg-green-500/10 border border-green-500/20 group-hover:bg-green-500/20" :
+                "bg-orange-500/10 border border-orange-500/20 group-hover:bg-orange-500/20"
+              }`}>
+                <Icon className={`w-7 h-7 transition-transform duration-300 group-hover:scale-110 ${
+                  color === "indigo" ? "text-indigo-400" :
+                  color === "amber" ? "text-amber-400" :
+                  color === "emerald" ? "text-emerald-400" :
+                  color === "blue" ? "text-blue-400" :
+                  color === "purple" ? "text-purple-400" :
+                  color === "rose" ? "text-rose-400" :
+                  color === "cyan" ? "text-cyan-400" :
+                  color === "green" ? "text-green-400" :
+                  "text-orange-400"
+                }`} />
+              </div>
+              <h3 className="text-white font-extrabold mb-3 text-xl tracking-tight">{title}</h3>
+              <p className="text-white/50 text-sm leading-relaxed">{desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
       {/* ─── BALANCE CHART ───────────────────────────────────── */}
       <section className="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -329,48 +373,7 @@ export default function LandingPage() {
           })}
         </div>
 
-        {/* Core Selling Points */}
-        <div className="grid md:grid-cols-3 gap-6 mt-16">
-          {[
-            { icon: LineChart, color: "indigo", title: "Built for MT4 & MT5 Lovers", desc: "Native support for the world's most popular trading platforms. Flawless integration." },
-            { icon: Zap, color: "amber", title: "Lightning Fast Live-Sync", desc: "No delays. Your trades sync automatically in real-time as soon as you close a position." },
-            { icon: BarChart3, color: "emerald", title: "Know Your Data Metrics", desc: "Stop guessing. Understand your edge with deep, institutional-grade analytics." },
-            { icon: BookOpen, color: "blue", title: "Journal Every Single Trade", desc: "Combine hard numbers with trading psychology. Document your thoughts seamlessly." },
-            { icon: Layers, color: "purple", title: "Multi-Account Dashboard", desc: "Manage prop-firms, challenges, and personal accounts all from one single unified view." },
-            { icon: CandlestickChart, color: "rose", title: "Multi-Symbol Analytics", desc: "Break down your performance by asset. Find out which pairs make you money and which you should drop." },
-            { icon: Cpu, color: "cyan", title: "Our Custom Built Expert (EA)", desc: "Secure, lightweight, and highly optimized Expert Advisor for instantaneous data transfer." },
-            { icon: DollarSign, color: "green", title: "Most Affordable on the Market", desc: "Unmatched value. Premium features at a fraction of the cost of our competitors." },
-            { icon: Rocket, color: "orange", title: "Small Investment, Massive Potential", desc: "The insights you gain will pay for the software on your very next successful trade." },
-          ].map(({ icon: Icon, color, title, desc }) => (
-            <div key={title} className="p-8 rounded-2xl border border-white/8 bg-[#0d1117]/80 hover:bg-[#161b22] hover:-translate-y-2 hover:border-indigo-500/40 hover:shadow-[0_10px_40px_-15px_rgba(99,102,241,0.2)] transition-all duration-300 group cursor-default">
-              <div className={`w-14 h-14 rounded-2xl mb-6 flex items-center justify-center transition-colors duration-300 ${
-                color === "indigo" ? "bg-indigo-500/10 border border-indigo-500/20 group-hover:bg-indigo-500/20" :
-                color === "amber" ? "bg-amber-500/10 border border-amber-500/20 group-hover:bg-amber-500/20" :
-                color === "emerald" ? "bg-emerald-500/10 border border-emerald-500/20 group-hover:bg-emerald-500/20" :
-                color === "blue" ? "bg-blue-500/10 border border-blue-500/20 group-hover:bg-blue-500/20" :
-                color === "purple" ? "bg-purple-500/10 border border-purple-500/20 group-hover:bg-purple-500/20" :
-                color === "rose" ? "bg-rose-500/10 border border-rose-500/20 group-hover:bg-rose-500/20" :
-                color === "cyan" ? "bg-cyan-500/10 border border-cyan-500/20 group-hover:bg-cyan-500/20" :
-                color === "green" ? "bg-green-500/10 border border-green-500/20 group-hover:bg-green-500/20" :
-                "bg-orange-500/10 border border-orange-500/20 group-hover:bg-orange-500/20"
-              }`}>
-                <Icon className={`w-7 h-7 transition-transform duration-300 group-hover:scale-110 ${
-                  color === "indigo" ? "text-indigo-400" :
-                  color === "amber" ? "text-amber-400" :
-                  color === "emerald" ? "text-emerald-400" :
-                  color === "blue" ? "text-blue-400" :
-                  color === "purple" ? "text-purple-400" :
-                  color === "rose" ? "text-rose-400" :
-                  color === "cyan" ? "text-cyan-400" :
-                  color === "green" ? "text-green-400" :
-                  "text-orange-400"
-                }`} />
-              </div>
-              <h3 className="text-white font-extrabold mb-3 text-xl tracking-tight">{title}</h3>
-              <p className="text-white/50 text-sm leading-relaxed">{desc}</p>
-            </div>
-          ))}
-        </div>
+
       </section>
 
       {/* ─── TWO WAYS TO IMPORT ──────────────────────────────── */}
