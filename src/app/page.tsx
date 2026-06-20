@@ -83,7 +83,7 @@ const showcaseFeatures = [
   { id: "time_hour", filename: "Time Analytics Hour.png", title: "Time Analytics Hour", desc: "Optimize your trading times. See in black and white exactly which hour of the day gives you the biggest edge in the market." },
   { id: "trade_exec", filename: "Trade Execution and Time Analytics.png", title: "Trade Execution and Time Analytics", desc: "Break down your exact entry and exit times to understand how your timing affects your results." },
   { id: "history", filename: "Trade history.png", title: "Full Trade History", desc: "Forget old clumsy lists. We give you your complete trading history beautifully and clearly packaged." },
-  { id: "journal", filename: "Trading Day History and day journal.png", title: "Trading Day History and Day Journal", desc: "Your daily history and journal in one place. Evaluate your emotions along with the cold statistics." },
+  { id: "journal", filename: "Trading Journal.png", title: "Trading Journal", desc: "Your daily history and journal in one place. Evaluate your emotions along with the cold statistics." },
   { id: "upload", filename: "Upload MT5 MT4 Report.png", title: "Upload MT5/MT4 Report", desc: "Don't want to use Live Sync? No problem. Upload your MT4/MT5 report in 5 seconds and get all data served." }
 ];
 
@@ -190,7 +190,7 @@ export default function LandingPage() {
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
             <div className="relative rounded-2xl border border-white/10 bg-[#161b22] p-2 shadow-2xl">
               <img 
-                src="/images/showcase/Drawdown chart.png" 
+                src="/images/showcase/Account Chart.png" 
                 alt="Account Growth Curve" 
                 className="w-full h-auto rounded-xl"
               />
