@@ -30,7 +30,7 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="text-2xl font-semibold text-white mb-4">1. Information We Collect</h2>
-            <p>To provide you with our advanced analytics, we collect specific types of information. This includes your account details (such as email address for account management), payment information (processed securely by our payment provider, Lemon Squeezy), and your trading history (transmitted securely via our Expert Advisor from your MT4 or MT5 terminal).</p>
+            <p>To provide you with our advanced analytics, we collect specific types of information. This includes your account details (such as email address for account management), payment information (processed securely by our payment provider, PayPal), and your trading history (transmitted securely via our Expert Advisor from your MT4 or MT5 terminal).</p>
           </section>
 
           <section>
