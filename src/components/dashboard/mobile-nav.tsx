@@ -51,7 +51,7 @@ export function MobileNav({ userEmail, profile }: { userEmail?: string, profile?
         <SheetHeader className="p-6 text-left border-b border-border shrink-0">
           <SheetTitle className="flex items-center gap-3 text-foreground">
             <img src="/downloads/logo.jpg" alt="MetaMetrics Logo" className="w-10 h-10 object-contain rounded-full border border-white/10 shrink-0 shadow-lg" />
-            <span className="font-bold text-lg tracking-tight">MetaMetrics</span>
+            <span className="font-bold text-lg tracking-tight">MetaMetricsAPP</span>
           </SheetTitle>
         </SheetHeader>
 

@@ -96,7 +96,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img src="/downloads/logo.jpg" alt="MetaMetrics Logo" className="w-10 h-10 object-contain rounded-full border border-white/10 shadow-lg" />
-            <span className="font-bold text-xl tracking-tight text-white">MetaMetrics</span>
+            <span className="font-bold text-xl tracking-tight text-white">MetaMetricsAPP</span>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/login" className="text-sm font-medium text-white/50 hover:text-white transition-colors">
