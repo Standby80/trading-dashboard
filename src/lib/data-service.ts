@@ -211,6 +211,14 @@ export async function getDashboardData(period?: string, symbolsStr?: string, acc
       continue; // ANVÄND ENBART CONTINUE HÄR! ALDRIG RETURN!
     }
 
+    // Låt notes/journal-anteckningar synas i listan, men de påverkar inga KPIs
+    if (trade.type === 'NOTE') {
+      if (!startDate || tradeDate >= startDate) {
+        validTradesToReturn.push(trade);
+      }
+      continue;
+    }
+
     // 2. Uppdatera löpande saldo för de riktiga affärerna
     currentBalance += profit;
     if (currentBalance > peakBalance) peakBalance = currentBalance;

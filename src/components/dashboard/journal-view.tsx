@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useRef } from 'react';
-import { Search, Filter, TrendingUp, TrendingDown, Image as ImageIcon, FileText, ChevronRight, Hash, Clock, Maximize2, BookOpen, Pencil, Save, Loader2, Trash2, Camera } from 'lucide-react';
+import { Search, Filter, TrendingUp, TrendingDown, Image as ImageIcon, FileText, ChevronRight, Hash, Clock, Maximize2, BookOpen, Pencil, Save, Loader2, Trash2, Camera, Plus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
@@ -21,6 +21,13 @@ export function JournalView({ trades }: { trades: any[] }) {
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // New Note state
+  const [isCreatingNew, setIsCreatingNew] = useState(false);
+  const [newTitle, setNewTitle] = useState('');
+  const [newNotes, setNewNotes] = useState('');
+  const [newScreenshotUrl, setNewScreenshotUrl] = useState('');
+  const [isSavingNew, setIsSavingNew] = useState(false);
 
   // Parse all unique hashtags from notes
   const allTags = useMemo(() => {
@@ -73,6 +80,7 @@ export function JournalView({ trades }: { trades: any[] }) {
   React.useEffect(() => {
     if (selectedTrade) {
       setIsEditing(false);
+      setIsCreatingNew(false);
       setEditNotes(selectedTrade.notes || '');
       setEditScreenshotUrl(selectedTrade.screenshot_url || '');
     }
@@ -98,8 +106,40 @@ export function JournalView({ trades }: { trades: any[] }) {
     }
   };
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!selectedTrade) return;
+  const handleSaveNew = async () => {
+    if (!newNotes.trim()) {
+      alert('Notes are required.');
+      return;
+    }
+    setIsSavingNew(true);
+    try {
+      const res = await fetch('/api/journal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: newTitle.trim() || 'Journal Entry',
+          notes: newNotes,
+          screenshot_url: newScreenshotUrl
+        })
+      });
+      if (!res.ok) throw new Error('Failed to create entry');
+      
+      const data = await res.json();
+      setIsCreatingNew(false);
+      setNewTitle('');
+      setNewNotes('');
+      setNewScreenshotUrl('');
+      setSelectedTradeId(data.ticket_id);
+      router.refresh();
+    } catch (e) {
+      alert("Error creating journal entry");
+    } finally {
+      setIsSavingNew(false);
+    }
+  };
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, forNew: boolean = false) => {
+    if (!forNew && !selectedTrade) return;
     try {
       const file = e.target.files?.[0];
       if (!file) return;
@@ -110,7 +150,8 @@ export function JournalView({ trades }: { trades: any[] }) {
       if (!user) throw new Error("Not logged in");
 
       const fileExt = file.name.split('.').pop();
-      const filePath = `${user.id}/${selectedTrade.ticket_id}-${Math.random()}.${fileExt}`;
+      const ticketRef = forNew ? `new-${Date.now()}` : selectedTrade?.ticket_id;
+      const filePath = `${user.id}/${ticketRef}-${Math.random()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('trade_screenshots')
@@ -122,7 +163,11 @@ export function JournalView({ trades }: { trades: any[] }) {
         .from('trade_screenshots')
         .getPublicUrl(filePath);
 
-      setEditScreenshotUrl(publicUrl);
+      if (forNew) {
+        setNewScreenshotUrl(publicUrl);
+      } else {
+        setEditScreenshotUrl(publicUrl);
+      }
     } catch (error: any) {
       alert("Error uploading screenshot: " + error.message);
     } finally {
@@ -136,14 +181,29 @@ export function JournalView({ trades }: { trades: any[] }) {
       {/* Top Bar: Search, Filters, Tags */}
       <div className="p-4 border-b border-border bg-card shrink-0 flex flex-col gap-4">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-          <div className="relative w-full md:w-96">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input 
-              placeholder="Search notes or symbols..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-background border-border"
-            />
+          <div className="flex items-center gap-4 w-full md:w-auto flex-1">
+            <Button 
+              onClick={() => {
+                setIsCreatingNew(true);
+                setSelectedTradeId(null);
+                setNewTitle('');
+                setNewNotes('');
+                setNewScreenshotUrl('');
+              }}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white shrink-0"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              New Entry
+            </Button>
+            <div className="relative w-full max-w-sm">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input 
+                placeholder="Search notes or symbols..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9 bg-background border-border"
+              />
+            </div>
           </div>
           
           <div className="flex items-center gap-2 bg-background p-1 rounded-lg border border-border w-full md:w-auto">
@@ -203,29 +263,42 @@ export function JournalView({ trades }: { trades: any[] }) {
                 const netProfit = (trade.profit || 0) + (trade.swap || 0) + (trade.commission || 0);
                 const isWin = netProfit >= 0;
                 
+                const isNote = trade.type === 'NOTE';
+                
                 return (
                   <div key={trade.ticket_id} className={`w-full text-left p-4 transition-colors relative group ${isSelected ? 'bg-indigo-500/10' : 'hover:bg-white/5'}`}>
                     {isSelected && <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500"></div>}
                     
                     <div 
-                      onClick={() => setSelectedTradeId(trade.ticket_id)}
+                      onClick={() => {
+                        setIsCreatingNew(false);
+                        setSelectedTradeId(trade.ticket_id);
+                      }}
                       className="cursor-pointer"
                     >
                       <div className="flex justify-between items-start mb-2">
                         <div className="flex items-center gap-2">
-                          <span className={`w-2 h-2 rounded-full ${isWin ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
+                          {isNote ? (
+                            <BookOpen className="w-4 h-4 text-indigo-400" />
+                          ) : (
+                            <span className={`w-2 h-2 rounded-full ${isWin ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
+                          )}
                           <span className="font-bold text-foreground">{trade.symbol}</span>
-                          <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider ${
-                            (trade.type === 'DEAL_TYPE_BUY' || trade.type === 'BUY') 
-                              ? 'bg-emerald-500/10 text-emerald-400' 
-                              : 'bg-rose-500/10 text-rose-400'
-                          }`}>
-                            {(trade.type === 'DEAL_TYPE_BUY' || trade.type === 'BUY') ? 'BUY' : 'SELL'}
-                          </span>
+                          {!isNote && (
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider ${
+                              (trade.type === 'DEAL_TYPE_BUY' || trade.type === 'BUY') 
+                                ? 'bg-emerald-500/10 text-emerald-400' 
+                                : 'bg-rose-500/10 text-rose-400'
+                            }`}>
+                              {(trade.type === 'DEAL_TYPE_BUY' || trade.type === 'BUY') ? 'BUY' : 'SELL'}
+                            </span>
+                          )}
                         </div>
-                        <span className={`font-mono font-bold ${isWin ? 'text-emerald-400' : 'text-rose-500'}`}>
-                          {isWin ? '+' : ''}${netProfit.toFixed(2)}
-                        </span>
+                        {!isNote && (
+                          <span className={`font-mono font-bold ${isWin ? 'text-emerald-400' : 'text-rose-500'}`}>
+                            {isWin ? '+' : ''}${netProfit.toFixed(2)}
+                          </span>
+                        )}
                       </div>
                       
                       <div className="text-xs text-muted-foreground mb-3 flex items-center gap-3">
@@ -233,18 +306,20 @@ export function JournalView({ trades }: { trades: any[] }) {
                           <Clock className="w-3 h-3" />
                           {new Date(trade.close_time).toLocaleDateString()} {new Date(trade.close_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </div>
-                        <div className="flex items-center gap-1 text-foreground/60" title="Holding Time">
-                          <TrendingUp className="w-3 h-3 opacity-50" />
-                          {(() => {
-                            const ms = new Date(trade.close_time).getTime() - new Date(trade.open_time).getTime();
-                            const mins = Math.floor(ms / 60000);
-                            const hours = Math.floor(mins / 60);
-                            const days = Math.floor(hours / 24);
-                            if (days > 0) return `${days}d ${hours % 24}h`;
-                            if (hours > 0) return `${hours}h ${mins % 60}m`;
-                            return `${mins}m`;
-                          })()}
-                        </div>
+                        {!isNote && (
+                          <div className="flex items-center gap-1 text-foreground/60" title="Holding Time">
+                            <TrendingUp className="w-3 h-3 opacity-50" />
+                            {(() => {
+                              const ms = new Date(trade.close_time).getTime() - new Date(trade.open_time).getTime();
+                              const mins = Math.floor(ms / 60000);
+                              const hours = Math.floor(mins / 60);
+                              const days = Math.floor(hours / 24);
+                              if (days > 0) return `${days}d ${hours % 24}h`;
+                              if (hours > 0) return `${hours}h ${mins % 60}m`;
+                              return `${mins}m`;
+                            })()}
+                          </div>
+                        )}
                       </div>
 
                       <p className="text-sm text-foreground/80 line-clamp-2 leading-relaxed">
@@ -292,46 +367,128 @@ export function JournalView({ trades }: { trades: any[] }) {
 
         {/* Right Column: Detail View */}
         <div className="hidden md:flex flex-1 flex-col overflow-y-auto bg-background p-6 lg:p-10 relative [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          {selectedTrade ? (
+          {isCreatingNew ? (
+            <div className="max-w-4xl mx-auto w-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="border-b border-border pb-6 flex items-center gap-3">
+                <BookOpen className="w-8 h-8 text-indigo-400" />
+                <h2 className="text-3xl font-black text-foreground">New Journal Entry</h2>
+              </div>
+              
+              <div className="space-y-6">
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 block">Title</label>
+                  <Input 
+                    placeholder="e.g., Tuesday Daily Review" 
+                    value={newTitle}
+                    onChange={(e) => setNewTitle(e.target.value)}
+                    className="max-w-md bg-card border-border"
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  <label className="text-sm font-medium text-foreground block">Notes & Analysis</label>
+                  <textarea 
+                    placeholder="What are your thoughts?"
+                    value={newNotes}
+                    onChange={e => setNewNotes(e.target.value)}
+                    className="w-full flex min-h-[250px] rounded-md border border-input bg-card px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 resize-y"
+                  />
+                  
+                  <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                    <div 
+                      onClick={() => !newScreenshotUrl && fileInputRef.current?.click()}
+                      className={`w-full sm:w-64 min-h-[100px] border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center relative overflow-hidden transition-colors ${!newScreenshotUrl ? 'cursor-pointer hover:border-indigo-500/50 hover:bg-indigo-500/5' : ''}`}
+                    >
+                      {newScreenshotUrl ? (
+                        <>
+                          <a href={newScreenshotUrl} target="_blank" rel="noreferrer" className="w-full h-full block absolute inset-0">
+                            <img src={newScreenshotUrl} alt="Screenshot" className="w-full h-full object-cover hover:opacity-80 transition-opacity" />
+                          </a>
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); setNewScreenshotUrl(''); }}
+                            className="absolute top-2 right-2 z-10 bg-black/60 text-white p-1.5 rounded-md hover:bg-rose-500 transition-colors"
+                            title="Remove Image"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </>
+                      ) : (
+                        <div className="text-center p-4">
+                          {isUploading ? (
+                            <Loader2 className="w-5 h-5 text-indigo-400 animate-spin mx-auto mb-1" />
+                          ) : (
+                            <Camera className="w-5 h-5 text-muted-foreground mx-auto mb-1" />
+                          )}
+                          <span className="text-[10px] text-muted-foreground font-medium uppercase">
+                            {isUploading ? 'Uploading...' : 'Add screenshot'}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={(e) => handleUpload(e, true)} />
+
+                    <div className="flex-1 flex justify-end gap-2 w-full sm:w-auto">
+                      <Button variant="outline" onClick={() => setIsCreatingNew(false)} disabled={isSavingNew}>Cancel</Button>
+                      <Button onClick={handleSaveNew} disabled={isSavingNew || isUploading || !newNotes.trim()} className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                        {isSavingNew ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+                        {isSavingNew ? 'Saving...' : 'Save Entry'}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : selectedTrade ? (
             <div className="max-w-4xl mx-auto w-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               
               {/* Header Info */}
               <div className="flex items-center justify-between border-b border-border pb-6">
                 <div>
-                  <h2 className="text-3xl font-black text-foreground mb-2">{selectedTrade.symbol}</h2>
+                  <h2 className="text-3xl font-black text-foreground mb-2 flex items-center gap-3">
+                    {selectedTrade.type === 'NOTE' && <BookOpen className="w-6 h-6 text-indigo-400" />}
+                    {selectedTrade.symbol}
+                  </h2>
                   <div className="flex items-center gap-4 text-muted-foreground text-sm">
                     <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {new Date(selectedTrade.open_time).toLocaleString()}</span>
-                    <span>→</span>
-                    <span>{new Date(selectedTrade.close_time).toLocaleString()}</span>
+                    {selectedTrade.type !== 'NOTE' && (
+                      <>
+                        <span>→</span>
+                        <span>{new Date(selectedTrade.close_time).toLocaleString()}</span>
+                      </>
+                    )}
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Net P/L</div>
-                  <div className={`text-3xl font-mono font-black ${((selectedTrade.profit || 0) + (selectedTrade.swap || 0) + (selectedTrade.commission || 0)) >= 0 ? 'text-emerald-400' : 'text-rose-500'}`}>
-                    {((selectedTrade.profit || 0) + (selectedTrade.swap || 0) + (selectedTrade.commission || 0)) >= 0 ? '+' : ''}${((selectedTrade.profit || 0) + (selectedTrade.swap || 0) + (selectedTrade.commission || 0)).toFixed(2)}
+                {selectedTrade.type !== 'NOTE' && (
+                  <div className="text-right">
+                    <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Net P/L</div>
+                    <div className={`text-3xl font-mono font-black ${((selectedTrade.profit || 0) + (selectedTrade.swap || 0) + (selectedTrade.commission || 0)) >= 0 ? 'text-emerald-400' : 'text-rose-500'}`}>
+                      {((selectedTrade.profit || 0) + (selectedTrade.swap || 0) + (selectedTrade.commission || 0)) >= 0 ? '+' : ''}${((selectedTrade.profit || 0) + (selectedTrade.swap || 0) + (selectedTrade.commission || 0)).toFixed(2)}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Trade Stats Bar */}
-              <div className="grid grid-cols-4 gap-4 p-4 rounded-xl bg-card border border-border">
-                <div>
-                  <div className="text-xs text-muted-foreground uppercase">Type</div>
-                  <div className="font-medium text-foreground">{selectedTrade.type === 'DEAL_TYPE_BUY' || selectedTrade.type === 'BUY' ? 'LONG' : 'SHORT'}</div>
+              {selectedTrade.type !== 'NOTE' && (
+                <div className="grid grid-cols-4 gap-4 p-4 rounded-xl bg-card border border-border">
+                  <div>
+                    <div className="text-xs text-muted-foreground uppercase">Type</div>
+                    <div className="font-medium text-foreground">{selectedTrade.type === 'DEAL_TYPE_BUY' || selectedTrade.type === 'BUY' ? 'LONG' : 'SHORT'}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground uppercase">Volume</div>
+                    <div className="font-medium text-foreground">{selectedTrade.volume}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground uppercase">Entry Price</div>
+                    <div className="font-mono text-foreground">{selectedTrade.open_price}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground uppercase">Exit Price</div>
+                    <div className="font-mono text-foreground">{selectedTrade.close_price}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="text-xs text-muted-foreground uppercase">Volume</div>
-                  <div className="font-medium text-foreground">{selectedTrade.volume}</div>
-                </div>
-                <div>
-                  <div className="text-xs text-muted-foreground uppercase">Entry Price</div>
-                  <div className="font-mono text-foreground">{selectedTrade.open_price}</div>
-                </div>
-                <div>
-                  <div className="text-xs text-muted-foreground uppercase">Exit Price</div>
-                  <div className="font-mono text-foreground">{selectedTrade.close_price}</div>
-                </div>
-              </div>
+              )}
 
               {/* Notes */}
               <div className="space-y-3">
@@ -388,7 +545,7 @@ export function JournalView({ trades }: { trades: any[] }) {
                           </div>
                         )}
                       </div>
-                      <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleUpload} />
+                      <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={(e) => handleUpload(e, false)} />
 
                       <div className="flex-1 flex justify-end gap-2 w-full sm:w-auto">
                         <Button variant="outline" size="sm" onClick={() => setIsEditing(false)} disabled={isSaving}>Cancel</Button>
