@@ -454,7 +454,7 @@ export default function LandingPage() {
               {/* Upload mockup */}
               <div className="rounded-xl border border-white/8 bg-[#0d1117] p-5 flex-1">
                 <p className="text-white font-bold mb-1 text-base">Upload HTML Report</p>
-                <p className="text-white/30 text-xs mb-4">Export your history as an HTML report from MetaTrader and upload it here.</p>
+                <p className="text-white/30 text-xs mb-4">Export your history as an HTML report from MetaTrader 4 & 5 and upload it here.</p>
                 <div className="mb-3">
                   <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Account Name</p>
                   <div className="bg-white/5 border border-indigo-500/30 rounded-lg px-3 py-2">

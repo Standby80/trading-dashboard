@@ -116,9 +116,9 @@ export function ReportUploadForm({ trigger }: { trigger?: React.ReactElement }) 
       
       <DialogContent className="sm:max-w-md bg-background border-border text-slate-50">
         <DialogHeader>
-          <DialogTitle className="text-xl">Upload MT5 Report</DialogTitle>
+          <DialogTitle className="text-xl">Upload MT4/MT5 Report</DialogTitle>
           <DialogDescription className="text-muted-foreground">
-            Export your history as an HTML report from MetaTrader 5 and upload it here.
+            Export your history as an HTML report from MetaTrader 4 & 5 and upload it here.
           </DialogDescription>
         </DialogHeader>
 
