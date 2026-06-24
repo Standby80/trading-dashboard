@@ -36,11 +36,9 @@ export async function POST(request: Request) {
       close_price: 0,
       commission: 0,
       swap: 0,
+      hold_time_mins: 0,
       notes: notes,
-      screenshot_url: screenshot_url || null,
-      magic_number: 0,
-      stop_loss: 0,
-      take_profit: 0
+      screenshot_url: screenshot_url || null
     }
 
     const { error } = await supabase
