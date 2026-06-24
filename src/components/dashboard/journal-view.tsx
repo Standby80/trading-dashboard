@@ -31,6 +31,7 @@ export function JournalView({ trades }: { trades: any[] }) {
   const [newType, setNewType] = useState('NOTE');
   const [newEntryPrice, setNewEntryPrice] = useState('');
   const [newExitPrice, setNewExitPrice] = useState('');
+  const [newProfit, setNewProfit] = useState('');
   const [newRating, setNewRating] = useState(0);
   const [newNotes, setNewNotes] = useState('');
   const [newScreenshotUrl, setNewScreenshotUrl] = useState('');
@@ -51,7 +52,17 @@ export function JournalView({ trades }: { trades: any[] }) {
 
   // Filter trades based on search, filter, and tag
   const filteredTrades = useMemo(() => {
-    return trades.filter(t => {
+    // 1. Hide note clones if the original MT5 trade is still present
+    const mt5TicketIds = new Set(trades.filter(t => !t.ticket_id.startsWith('note-')).map(t => t.ticket_id));
+    const dedupedTrades = trades.filter(trade => {
+      if (trade.ticket_id.startsWith('note-clone-')) {
+        const originalId = trade.ticket_id.replace('note-clone-', '');
+        if (mt5TicketIds.has(originalId)) return false; // Hide clone because original exists
+      }
+      return true;
+    });
+
+    return dedupedTrades.filter(t => {
       const isWin = (t.profit || 0) + (t.swap || 0) + (t.commission || 0) >= 0;
       
       // Filter Win/Loss
@@ -152,6 +163,7 @@ export function JournalView({ trades }: { trades: any[] }) {
           volume: parseFloat(newVolume) || 0,
           open_price: parseFloat(newEntryPrice) || 0,
           close_price: parseFloat(newExitPrice) || 0,
+          profit: parseFloat(newProfit) || 0,
           notes: finalNotes.trim(),
           screenshot_url: newScreenshotUrl,
           date: new Date(newDate).toISOString()
@@ -248,6 +260,7 @@ export function JournalView({ trades }: { trades: any[] }) {
                 setNewType('NOTE');
                 setNewEntryPrice('');
                 setNewExitPrice('');
+                setNewProfit('');
                 setNewRating(0);
                 setNewNotes('');
                 setNewScreenshotUrl('');
@@ -366,7 +379,7 @@ export function JournalView({ trades }: { trades: any[] }) {
                             </span>
                           )}
                         </div>
-                        {!isNote && (
+                        {(!isNote || netProfit !== 0) && (
                           <span className={`font-mono font-bold ${isWin ? 'text-emerald-400' : 'text-rose-500'}`}>
                             {isWin ? '+' : ''}${netProfit.toFixed(2)}
                           </span>
@@ -503,7 +516,7 @@ export function JournalView({ trades }: { trades: any[] }) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl">
                   <div>
                     <label className="text-sm font-medium text-foreground mb-2 block">Entry Price (Optional)</label>
                     <Input 
@@ -523,6 +536,17 @@ export function JournalView({ trades }: { trades: any[] }) {
                       placeholder="e.g., 1.05500" 
                       value={newExitPrice}
                       onChange={(e) => setNewExitPrice(e.target.value)}
+                      className="bg-card border-border text-foreground"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-2 block">Net P/L (Optional)</label>
+                    <Input 
+                      type="number"
+                      step="0.01"
+                      placeholder="e.g., 150.50" 
+                      value={newProfit}
+                      onChange={(e) => setNewProfit(e.target.value)}
                       className="bg-card border-border text-foreground"
                     />
                   </div>
@@ -606,7 +630,7 @@ export function JournalView({ trades }: { trades: any[] }) {
                     )}
                   </div>
                 </div>
-                {selectedTrade.type !== 'NOTE' && (
+                {(selectedTrade.type !== 'NOTE' || selectedTrade.profit !== 0) && (
                   <div className="text-right">
                     <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Net P/L</div>
                     <div className={`text-3xl font-mono font-black ${((selectedTrade.profit || 0) + (selectedTrade.swap || 0) + (selectedTrade.commission || 0)) >= 0 ? 'text-emerald-400' : 'text-rose-500'}`}>
