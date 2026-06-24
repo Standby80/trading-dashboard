@@ -34,12 +34,19 @@ interface DayDetailsModalProps {
 }
 
 import { createClient } from '@/lib/supabase/client';
-import { Camera, Save, ChevronDown, ChevronUp, Image as ImageIcon, Loader2, Trash2, TrendingUp, TrendingDown, Eye } from 'lucide-react';
+import { Camera, Save, ChevronDown, ChevronUp, Image as ImageIcon, Loader2, Trash2, TrendingUp, TrendingDown, Eye, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 function ExpandableTradeRow({ trade }: { trade: Trade & { netProfit: number } }) {
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const [notes, setNotes] = React.useState(trade.notes || '');
+  const [notes, setNotes] = React.useState(() => {
+    const rawNotes = trade.notes || '';
+    return rawNotes.replace(/\s*#rating-[1-5]/g, '').trim();
+  });
+  const [rating, setRating] = React.useState(() => {
+    const match = trade.notes?.match(/#rating-([1-5])/);
+    return match ? parseInt(match[1]) : 0;
+  });
   const [screenshotUrl, setScreenshotUrl] = React.useState(trade.screenshot_url || '');
   const [isSaving, setIsSaving] = React.useState(false);
   const [isUploading, setIsUploading] = React.useState(false);
@@ -57,10 +64,15 @@ function ExpandableTradeRow({ trade }: { trade: Trade & { netProfit: number } })
   const handleSave = async () => {
     setIsSaving(true);
     try {
+      let finalNotes = notes;
+      if (rating > 0) {
+        finalNotes += `\n\n#rating-${rating}`;
+      }
+
       const res = await fetch(`/api/trades/${trade.ticket_id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ notes, screenshot_url: screenshotUrl })
+        body: JSON.stringify({ notes: finalNotes.trim(), screenshot_url: screenshotUrl })
       });
       if (!res.ok) throw new Error('Failed to save');
       // Optional: show toast
@@ -102,6 +114,26 @@ function ExpandableTradeRow({ trade }: { trade: Trade & { netProfit: number } })
     }
   };
 
+  const renderStars = (currentRating: number, onRate: (r: number) => void) => {
+    return (
+      <div className="flex items-center gap-0.5">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            onClick={() => onRate(star)}
+            className={`p-1 transition-colors ${star <= currentRating ? 'text-amber-400' : 'text-muted-foreground hover:text-amber-400/50'}`}
+            title={`${star} Star`}
+          >
+            <Star className={`w-4 h-4 ${star <= currentRating ? 'fill-amber-400' : 'fill-transparent'}`} />
+          </button>
+        ))}
+        {currentRating > 0 && (
+          <button onClick={() => onRate(0)} className="ml-1 text-[10px] uppercase font-bold text-muted-foreground hover:text-foreground">Clear</button>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col relative group hover:border-border transition-colors">
       {/* Left Border Status */}
@@ -113,8 +145,8 @@ function ExpandableTradeRow({ trade }: { trade: Trade & { netProfit: number } })
         className="flex-1 p-4 pl-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer hover:bg-white/5 transition-colors"
       >
         <div className="flex items-center gap-3">
-          <div className={`p-2 rounded-lg bg-opacity-10 ${isWin ? 'bg-emerald-500 text-emerald-400' : 'bg-rose-500 text-rose-400'}`}>
-            {isWin ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isWin ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>
+            {isWin ? <TrendingUp size={20} /> : <TrendingDown size={20} />}
           </div>
           <div>
             <div className="font-semibold text-foreground flex items-center gap-2">
@@ -122,7 +154,7 @@ function ExpandableTradeRow({ trade }: { trade: Trade & { netProfit: number } })
               <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold tracking-wider ${typeColor}`}>
                 {tradeTypeRaw}
               </span>
-              {(notes || screenshotUrl) && (
+              {(notes || screenshotUrl || rating > 0) && (
                 <div className="w-2 h-2 rounded-full bg-indigo-500" title="Has journal entry"></div>
               )}
             </div>
@@ -141,8 +173,13 @@ function ExpandableTradeRow({ trade }: { trade: Trade & { netProfit: number } })
             <div className={`text-lg font-bold font-mono ${isWin ? 'text-emerald-400' : 'text-rose-500'}`}>
               {isWin ? '+' : ''}${trade.netProfit.toFixed(2)}
             </div>
-            <div className="text-[10px] text-muted-foreground">
-              {new Date(trade.open_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(trade.close_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            <div className="text-[10px] text-muted-foreground flex flex-col items-end gap-1">
+              <span>{new Date(trade.open_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(trade.close_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+              {rating > 0 && (
+                <div className="flex text-amber-400">
+                  {Array(rating).fill(0).map((_, i) => <Star key={i} className="w-3 h-3 fill-amber-400" />)}
+                </div>
+              )}
             </div>
           </div>
           <button className="text-muted-foreground hover:text-foreground transition-colors p-2 rounded-full hover:bg-white/5">
@@ -155,7 +192,10 @@ function ExpandableTradeRow({ trade }: { trade: Trade & { netProfit: number } })
       {isExpanded && (
         <div className="p-4 pl-6 border-t border-border/50 bg-black/20 flex flex-col md:flex-row gap-6">
           <div className="flex-1 space-y-3">
-            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Trade Notes & Lessons</label>
+            <div className="flex justify-between items-center">
+              <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Trade Notes & Lessons</label>
+              {renderStars(rating, setRating)}
+            </div>
             <textarea 
               placeholder="Why did you take this trade? What did you learn?"
               value={notes}
