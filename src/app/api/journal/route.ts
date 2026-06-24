@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import crypto from 'crypto'
 
 export const dynamic = 'force-dynamic';
 
@@ -21,7 +20,7 @@ export async function POST(request: Request) {
     }
 
     const now = new Date().toISOString()
-    const ticketId = `note-${crypto.randomUUID().substring(0, 8)}-${Date.now()}`
+    const ticketId = `note-${Math.random().toString(36).substring(2, 10)}-${Date.now()}`
 
     const newNote = {
       ticket_id: ticketId,

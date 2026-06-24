@@ -122,17 +122,17 @@ export function JournalView({ trades }: { trades: any[] }) {
           screenshot_url: newScreenshotUrl
         })
       });
-      if (!res.ok) throw new Error('Failed to create entry');
-      
       const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to create entry');
+      
       setIsCreatingNew(false);
       setNewTitle('');
       setNewNotes('');
       setNewScreenshotUrl('');
       setSelectedTradeId(data.ticket_id);
       router.refresh();
-    } catch (e) {
-      alert("Error creating journal entry");
+    } catch (e: any) {
+      alert("Error creating journal entry: " + e.message);
     } finally {
       setIsSavingNew(false);
     }
