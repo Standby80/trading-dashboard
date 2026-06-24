@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useRef } from 'react';
-import { Search, Filter, TrendingUp, TrendingDown, Image as ImageIcon, FileText, ChevronRight, Hash, Clock, Maximize2, BookOpen, Pencil, Save, Loader2, Trash2, Camera, Plus } from 'lucide-react';
+import { Search, Filter, TrendingUp, TrendingDown, Image as ImageIcon, FileText, ChevronRight, Hash, Clock, Maximize2, BookOpen, Pencil, Save, Loader2, Trash2, Camera, Plus, Star } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
@@ -17,6 +17,7 @@ export function JournalView({ trades }: { trades: any[] }) {
   // Edit state
   const [isEditing, setIsEditing] = useState(false);
   const [editNotes, setEditNotes] = useState('');
+  const [editRating, setEditRating] = useState(0);
   const [editScreenshotUrl, setEditScreenshotUrl] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -25,6 +26,9 @@ export function JournalView({ trades }: { trades: any[] }) {
   // New Note state
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [newTitle, setNewTitle] = useState('');
+  const [newSymbol, setNewSymbol] = useState('');
+  const [newVolume, setNewVolume] = useState('');
+  const [newRating, setNewRating] = useState(0);
   const [newNotes, setNewNotes] = useState('');
   const [newScreenshotUrl, setNewScreenshotUrl] = useState('');
   const [newDate, setNewDate] = useState('');
@@ -84,6 +88,8 @@ export function JournalView({ trades }: { trades: any[] }) {
       setIsCreatingNew(false);
       setEditNotes(selectedTrade.notes || '');
       setEditScreenshotUrl(selectedTrade.screenshot_url || '');
+      const match = selectedTrade.notes?.match(/#rating-([1-5])/);
+      setEditRating(match ? parseInt(match[1]) : 0);
     }
   }, [selectedTradeId, selectedTrade]);
 
@@ -91,10 +97,22 @@ export function JournalView({ trades }: { trades: any[] }) {
     if (!selectedTrade) return;
     setIsSaving(true);
     try {
+      // Append rating to notes if selected
+      let finalNotes = editNotes;
+      if (editRating > 0) {
+        finalNotes = finalNotes.replace(/\s*#rating-[1-5]/g, '');
+        finalNotes += `\n\n#rating-${editRating}`;
+      } else {
+        finalNotes = finalNotes.replace(/\s*#rating-[1-5]/g, '');
+      }
+
       const res = await fetch(`/api/trades/${selectedTrade.ticket_id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ notes: editNotes, screenshot_url: editScreenshotUrl })
+        body: JSON.stringify({
+          notes: finalNotes.trim(),
+          screenshot_url: editScreenshotUrl
+        })
       });
       if (!res.ok) throw new Error('Failed to save');
       
@@ -114,12 +132,22 @@ export function JournalView({ trades }: { trades: any[] }) {
     }
     setIsSavingNew(true);
     try {
+      // Prepend Title to Notes, and Append Rating
+      let finalNotes = newNotes;
+      if (newTitle.trim()) {
+        finalNotes = `**${newTitle.trim()}**\n\n${finalNotes}`;
+      }
+      if (newRating > 0) {
+        finalNotes += `\n\n#rating-${newRating}`;
+      }
+
       const res = await fetch('/api/journal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          title: newTitle.trim() || 'Journal Entry',
-          notes: newNotes,
+          symbol: newSymbol.trim() || 'NOTE',
+          volume: parseFloat(newVolume) || 0,
+          notes: finalNotes.trim(),
           screenshot_url: newScreenshotUrl,
           date: new Date(newDate).toISOString()
         })
@@ -177,6 +205,27 @@ export function JournalView({ trades }: { trades: any[] }) {
     }
   };
 
+  const renderStars = (rating: number, onRate?: (r: number) => void) => {
+    return (
+      <div className="flex items-center gap-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            onClick={() => onRate && onRate(star)}
+            disabled={!onRate}
+            className={`p-1 transition-colors ${!onRate ? 'cursor-default' : ''} ${star <= rating ? 'text-amber-400' : 'text-muted-foreground hover:text-amber-400/50'}`}
+            title={star === 1 ? '1 Star - Impulse / Disaster' : star === 2 ? '2 Stars - Forced / Sub-optimal' : star === 3 ? '3 Stars - Okay Setup' : star === 4 ? '4 Stars - Good Execution' : '5 Stars - A+ Setup'}
+          >
+            <Star className={`w-6 h-6 ${star <= rating ? 'fill-amber-400' : 'fill-transparent'}`} />
+          </button>
+        ))}
+        {onRate !== undefined && rating > 0 && (
+          <button onClick={() => onRate(0)} className="ml-2 text-xs text-muted-foreground hover:text-foreground">Clear</button>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col h-full bg-background border border-border rounded-xl overflow-hidden shadow-xl">
       
@@ -189,6 +238,9 @@ export function JournalView({ trades }: { trades: any[] }) {
                 setIsCreatingNew(true);
                 setSelectedTradeId(null);
                 setNewTitle('');
+                setNewSymbol('');
+                setNewVolume('');
+                setNewRating(0);
                 setNewNotes('');
                 setNewScreenshotUrl('');
                 const now = new Date();
@@ -401,6 +453,34 @@ export function JournalView({ trades }: { trades: any[] }) {
                   </div>
                 </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-2 block">Symbol (Optional)</label>
+                    <Input 
+                      placeholder="e.g., EURUSD" 
+                      value={newSymbol}
+                      onChange={(e) => setNewSymbol(e.target.value.toUpperCase())}
+                      className="bg-card border-border text-foreground"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-2 block">Lot Size / Volume (Optional)</label>
+                    <Input 
+                      type="number"
+                      step="0.01"
+                      placeholder="e.g., 1.50" 
+                      value={newVolume}
+                      onChange={(e) => setNewVolume(e.target.value)}
+                      className="bg-card border-border text-foreground"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 block">Trade Rating</label>
+                  {renderStars(newRating, setNewRating)}
+                </div>
+
                 <div className="space-y-3">
                   <label className="text-sm font-medium text-foreground block">Notes & Analysis</label>
                   <textarea 
@@ -522,7 +602,11 @@ export function JournalView({ trades }: { trades: any[] }) {
                 </div>
                 
                 {isEditing ? (
-                  <div className="space-y-3">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block">Trade Rating</label>
+                      {renderStars(editRating, setEditRating)}
+                    </div>
                     <textarea 
                       placeholder="Why did you take this trade? What did you learn?"
                       value={editNotes}
@@ -573,12 +657,28 @@ export function JournalView({ trades }: { trades: any[] }) {
                     </div>
                   </div>
                 ) : (
-                  <div className="p-6 bg-card border border-border rounded-xl">
+                  <div className="p-6 bg-card border border-border rounded-xl space-y-4">
+                    {(() => {
+                      const match = selectedTrade.notes?.match(/#rating-([1-5])/);
+                      const displayRating = match ? parseInt(match[1]) : 0;
+                      return displayRating > 0 ? (
+                        <div className="pb-4 border-b border-border/50">
+                          {renderStars(displayRating)}
+                        </div>
+                      ) : null;
+                    })()}
+                    
                     {selectedTrade.notes ? (
                       <p className="text-foreground leading-relaxed whitespace-pre-wrap text-lg">
-                        {selectedTrade.notes.split(/(#\w+)/g).map((part: string, i: number) => {
-                          if (part.startsWith('#')) return <span key={i} className="text-indigo-400 font-semibold">{part}</span>;
-                          return <span key={i}>{part}</span>;
+                        {selectedTrade.notes
+                          .replace(/\s*#rating-[1-5]/g, '')
+                          .split(/(#\w+)/g)
+                          .map((part: string, i: number) => {
+                            if (part.startsWith('#')) return <span key={i} className="text-indigo-400 font-semibold">{part}</span>;
+                            if (part.startsWith('**') && part.endsWith('**')) {
+                              return <strong key={i} className="font-bold text-xl block mb-2">{part.replace(/\*\*/g, '')}</strong>;
+                            }
+                            return <span key={i}>{part}</span>;
                         })}
                       </p>
                     ) : (
