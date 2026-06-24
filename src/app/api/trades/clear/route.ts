@@ -34,7 +34,12 @@ export async function DELETE(request: Request) {
       }
       
       // Clear the cache
-      await redis.del(`kpis:${user.id}:${accountName}:all:undefined:undefined`);
+      if (redis) {
+        const keys = await redis.keys(`dashboard_data_*${user.id}*`);
+        if (keys.length > 0) {
+          await redis.del(...keys);
+        }
+      }
       return NextResponse.json({ success: true });
     }
 
