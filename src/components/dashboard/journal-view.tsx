@@ -381,7 +381,7 @@ export function JournalView({ trades }: { trades: any[] }) {
                     placeholder="e.g., Tuesday Daily Review" 
                     value={newTitle}
                     onChange={(e) => setNewTitle(e.target.value)}
-                    className="max-w-md bg-card border-border"
+                    className="max-w-md bg-card border-border text-foreground"
                   />
                 </div>
 
@@ -391,7 +391,7 @@ export function JournalView({ trades }: { trades: any[] }) {
                     placeholder="What are your thoughts?"
                     value={newNotes}
                     onChange={e => setNewNotes(e.target.value)}
-                    className="w-full flex min-h-[250px] rounded-md border border-input bg-card px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 resize-y"
+                    className="w-full flex min-h-[250px] rounded-md border border-input bg-card px-3 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 resize-y"
                   />
                   
                   <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
@@ -511,7 +511,7 @@ export function JournalView({ trades }: { trades: any[] }) {
                       placeholder="Why did you take this trade? What did you learn?"
                       value={editNotes}
                       onChange={e => setEditNotes(e.target.value)}
-                      className="w-full flex min-h-[150px] rounded-md border border-input bg-card px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
+                      className="w-full flex min-h-[150px] rounded-md border border-input bg-card px-3 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
                     />
                     
                     <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
