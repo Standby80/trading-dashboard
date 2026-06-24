@@ -25,7 +25,6 @@ export function JournalView({ trades }: { trades: any[] }) {
 
   // New Note state
   const [isCreatingNew, setIsCreatingNew] = useState(false);
-  const [newTitle, setNewTitle] = useState('');
   const [newSymbol, setNewSymbol] = useState('');
   const [newVolume, setNewVolume] = useState('');
   const [newType, setNewType] = useState('NOTE');
@@ -145,11 +144,8 @@ export function JournalView({ trades }: { trades: any[] }) {
     }
     setIsSavingNew(true);
     try {
-      // Prepend Title to Notes, and Append Rating
+      // Append Rating
       let finalNotes = newNotes;
-      if (newTitle.trim()) {
-        finalNotes = `**${newTitle.trim()}**\n\n${finalNotes}`;
-      }
       if (newRating > 0) {
         finalNotes += `\n\n#rating-${newRating}`;
       }
@@ -254,7 +250,6 @@ export function JournalView({ trades }: { trades: any[] }) {
               onClick={() => {
                 setIsCreatingNew(true);
                 setSelectedTradeId(null);
-                setNewTitle('');
                 setNewSymbol('');
                 setNewVolume('');
                 setNewType('NOTE');
@@ -378,6 +373,18 @@ export function JournalView({ trades }: { trades: any[] }) {
                               {trade.type === 'BUY' ? 'LONG' : 'SHORT'}
                             </span>
                           )}
+                          {(() => {
+                            const match = trade.notes?.match(/#rating-([1-5])/);
+                            const rating = match ? parseInt(match[1]) : 0;
+                            if (rating > 0) {
+                              return (
+                                <div className="flex items-center ml-1">
+                                  {Array(rating).fill(0).map((_, i) => <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />)}
+                                </div>
+                              );
+                            }
+                            return null;
+                          })()}
                         </div>
                         {(!isNote || netProfit !== 0) && (
                           <span className={`font-mono font-bold ${isWin ? 'text-emerald-400' : 'text-rose-500'}`}>
@@ -408,14 +415,14 @@ export function JournalView({ trades }: { trades: any[] }) {
                       </div>
 
                       <p className="text-sm text-foreground/80 line-clamp-2 leading-relaxed">
-                        {trade.notes || <span className="italic text-muted-foreground">No notes written...</span>}
+                        {trade.notes ? trade.notes.replace(/\s*#rating-[1-5]/g, '').replace(/\*\*(.*?)\*\*/g, '$1') : <span className="italic text-muted-foreground">No notes written...</span>}
                       </p>
                     </div>
 
                     <div className="mt-3 flex items-center justify-between">
                       <div className="flex gap-2">
                         {trade.screenshot_url && <ImageIcon className="w-4 h-4 text-indigo-400" />}
-                        {trade.notes && trade.notes.match(/#\w+/g)?.map((tag: string) => (
+                        {trade.notes && trade.notes.match(/#\w+/g)?.filter((tag: string) => !tag.startsWith('#rating-')).map((tag: string) => (
                           <span key={tag} className="text-[10px] text-indigo-300 bg-indigo-500/10 px-1.5 py-0.5 rounded">
                             {tag}
                           </span>
@@ -462,11 +469,11 @@ export function JournalView({ trades }: { trades: any[] }) {
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
                   <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">Title</label>
+                    <label className="text-sm font-medium text-foreground mb-2 block">Symbol</label>
                     <Input 
-                      placeholder="e.g., Tuesday Daily Review" 
-                      value={newTitle}
-                      onChange={(e) => setNewTitle(e.target.value)}
+                      placeholder="e.g., EURUSD" 
+                      value={newSymbol}
+                      onChange={(e) => setNewSymbol(e.target.value.toUpperCase())}
                       className="bg-card border-border text-foreground"
                     />
                   </div>
@@ -481,16 +488,7 @@ export function JournalView({ trades }: { trades: any[] }) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl">
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">Symbol (Optional)</label>
-                    <Input 
-                      placeholder="e.g., EURUSD" 
-                      value={newSymbol}
-                      onChange={(e) => setNewSymbol(e.target.value.toUpperCase())}
-                      className="bg-card border-border text-foreground"
-                    />
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
                   <div>
                     <label className="text-sm font-medium text-foreground mb-2 block">Type (Optional)</label>
                     <select
