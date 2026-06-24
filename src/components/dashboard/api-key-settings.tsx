@@ -78,21 +78,21 @@ export default function ApiKeySettings() {
   const hasAccess = isPremium || isTrialActive;
 
   return (
-    <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl backdrop-blur-md max-w-2xl">
+    <div className="p-6 bg-card border border-border rounded-xl shadow-sm max-w-2xl">
       <h2 className="text-xl font-semibold text-foreground mb-2">MetaMetrics Live Sync API</h2>
-      <p className="text-sm text-zinc-400 mb-6">
+      <p className="text-sm text-muted-foreground mb-6">
         Use your unique API key to connect your MetaTrader 5 script with your dashboard for real-time syncing.
       </p>
 
       {!hasAccess ? (
-        <div className="relative p-6 bg-zinc-950/40 border border-dashed border-zinc-800 rounded-lg overflow-hidden flex flex-col items-center text-center">
-          <div className="absolute inset-0 bg-zinc-950/60 backdrop-blur-sm z-10" />
+        <div className="relative p-6 bg-muted/30 border border-dashed border-border rounded-lg overflow-hidden flex flex-col items-center text-center">
+          <div className="absolute inset-0 bg-background/50 backdrop-blur-sm z-10" />
           <div className="relative z-20 flex flex-col items-center">
             <div className="p-3 bg-indigo-600/10 rounded-full border border-indigo-500/20 mb-4">
               <Lock className="w-6 h-6 text-indigo-500" />
             </div>
             <h3 className="text-foreground font-medium mb-1">Premium Feature</h3>
-            <p className="text-xs text-zinc-400 max-w-sm mb-4">
+            <p className="text-xs text-muted-foreground max-w-sm mb-4">
               Automatic Live Sync requires a Premium membership. For now, you can upload your reports manually via HTML.
             </p>
             <button className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-2 px-4 rounded-lg transition duration-200">
@@ -102,15 +102,15 @@ export default function ApiKeySettings() {
         </div>
       ) : (
         <div className="space-y-4">
-          <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Your API Key</label>
+          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Your API Key</label>
           <div className="flex gap-2">
-            <div className="relative flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2.5 font-mono text-sm text-zinc-300 flex items-center justify-between overflow-hidden">
+            <div className="relative flex-1 bg-muted border border-border rounded-lg px-4 py-2.5 font-mono text-sm text-foreground flex items-center justify-between overflow-hidden">
               <span className="truncate">
                 {showKey ? profile.api_key : '••••••••••••••••••••••••••••••••'}
               </span>
               <button 
                 onClick={() => setShowKey(!showKey)}
-                className="text-zinc-500 hover:text-zinc-300 ml-2"
+                className="text-muted-foreground hover:text-foreground ml-2 transition-colors"
               >
                 {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -118,7 +118,7 @@ export default function ApiKeySettings() {
 
             <button 
               onClick={handleCopy}
-              className="px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg border border-zinc-700 flex items-center gap-2 text-sm font-medium transition duration-150"
+              className="px-4 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-lg border border-border flex items-center gap-2 text-sm font-medium transition duration-150"
             >
               <Copy className="w-4 h-4" />
               {copied ? 'Copied!' : 'Copy'}
@@ -126,7 +126,7 @@ export default function ApiKeySettings() {
           </div>
 
           <div className="flex justify-between items-center pt-2">
-            <span className="text-xs text-zinc-500">
+            <span className="text-xs text-muted-foreground">
               Never share your API key. It grants direct access to input trades to your account.
             </span>
             <button 

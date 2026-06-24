@@ -28,12 +28,12 @@ export default function LiveSyncGuide() {
               <div key={s.id} className="flex flex-col items-center gap-2 bg-background px-2">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-colors ${
                   step >= s.id 
-                    ? 'border-indigo-500 bg-indigo-500/20 text-indigo-400' 
-                    : 'border-border bg-card text-slate-500'
+                    ? 'border-primary bg-primary/10 text-primary' 
+                    : 'border-border bg-muted text-muted-foreground'
                 }`}>
                   <s.icon className="w-5 h-5" />
                 </div>
-                <span className={`text-xs font-medium ${step >= s.id ? 'text-indigo-300' : 'text-slate-500'}`}>
+                <span className={`text-xs font-medium ${step >= s.id ? 'text-primary' : 'text-muted-foreground'}`}>
                   {s.name}
                 </span>
               </div>
