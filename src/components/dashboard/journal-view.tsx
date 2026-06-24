@@ -193,7 +193,8 @@ export function JournalView({ trades }: { trades: any[] }) {
           {filteredTrades.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground flex flex-col items-center">
               <FileText className="w-8 h-8 mb-3 opacity-20" />
-              <p>No journal entries found.</p>
+              <p className="font-medium text-foreground mb-1">No journal entries found.</p>
+              <p className="text-sm max-w-[250px]">To write a journal entry, go to the <strong>Dashboard</strong> calendar, click on any trade, and add your notes.</p>
             </div>
           ) : (
             <div className="flex flex-col divide-y divide-border/50">
@@ -441,9 +442,12 @@ export function JournalView({ trades }: { trades: any[] }) {
 
             </div>
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground">
+            <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground p-8">
               <BookOpen className="w-16 h-16 mb-4 opacity-20" />
-              <p className="text-lg">Select a trade from the timeline to view details.</p>
+              <p className="text-lg font-medium text-foreground mb-2">Select a trade from the timeline to view details.</p>
+              <p className="text-sm text-center max-w-sm">
+                To write a new journal entry, go to the <strong className="text-foreground">Dashboard</strong> calendar, click on a trade, and add your notes there.
+              </p>
             </div>
           )}
         </div>
