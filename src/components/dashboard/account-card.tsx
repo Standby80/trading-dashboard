@@ -70,31 +70,43 @@ export function AccountCard({ acc, isEur, colorClass }: AccountCardProps) {
       alert('You can only record withdrawals on specific accounts.');
       return;
     }
-    const amountStr = window.prompt(`Enter withdrawal amount for ${acc.name}:\n(e.g. 500)`);
-    if (!amountStr) return;
+    const amountStr = window.prompt(`Enter withdrawal amount for ${acc.name}:\n(Enter 0 to clear all manual withdrawals)`);
+    if (amountStr === null) return;
     const amount = parseFloat(amountStr.replace(/[^0-9.]/g, ''));
-    if (isNaN(amount) || amount <= 0) {
-      alert("Invalid amount");
+    if (isNaN(amount) || amount < 0) {
+      alert("Amount must be 0 or greater. (If you still see this, your browser is caching the old version!)");
       return;
     }
+    
     setIsWithdrawing(true);
     try {
-      const res = await fetch('/api/journal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          account_name: acc.id,
-          type: 'WITHDRAWAL',
-          profit: -amount,
-          notes: `Manual withdrawal`,
-          symbol: 'WITHDRAWAL'
-        })
-      });
-      if (!res.ok) throw new Error('Failed to record withdrawal');
+      if (amount === 0) {
+        if (!window.confirm(`Are you sure you want to delete all manual withdrawals for ${acc.name}?`)) {
+          setIsWithdrawing(false);
+          return;
+        }
+        const res = await fetch(`/api/trades/clear?account=${encodeURIComponent(acc.id)}&type=WITHDRAWAL`, {
+          method: 'DELETE',
+        });
+        if (!res.ok) throw new Error('Failed to clear withdrawals');
+      } else {
+        const res = await fetch('/api/journal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            account_name: acc.id,
+            type: 'WITHDRAWAL',
+            profit: -amount,
+            notes: `Manual withdrawal`,
+            symbol: 'WITHDRAWAL'
+          })
+        });
+        if (!res.ok) throw new Error('Failed to record withdrawal');
+      }
       window.location.reload();
     } catch (err) {
       console.error(err);
-      alert('Error recording withdrawal');
+      alert('Error recording/clearing withdrawal');
       setIsWithdrawing(false);
     }
   };
