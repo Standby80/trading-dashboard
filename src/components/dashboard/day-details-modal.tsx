@@ -34,10 +34,12 @@ interface DayDetailsModalProps {
 }
 
 import { createClient } from '@/lib/supabase/client';
-import { Camera, Save, ChevronDown, ChevronUp, Image as ImageIcon, Loader2, Trash2, TrendingUp, TrendingDown, Eye, Star } from 'lucide-react';
+import { Camera, Save, ChevronDown, ChevronUp, Image as ImageIcon, Loader2, Trash2, TrendingUp, TrendingDown, Eye, Star, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 function ExpandableTradeRow({ trade }: { trade: Trade & { netProfit: number } }) {
+  const router = useRouter();
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [notes, setNotes] = React.useState(() => {
     const rawNotes = trade.notes || '';
@@ -49,6 +51,7 @@ function ExpandableTradeRow({ trade }: { trade: Trade & { netProfit: number } })
   });
   const [screenshotUrl, setScreenshotUrl] = React.useState(trade.screenshot_url || '');
   const [isSaving, setIsSaving] = React.useState(false);
+  const [isSaved, setIsSaved] = React.useState(false);
   const [isUploading, setIsUploading] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -75,7 +78,13 @@ function ExpandableTradeRow({ trade }: { trade: Trade & { netProfit: number } })
         body: JSON.stringify({ notes: finalNotes.trim(), screenshot_url: screenshotUrl })
       });
       if (!res.ok) throw new Error('Failed to save');
-      // Optional: show toast
+      
+      trade.notes = finalNotes.trim();
+      trade.screenshot_url = screenshotUrl;
+      router.refresh();
+      
+      setIsSaved(true);
+      setTimeout(() => setIsSaved(false), 2000);
     } catch (e) {
       alert("Error saving notes");
     } finally {
@@ -202,9 +211,14 @@ function ExpandableTradeRow({ trade }: { trade: Trade & { netProfit: number } })
               onChange={e => setNotes(e.target.value)}
               className="w-full flex min-h-[120px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
             />
-            <Button onClick={handleSave} disabled={isSaving} size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white">
-              {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-              {isSaving ? 'Saving...' : 'Save Journal'}
+            <Button 
+              onClick={handleSave} 
+              disabled={isSaving || isSaved} 
+              size="sm" 
+              className={isSaved ? "bg-emerald-600 hover:bg-emerald-700 text-white" : "bg-indigo-600 hover:bg-indigo-700 text-white"}
+            >
+              {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : isSaved ? <Check className="w-4 h-4 mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+              {isSaving ? 'Saving...' : isSaved ? 'Saved!' : 'Save Journal'}
             </Button>
           </div>
           
