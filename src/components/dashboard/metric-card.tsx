@@ -121,7 +121,7 @@ export function MetricCard({
         </div>
         {subtext && <span className={`text-[10px] mt-1 ${subtextColor}`}>{subtext}</span>}
       </CardContent>
-      <div className="absolute bottom-0 left-0 right-0 z-0 pointer-events-none opacity-80 mix-blend-screen">
+      <div className="absolute bottom-0 left-0 right-0 z-0 pointer-events-none opacity-60 dark:opacity-80">
          <Sparkline color={color} trend={trend} title={title} />
       </div>
     </Card>
