@@ -77,7 +77,25 @@ function ExpandableTradeRow({ trade }: { trade: Trade & { netProfit: number } })
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ notes: finalNotes.trim(), screenshot_url: screenshotUrl })
       });
-      if (!res.ok) throw new Error('Failed to save');
+      if (!res.ok) throw new Error('Failed to save to trade');
+
+      // Safeguard: Create a standalone copy of this journal entry
+      const cloneRes = await fetch('/api/journal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ticket_id: `note-clone-${trade.ticket_id}`,
+          symbol: trade.symbol,
+          type: trade.type ? (trade.type.includes('BUY') ? 'BUY' : trade.type.includes('SELL') ? 'SELL' : 'NOTE') : 'NOTE',
+          volume: trade.volume || 0,
+          open_price: trade.open_price || 0,
+          close_price: trade.close_price || 0,
+          notes: finalNotes.trim(),
+          screenshot_url: screenshotUrl,
+          date: trade.close_time || new Date().toISOString()
+        })
+      });
+      if (!cloneRes.ok) console.error('Failed to clone journal entry');
       
       trade.notes = finalNotes.trim();
       trade.screenshot_url = screenshotUrl;

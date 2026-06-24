@@ -212,7 +212,7 @@ export async function getDashboardData(period?: string, symbolsStr?: string, acc
     }
 
     // Låt notes/journal-anteckningar synas i listan, men de påverkar inga KPIs
-    if (trade.type === 'NOTE') {
+    if (trade.type === 'NOTE' || trade.ticket_id?.startsWith('note-')) {
       if (!startDate || tradeDate >= startDate) {
         validTradesToReturn.push(trade);
       }

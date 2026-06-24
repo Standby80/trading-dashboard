@@ -13,27 +13,27 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const { symbol, volume, notes, screenshot_url, date, account_name = 'Default' } = body
+    const { symbol, type, volume, open_price, close_price, notes, screenshot_url, date, ticket_id, account_name = 'Default' } = body
 
     if (!notes) {
       return NextResponse.json({ error: 'Notes are required' }, { status: 400 })
     }
 
     const now = date ? new Date(date).toISOString() : new Date().toISOString()
-    const ticketId = `note-${Math.random().toString(36).substring(2, 10)}-${Date.now()}`
+    const finalTicketId = ticket_id || `note-${Math.random().toString(36).substring(2, 10)}-${Date.now()}`
 
     const newNote = {
-      ticket_id: ticketId,
+      ticket_id: finalTicketId,
       user_id: user.id,
       account_name: account_name,
       symbol: symbol || 'Journal Note',
-      type: 'NOTE',
+      type: type || 'NOTE',
       open_time: now,
       close_time: now,
       profit: 0,
       volume: volume || 0,
-      open_price: 0,
-      close_price: 0,
+      open_price: open_price || 0,
+      close_price: close_price || 0,
       commission: 0,
       swap: 0,
       hold_time_mins: 0,
@@ -43,14 +43,14 @@ export async function POST(request: Request) {
 
     const { error } = await supabase
       .from('trades')
-      .insert(newNote)
+      .upsert(newNote)
 
     if (error) {
-      console.error('Error inserting journal note:', error)
+      console.error('Error inserting/updating journal note:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json({ success: true, ticket_id: ticketId })
+    return NextResponse.json({ success: true, ticket_id: finalTicketId })
   } catch (error: any) {
     console.error('Error in POST /api/journal:', error)
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 })

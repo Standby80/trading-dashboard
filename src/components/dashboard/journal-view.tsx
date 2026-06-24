@@ -28,6 +28,9 @@ export function JournalView({ trades }: { trades: any[] }) {
   const [newTitle, setNewTitle] = useState('');
   const [newSymbol, setNewSymbol] = useState('');
   const [newVolume, setNewVolume] = useState('');
+  const [newType, setNewType] = useState('NOTE');
+  const [newEntryPrice, setNewEntryPrice] = useState('');
+  const [newExitPrice, setNewExitPrice] = useState('');
   const [newRating, setNewRating] = useState(0);
   const [newNotes, setNewNotes] = useState('');
   const [newScreenshotUrl, setNewScreenshotUrl] = useState('');
@@ -145,8 +148,11 @@ export function JournalView({ trades }: { trades: any[] }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          symbol: newSymbol.trim() || 'NOTE',
+          symbol: newSymbol.trim() || 'Journal Note',
+          type: newType,
           volume: parseFloat(newVolume) || 0,
+          open_price: parseFloat(newEntryPrice) || 0,
+          close_price: parseFloat(newExitPrice) || 0,
           notes: finalNotes.trim(),
           screenshot_url: newScreenshotUrl,
           date: new Date(newDate).toISOString()
@@ -240,6 +246,9 @@ export function JournalView({ trades }: { trades: any[] }) {
                 setNewTitle('');
                 setNewSymbol('');
                 setNewVolume('');
+                setNewType('NOTE');
+                setNewEntryPrice('');
+                setNewExitPrice('');
                 setNewRating(0);
                 setNewNotes('');
                 setNewScreenshotUrl('');
@@ -320,7 +329,7 @@ export function JournalView({ trades }: { trades: any[] }) {
                 const netProfit = (trade.profit || 0) + (trade.swap || 0) + (trade.commission || 0);
                 const isWin = netProfit >= 0;
                 
-                const isNote = trade.type === 'NOTE';
+                const isNote = trade.ticket_id.startsWith('note-');
                 
                 return (
                   <div key={trade.ticket_id} className={`w-full text-left p-4 transition-colors relative group ${isSelected ? 'bg-indigo-500/10' : 'hover:bg-white/5'}`}>
@@ -348,6 +357,13 @@ export function JournalView({ trades }: { trades: any[] }) {
                                 : 'bg-rose-500/10 text-rose-400'
                             }`}>
                               {(trade.type === 'DEAL_TYPE_BUY' || trade.type === 'BUY') ? 'BUY' : 'SELL'}
+                            </span>
+                          )}
+                          {isNote && trade.type !== 'NOTE' && (
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider ${
+                              trade.type === 'BUY' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'
+                            }`}>
+                              {trade.type === 'BUY' ? 'LONG' : 'SHORT'}
                             </span>
                           )}
                         </div>
@@ -453,7 +469,7 @@ export function JournalView({ trades }: { trades: any[] }) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl">
                   <div>
                     <label className="text-sm font-medium text-foreground mb-2 block">Symbol (Optional)</label>
                     <Input 
@@ -464,13 +480,50 @@ export function JournalView({ trades }: { trades: any[] }) {
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">Lot Size / Volume (Optional)</label>
+                    <label className="text-sm font-medium text-foreground mb-2 block">Type (Optional)</label>
+                    <select
+                      value={newType}
+                      onChange={(e) => setNewType(e.target.value)}
+                      className="w-full h-10 px-3 py-2 rounded-md border border-border bg-card text-foreground text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                    >
+                      <option value="NOTE">NOTE (General)</option>
+                      <option value="BUY">LONG</option>
+                      <option value="SELL">SHORT</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-2 block">Volume (Optional)</label>
                     <Input 
                       type="number"
                       step="0.01"
                       placeholder="e.g., 1.50" 
                       value={newVolume}
                       onChange={(e) => setNewVolume(e.target.value)}
+                      className="bg-card border-border text-foreground"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-2 block">Entry Price (Optional)</label>
+                    <Input 
+                      type="number"
+                      step="0.00001"
+                      placeholder="e.g., 1.05000" 
+                      value={newEntryPrice}
+                      onChange={(e) => setNewEntryPrice(e.target.value)}
+                      className="bg-card border-border text-foreground"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-2 block">Exit Price (Optional)</label>
+                    <Input 
+                      type="number"
+                      step="0.00001"
+                      placeholder="e.g., 1.05500" 
+                      value={newExitPrice}
+                      onChange={(e) => setNewExitPrice(e.target.value)}
                       className="bg-card border-border text-foreground"
                     />
                   </div>
@@ -565,23 +618,23 @@ export function JournalView({ trades }: { trades: any[] }) {
               </div>
 
               {/* Trade Stats Bar */}
-              {selectedTrade.type !== 'NOTE' && (
+              {(selectedTrade.volume > 0 || selectedTrade.open_price > 0 || selectedTrade.close_price > 0 || selectedTrade.type !== 'NOTE') && (
                 <div className="grid grid-cols-4 gap-4 p-4 rounded-xl bg-card border border-border">
                   <div>
                     <div className="text-xs text-muted-foreground uppercase">Type</div>
-                    <div className="font-medium text-foreground">{selectedTrade.type === 'DEAL_TYPE_BUY' || selectedTrade.type === 'BUY' ? 'LONG' : 'SHORT'}</div>
+                    <div className="font-medium text-foreground">{selectedTrade.type === 'DEAL_TYPE_BUY' || selectedTrade.type === 'BUY' ? 'LONG' : selectedTrade.type === 'DEAL_TYPE_SELL' || selectedTrade.type === 'SELL' ? 'SHORT' : 'NOTE'}</div>
                   </div>
                   <div>
                     <div className="text-xs text-muted-foreground uppercase">Volume</div>
-                    <div className="font-medium text-foreground">{selectedTrade.volume}</div>
+                    <div className="font-medium text-foreground">{selectedTrade.volume || '-'}</div>
                   </div>
                   <div>
                     <div className="text-xs text-muted-foreground uppercase">Entry Price</div>
-                    <div className="font-mono text-foreground">{selectedTrade.open_price}</div>
+                    <div className="font-mono text-foreground">{selectedTrade.open_price || '-'}</div>
                   </div>
                   <div>
                     <div className="text-xs text-muted-foreground uppercase">Exit Price</div>
-                    <div className="font-mono text-foreground">{selectedTrade.close_price}</div>
+                    <div className="font-mono text-foreground">{selectedTrade.close_price || '-'}</div>
                   </div>
                 </div>
               )}
