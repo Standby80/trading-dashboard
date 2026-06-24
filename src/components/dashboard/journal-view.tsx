@@ -27,6 +27,7 @@ export function JournalView({ trades }: { trades: any[] }) {
   const [newTitle, setNewTitle] = useState('');
   const [newNotes, setNewNotes] = useState('');
   const [newScreenshotUrl, setNewScreenshotUrl] = useState('');
+  const [newDate, setNewDate] = useState('');
   const [isSavingNew, setIsSavingNew] = useState(false);
 
   // Parse all unique hashtags from notes
@@ -119,7 +120,8 @@ export function JournalView({ trades }: { trades: any[] }) {
         body: JSON.stringify({
           title: newTitle.trim() || 'Journal Entry',
           notes: newNotes,
-          screenshot_url: newScreenshotUrl
+          screenshot_url: newScreenshotUrl,
+          date: new Date(newDate).toISOString()
         })
       });
       const data = await res.json();
@@ -189,6 +191,9 @@ export function JournalView({ trades }: { trades: any[] }) {
                 setNewTitle('');
                 setNewNotes('');
                 setNewScreenshotUrl('');
+                const now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                setNewDate(now.toISOString().slice(0, 16));
               }}
               className="bg-indigo-600 hover:bg-indigo-700 text-white shrink-0"
             >
@@ -375,14 +380,25 @@ export function JournalView({ trades }: { trades: any[] }) {
               </div>
               
               <div className="space-y-6">
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">Title</label>
-                  <Input 
-                    placeholder="e.g., Tuesday Daily Review" 
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                    className="max-w-md bg-card border-border text-foreground"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-2 block">Title</label>
+                    <Input 
+                      placeholder="e.g., Tuesday Daily Review" 
+                      value={newTitle}
+                      onChange={(e) => setNewTitle(e.target.value)}
+                      className="bg-card border-border text-foreground"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-2 block">Date & Time</label>
+                    <Input 
+                      type="datetime-local"
+                      value={newDate}
+                      onChange={(e) => setNewDate(e.target.value)}
+                      className="bg-card border-border text-foreground"
+                    />
+                  </div>
                 </div>
 
                 <div className="space-y-3">

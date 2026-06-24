@@ -13,13 +13,13 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const { title, notes, screenshot_url, account_name = 'Default' } = body
+    const { title, notes, screenshot_url, date, account_name = 'Default' } = body
 
     if (!notes) {
       return NextResponse.json({ error: 'Notes are required' }, { status: 400 })
     }
 
-    const now = new Date().toISOString()
+    const now = date ? new Date(date).toISOString() : new Date().toISOString()
     const ticketId = `note-${Math.random().toString(36).substring(2, 10)}-${Date.now()}`
 
     const newNote = {
