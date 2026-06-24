@@ -428,7 +428,7 @@ export function JournalView({ trades }: { trades: any[] }) {
                     <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={(e) => handleUpload(e, true)} />
 
                     <div className="flex-1 flex justify-end gap-2 w-full sm:w-auto">
-                      <Button variant="outline" onClick={() => setIsCreatingNew(false)} disabled={isSavingNew}>Cancel</Button>
+                      <Button variant="outline" className="text-foreground border-border hover:bg-white/5" onClick={() => setIsCreatingNew(false)} disabled={isSavingNew}>Cancel</Button>
                       <Button onClick={handleSaveNew} disabled={isSavingNew || isUploading || !newNotes.trim()} className="bg-indigo-600 hover:bg-indigo-700 text-white">
                         {isSavingNew ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
                         {isSavingNew ? 'Saving...' : 'Save Entry'}
@@ -548,7 +548,7 @@ export function JournalView({ trades }: { trades: any[] }) {
                       <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={(e) => handleUpload(e, false)} />
 
                       <div className="flex-1 flex justify-end gap-2 w-full sm:w-auto">
-                        <Button variant="outline" size="sm" onClick={() => setIsEditing(false)} disabled={isSaving}>Cancel</Button>
+                        <Button variant="outline" size="sm" className="text-foreground border-border hover:bg-white/5" onClick={() => setIsEditing(false)} disabled={isSaving}>Cancel</Button>
                         <Button size="sm" onClick={handleSave} disabled={isSaving || isUploading} className="bg-indigo-600 hover:bg-indigo-700 text-white">
                           {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
                           {isSaving ? 'Saving...' : 'Save Changes'}
