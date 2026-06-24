@@ -172,7 +172,9 @@ export async function getDashboardData(period?: string, symbolsStr?: string, acc
   // Fallback if no deposits were found in the history
   if (calculatedInitialBalance <= 0) {
     const uniqueAccountsInTrades = Array.from(new Set(trades.map((t: any) => t.account_name)));
-    const accountMultiplier = accountName === 'All Accounts' ? Math.max(1, uniqueAccountsInTrades.length) : 1;
+    const realAccounts = uniqueAccountsInTrades.filter(name => name !== 'Default');
+    const multiplierCount = realAccounts.length > 0 ? realAccounts.length : 1;
+    const accountMultiplier = accountName === 'All Accounts' ? Math.max(1, multiplierCount) : 1;
     calculatedInitialBalance = 10000 * accountMultiplier;
   }
 
