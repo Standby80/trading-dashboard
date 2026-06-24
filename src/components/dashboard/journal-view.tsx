@@ -79,16 +79,15 @@ export function JournalView({ trades }: { trades: any[] }) {
 
   // Auto-select first trade if none selected
   React.useEffect(() => {
-    if (!selectedTradeId && filteredTrades.length > 0) {
+    if (!selectedTradeId && filteredTrades.length > 0 && !isCreatingNew) {
       setSelectedTradeId(filteredTrades[0].ticket_id);
     }
-  }, [filteredTrades, selectedTradeId]);
+  }, [filteredTrades, selectedTradeId, isCreatingNew]);
 
   // Reset edit state when selected trade changes
   React.useEffect(() => {
     if (selectedTrade) {
       setIsEditing(false);
-      setIsCreatingNew(false);
       setEditNotes(selectedTrade.notes || '');
       setEditScreenshotUrl(selectedTrade.screenshot_url || '');
       const match = selectedTrade.notes?.match(/#rating-([1-5])/);
