@@ -46,8 +46,7 @@ export default async function AccountsPage() {
       
       const balance = data?.kpis?.currentBalance || 10000;
       const initial = data?.kpis?.initialBalance || 10000;
-      // Withdrawals aren't explicitly tracked separately in kpis yet, so we mock or use 0
-      const withdrawals = 0; 
+      const withdrawals = data?.kpis?.withdrawals || 0; 
       
       return {
         name: account.label,

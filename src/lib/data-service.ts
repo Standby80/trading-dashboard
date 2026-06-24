@@ -112,6 +112,7 @@ export async function getDashboardData(period?: string, symbolsStr?: string, acc
   let bestTrade = 0, worstTrade = 0, sumOfProfits = 0, sumOfSquares = 0;
   let totalDurationMs = 0, totalCommissions = 0, totalSwaps = 0;
   let maxDrawdownDol = 0, maxDrawdownPct = 0;
+  let totalWithdrawals = 0;
 
   // Advanced Analytics Variables
   let longestTradeMs = 0;
@@ -201,15 +202,17 @@ export async function getDashboardData(period?: string, symbolsStr?: string, acc
       ? rawProfit 
       : parseFloat(String(rawProfit).replace(/\s+/g, '').replace(/[^0-9.-]/g, '')) || 0;
       
-    const isDeposit = trade.type === 'DEPOSIT' || trade.symbol === 'DEPOSIT' || trade.type === 'BALANCE' || trade.type === 'DEAL_TYPE_BALANCE';
+    const isDeposit = trade.type === 'DEPOSIT' || trade.symbol === 'DEPOSIT' || trade.type === 'BALANCE' || trade.type === 'DEAL_TYPE_BALANCE' || trade.type === 'WITHDRAWAL';
     const tradeDate = new Date(trade.close_time);
     const displayDate = tradeDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
     const dateStr = tradeDate.toISOString().split('T')[0];
 
     // SÄKERHETS-SPÄRR: Om det är startinsättningen, justera bas-saldot om det behövs, men hoppa sedan över KPI-matten!
     if (isDeposit) {
-      // Om backend skickade insättningen som profit, se till att vi inte dubbelräknar den
-      // Vi uppdaterade currentBalance redan via pre-calculation i toppen av filen.
+      if (profit < 0) {
+        currentBalance += profit; // Subtrahera uttaget
+        totalWithdrawals += Math.abs(profit);
+      }
       continue; // ANVÄND ENBART CONTINUE HÄR! ALDRIG RETURN!
     }
 
@@ -542,6 +545,7 @@ export async function getDashboardData(period?: string, symbolsStr?: string, acc
     kpis: {
       initialBalance: assumedInitialBalance,
       currentBalance,
+      withdrawals: totalWithdrawals,
       peakBalance,
       netProfit: netPnl,
       totalTrades,

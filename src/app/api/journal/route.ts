@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const { symbol, type, volume, open_price, close_price, notes, screenshot_url, date, ticket_id, account_name = 'Default' } = body
+    const { symbol, type, volume, open_price, close_price, profit, notes, screenshot_url, date, ticket_id, account_name = 'Default' } = body
 
     if (!notes) {
       return NextResponse.json({ error: 'Notes are required' }, { status: 400 })
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       type: type || 'NOTE',
       open_time: now,
       close_time: now,
-      profit: 0,
+      profit: profit || 0,
       volume: volume || 0,
       open_price: open_price || 0,
       close_price: close_price || 0,

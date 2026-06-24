@@ -13,12 +13,32 @@ export async function DELETE(request: Request) {
 
     const { searchParams } = new URL(request.url);
     const accountName = searchParams.get('account');
+    const type = searchParams.get('type');
 
     if (!accountName) {
       return NextResponse.json({ error: 'Account name is required' }, { status: 400 });
     }
 
-    // Delete trades for this specific account
+    // If type is specified, only delete trades of that type
+    if (type) {
+      const { error: deleteTradesError } = await supabase
+        .from('trades')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('account_name', accountName)
+        .eq('type', type);
+
+      if (deleteTradesError) {
+        console.error('Failed to clear trades of type:', deleteTradesError);
+        return NextResponse.json({ error: 'Failed to clear trades' }, { status: 500 });
+      }
+      
+      // Clear the cache
+      await redis.del(`kpis:${user.id}:${accountName}:all:undefined:undefined`);
+      return NextResponse.json({ success: true });
+    }
+
+    // Delete ALL trades for this specific account
     const { error: deleteTradesError } = await supabase
       .from('trades')
       .delete()

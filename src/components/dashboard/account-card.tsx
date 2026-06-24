@@ -30,6 +30,7 @@ const formatMoneyDynamic = (val: number, isEur: boolean) => {
 export function AccountCard({ acc, isEur, colorClass }: AccountCardProps) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
 
   const handleCardClick = () => {
     router.push(`/?account=${acc.id}`);
@@ -63,10 +64,45 @@ export function AccountCard({ acc, isEur, colorClass }: AccountCardProps) {
     }
   };
 
+  const handleWithdrawalClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (acc.name === 'All Accounts') {
+      alert('You can only record withdrawals on specific accounts.');
+      return;
+    }
+    const amountStr = window.prompt(`Enter withdrawal amount for ${acc.name}:\n(e.g. 500)`);
+    if (!amountStr) return;
+    const amount = parseFloat(amountStr.replace(/[^0-9.]/g, ''));
+    if (isNaN(amount) || amount <= 0) {
+      alert("Invalid amount");
+      return;
+    }
+    setIsWithdrawing(true);
+    try {
+      const res = await fetch('/api/journal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          account_name: acc.id,
+          type: 'WITHDRAWAL',
+          profit: -amount,
+          notes: `Manual withdrawal`,
+          symbol: 'WITHDRAWAL'
+        })
+      });
+      if (!res.ok) throw new Error('Failed to record withdrawal');
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      alert('Error recording withdrawal');
+      setIsWithdrawing(false);
+    }
+  };
+
   return (
     <div 
       onClick={handleCardClick}
-      className={`rounded-3xl overflow-hidden bg-[#1e2128] border border-border shadow-2xl flex flex-col h-[200px] transition-transform hover:-translate-y-1 duration-300 cursor-pointer ${isDeleting ? 'opacity-50 pointer-events-none' : ''}`}
+      className={`rounded-3xl overflow-hidden bg-[#1e2128] border border-border shadow-2xl flex flex-col h-[200px] transition-transform hover:-translate-y-1 duration-300 cursor-pointer ${(isDeleting || isWithdrawing) ? 'opacity-50 pointer-events-none' : ''}`}
     >
       {/* Colored Area */}
       <div className={`flex-1 p-6 relative flex flex-col ${colorClass}`}>
@@ -106,7 +142,11 @@ export function AccountCard({ acc, isEur, colorClass }: AccountCardProps) {
                 {formatMoneyDynamic(acc.deposits, isEur)}
               </div>
             </div>
-            <div>
+            <div 
+              onClick={handleWithdrawalClick}
+              className={`cursor-pointer hover:bg-white/10 p-1.5 -m-1.5 rounded-lg transition-colors ${acc.name === 'All Accounts' ? 'pointer-events-none' : ''}`}
+              title="Click to record a withdrawal"
+            >
               <div className="text-foreground/60 text-[10px] uppercase font-bold mb-1 tracking-widest">Withdrawals</div>
               <div className="text-rose-400 text-sm font-bold tracking-wide">
                 {formatMoneyDynamic(acc.withdrawals, isEur)}
