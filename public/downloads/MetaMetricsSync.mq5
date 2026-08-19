@@ -1,5 +1,5 @@
 #property copyright "MetaMetrics"
-#property version   "1.03"
+#property version   "1.04"
 #property description "Real-time Live Sync for MetaMetrics Dashboard"
 
 input string InpApiKey    = "DIN_API_NYCKEL_HAR";
@@ -27,7 +27,7 @@ int OnInit()
 {
    g_last_sync = 0;
    EventSetTimer(InpTimerSec);
-   Print("MetaMetrics EA v1.03: Initierad. Synkar historik nu...");
+   Print("MetaMetrics EA v1.04: Initierad. Synkar historik nu...");
    SyncTrades(0, TimeCurrent());
    return(INIT_SUCCEEDED);
 }
@@ -64,7 +64,30 @@ void SyncTrades(datetime from, datetime to)
       ulong deal_ticket = HistoryDealGetTicket(i);
       if(deal_ticket == 0) continue;
 
+      long deal_type = HistoryDealGetInteger(deal_ticket, DEAL_TYPE);
       long entry = HistoryDealGetInteger(deal_ticket, DEAL_ENTRY);
+      
+      // Spara deposits (balance deals)
+      if(deal_type == DEAL_TYPE_BALANCE)
+      {
+         ArrayResize(deals, deal_count + 1);
+         deals[deal_count].position_id  = 0;
+         deals[deal_count].symbol       = "DEPOSIT";
+         deals[deal_count].profit       = HistoryDealGetDouble(deal_ticket, DEAL_PROFIT);
+         deals[deal_count].commission   = 0;
+         deals[deal_count].swap         = 0;
+         deals[deal_count].volume       = 0;
+         deals[deal_count].close_price  = 0;
+         deals[deal_count].type_str     = "DEPOSIT";
+         
+         datetime time = (datetime)HistoryDealGetInteger(deal_ticket, DEAL_TIME);
+         deals[deal_count].close_time_str = TimeToString(time, TIME_DATE|TIME_MINUTES|TIME_SECONDS);
+         deals[deal_count].open_price    = 0.0;
+         deals[deal_count].open_time_str = deals[deal_count].close_time_str;
+         deal_count++;
+         continue;
+      }
+
       if(entry != DEAL_ENTRY_OUT && entry != DEAL_ENTRY_INOUT) continue;
 
       ArrayResize(deals, deal_count + 1);
@@ -76,7 +99,6 @@ void SyncTrades(datetime from, datetime to)
       deals[deal_count].volume       = HistoryDealGetDouble(deal_ticket, DEAL_VOLUME);
       deals[deal_count].close_price  = HistoryDealGetDouble(deal_ticket, DEAL_PRICE);
 
-      long deal_type = HistoryDealGetInteger(deal_ticket, DEAL_TYPE);
       deals[deal_count].type_str = (deal_type == DEAL_TYPE_BUY) ? "SELL" : "BUY";
 
       datetime close_time = (datetime)HistoryDealGetInteger(deal_ticket, DEAL_TIME);
@@ -91,6 +113,8 @@ void SyncTrades(datetime from, datetime to)
 
    for(int i = 0; i < deal_count; i++)
    {
+      if(deals[i].symbol == "DEPOSIT") continue;
+      
       if(HistorySelectByPosition(deals[i].position_id))
       {
          int pos_total = HistoryDealsTotal();
@@ -103,6 +127,7 @@ void SyncTrades(datetime from, datetime to)
                datetime open_time = (datetime)HistoryDealGetInteger(pos_ticket, DEAL_TIME);
                deals[i].open_time_str = TimeToString(open_time, TIME_DATE|TIME_MINUTES|TIME_SECONDS);
                deals[i].open_price    = HistoryDealGetDouble(pos_ticket, DEAL_PRICE);
+               deals[i].commission   += HistoryDealGetDouble(pos_ticket, DEAL_COMMISSION); // Lägg till IN-kommission!
                break;
             }
          }
