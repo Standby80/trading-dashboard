@@ -44,8 +44,8 @@ export default async function AccountsPage() {
     accountNames.map(async (account, index) => {
       const data = await getDashboardData('all', undefined, account.id);
       
-      const balance = data?.kpis?.currentBalance || 10000;
-      const initial = data?.kpis?.initialBalance || 10000;
+      const balance = data?.kpis?.currentBalance || 0;
+      const initial = data?.kpis?.initialBalance || 0;
       const withdrawals = data?.kpis?.withdrawals || 0; 
       
       return {

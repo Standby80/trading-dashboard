@@ -176,7 +176,7 @@ export async function getDashboardData(period?: string, symbolsStr?: string, acc
     const realAccounts = uniqueAccountsInTrades.filter(name => name !== 'Default');
     const multiplierCount = realAccounts.length > 0 ? realAccounts.length : 1;
     const accountMultiplier = accountName === 'All Accounts' ? Math.max(1, multiplierCount) : 1;
-    calculatedInitialBalance = 10000 * accountMultiplier;
+    calculatedInitialBalance = 0;
   }
 
   assumedInitialBalance = calculatedInitialBalance;
@@ -618,7 +618,7 @@ export async function getDashboardData(period?: string, symbolsStr?: string, acc
       shortestTradeMins: Math.round(shortestTradeMs / 60000),
       metaMetrics: calculateMetaMetricsScore(
         validTradesToReturn.map(t => ({ netProfit: Number(t.profit) + Number(t.swap || 0) + Number(t.commission || 0) })),
-        assumedInitialBalance > 0 ? assumedInitialBalance : 10000,
+        assumedInitialBalance > 0 ? assumedInitialBalance : 0,
         reportMaxDrawdown || 2.04
       ),
 
@@ -695,7 +695,7 @@ export function generateExpectancyCurve(trades: any[], currentBalance: number, p
     return curveData;
 }
 
-export function calculateMetaMetricsScore(trades: any[], initialBalance: number = 10000, maxDrawdownPct: number = 0) {
+export function calculateMetaMetricsScore(trades: any[], initialBalance: number = 0, maxDrawdownPct: number = 0) {
     if (trades.length === 0) {
         return { totalScore: 0, winRateScore: 0, profitFactorScore: 0, consistencyScore: 0, drawdownScore: 0, recoveryScore: 0 };
     }
