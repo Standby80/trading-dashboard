@@ -1,5 +1,5 @@
 #property copyright "MetaMetrics"
-#property version   "1.03"
+#property version   "1.04"
 #property description "Real-time Live Sync for MetaMetrics Dashboard (MT4)"
 #property strict
 
@@ -13,7 +13,7 @@ int OnInit()
 {
    g_last_sync = 0;
    EventSetTimer(InpTimerSec);
-   Print("MetaMetrics EA v1.03: Initierad. Synkar historik nu...");
+   Print("MetaMetrics EA v1.04: Initierad. Synkar historik nu...");
    SyncTrades(0, TimeCurrent());
    return(INIT_SUCCEEDED);
 }
@@ -53,15 +53,21 @@ void SyncTrades(datetime from, datetime to)
       if(close_time < from || close_time > to) continue;
       
       int order_type = OrderType();
-      if(order_type != OP_BUY && order_type != OP_SELL) continue; // Skip deposits/withdrawals/pending
+      if(order_type != OP_BUY && order_type != OP_SELL && order_type != 6) continue; // 6 = OP_BALANCE
       
       string type_str = (order_type == OP_BUY) ? "BUY" : "SELL";
+      string symbol_str = OrderSymbol();
+      
+      if(order_type == 6) {
+         type_str = "DEPOSIT";
+         symbol_str = "DEPOSIT";
+      }
       
       if(deal_count > 0) json += ",";
       
       string t = StringFormat(
          "{\"positionId\":\"%d\",\"symbol\":\"%s\",\"type\":\"%s\",\"volume\":%.2f,\"openTime\":\"%s\",\"closeTime\":\"%s\",\"commission\":%.2f,\"swap\":%.2f,\"grossProfit\":%.2f,\"openPrice\":%.5f,\"closePrice\":%.5f}",
-         OrderTicket(), OrderSymbol(), type_str, OrderLots(),
+         OrderTicket(), symbol_str, type_str, OrderLots(),
          TimeToString(OrderOpenTime(), TIME_DATE|TIME_MINUTES|TIME_SECONDS), 
          TimeToString(OrderCloseTime(), TIME_DATE|TIME_MINUTES|TIME_SECONDS),
          OrderCommission(), OrderSwap(), OrderProfit(),
