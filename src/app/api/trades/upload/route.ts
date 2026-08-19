@@ -246,6 +246,7 @@ export async function POST(request: Request) {
 
     // 1. Skapa en map för symboler i toppen av din POST-funktion
     const symbolOpenMap = new Map<string, string>();
+    let hasPositions = false;
 
     // ANVÄND REGEX DIREKT I LOOPEN ISTÄLLET FÖR ATT DEKLARERA EN VARIABEL HÖGRE UPP
     const rowRegexPattern = /<tr[^>]*>([\s\S]*?)<\/tr>/g;
@@ -306,6 +307,8 @@ export async function POST(request: Request) {
                 // Leta upp typen ("buy" eller "sell")
                 const actualType = cells.find(c => c.toLowerCase() === 'buy' || c.toLowerCase() === 'sell') || 'buy';
                 
+                hasPositions = true;
+                
                 trades.push({
                     ticket_id: cells[1],
                     user_id: user.id,
@@ -328,8 +331,31 @@ export async function POST(request: Request) {
 
         const direction = cells[4]?.toLowerCase();
         
-        // Om det är startinsättningen, spara den som DEPOSIT, ignorera
+        // Om det är startinsättningen, spara den som DEPOSIT
         if (direction === 'balance' || cells[3]?.toLowerCase() === 'balance') {
+          const depProfitStr = cells.find(c => parseCleanNumber(c) !== 0 && !c.includes('.')); 
+          // Titta på slutet av cellerna
+          const depProfit = parseCleanNumber(cells[cells.length - 2]) || parseCleanNumber(cells[cells.length - 3]) || 0;
+          
+          if (depProfit !== 0) {
+            const timeStr = formatDateTime(cells[0]);
+            trades.push({
+              ticket_id: cells[1] || `dep-${Date.now()}-${Math.random()}`,
+              user_id: user.id,
+              account_name: accountName,
+              symbol: 'DEPOSIT',
+              type: 'DEPOSIT',
+              open_time: timeStr,
+              close_time: timeStr,
+              commission: 0,
+              swap: 0,
+              profit: depProfit,
+              volume: 0,
+              hold_time_mins: 0,
+              open_price: 0,
+              close_price: 0
+            });
+          }
           continue;
         }
 
@@ -347,66 +373,74 @@ export async function POST(request: Request) {
     // Sortera alla rader kronologiskt så vi är garanterade att se 'in' FÖRE 'out'
     validDealsRows.sort((a, b) => a.timestamp - b.timestamp);
 
-    // Pass 2: Processa deals i rätt tidsordning
-    for (const row of validDealsRows) {
-      const { cells } = row;
-      const symbol = cells[2];
-      const direction = cells[4]?.toLowerCase();
+    // Pass 2: Processa deals i rätt tidsordning, BARA om vi inte redan hittat Positions!
+    if (!hasPositions) {
+      for (const row of validDealsRows) {
+        const { cells } = row;
+        const symbol = cells[2];
+        const direction = cells[4]?.toLowerCase();
 
-      if (!symbol || symbol.length < 2) continue;
+        if (!symbol || symbol.length < 2) continue;
 
-      // Använd Position ID (index 8) för att para ihop in och ut! I Deals tabellen har en in och ut deal samma Position ID.
-      const positionId = cells[8];
+        // Använd Position ID (index 8) för att para ihop in och ut! I Deals tabellen har en in och ut deal samma Position ID.
+        const positionId = cells[8];
 
-      if (direction === 'out' || direction === 'ut' || direction === 'in/out') {
-        const commission = parseCleanNumber(cells[9]);   // Index 9: Provision
-        const swap = parseCleanNumber(cells[11]);         // Index 11: Byt
-        const grossProfit = parseCleanNumber(cells[12]);  // Index 12: Vinst
-        const netProfit = parseFloat((grossProfit + commission + swap).toFixed(2));
+        if (direction === 'out' || direction === 'ut' || direction === 'in/out') {
+          const outCommission = parseCleanNumber(cells[9]);   // Index 9: Provision
+          const swap = parseCleanNumber(cells[11]);         // Index 11: Byt
+          const grossProfit = parseCleanNumber(cells[12]);  // Index 12: Vinst
+          
+          // Hämta openPrice m.h.a. Position ID
+          const openData = openTradesMap.get(positionId);
+          const openPrice = openData ? openData.openPrice : parseCleanNumber(cells[6]);
+          
+          const inCommission = openData ? (openData.inCommission || 0) : 0;
+          const commission = outCommission + inCommission;
 
-        const trueCloseTime = cells[0]; 
-        const trueOpenTime = symbolOpenMap.get(symbol) || cells[0]; 
+          const netProfit = parseFloat((grossProfit + commission + swap).toFixed(2));
 
-        let holdTimeMins = 0;
-        if (trueOpenTime && trueCloseTime) {
-          const start = new Date(trueOpenTime.replace(/\./g, '/'));
-          const end = new Date(trueCloseTime.replace(/\./g, '/'));
-          holdTimeMins = Math.max(0, Math.floor((end.getTime() - start.getTime()) / 1000 / 60));
+          const trueCloseTime = cells[0]; 
+          const trueOpenTime = symbolOpenMap.get(symbol) || cells[0];
+          
+          let holdTimeMins = 0;
+          if (trueOpenTime && trueCloseTime) {
+            const start = new Date(trueOpenTime.replace(/\./g, '/'));
+            const end = new Date(trueCloseTime.replace(/\./g, '/'));
+            holdTimeMins = Math.max(0, Math.floor((end.getTime() - start.getTime()) / 1000 / 60));
+          }
+
+          const closePrice = parseCleanNumber(cells[6]);
+          
+          // I Deals tabellen är 'out' dealen alltid Motsatt till originalpositionen!
+          // Så om out-dealen är 'sell' så var originalpositionen en 'buy'.
+          const tradeType = openData ? openData.type : (cells[3].toUpperCase().includes('BUY') ? 'SELL' : 'BUY');
+
+          trades.push({
+            ticket_id: cells[1], // Deal ticket
+            user_id: user.id,
+            account_name: accountName,
+            symbol: symbol.replace('.', ''),
+            type: tradeType,
+            open_time: trueOpenTime,
+            close_time: trueCloseTime,
+            commission,
+            swap,
+            profit: netProfit,
+            volume: parseCleanNumber(cells[5]),
+            hold_time_mins: holdTimeMins,
+            open_price: openPrice || 0,
+            close_price: closePrice || 0
+          });
+        } else if (direction === 'in') {
+          symbolOpenMap.set(symbol, cells[0]);
+          // Spara openPrice och original typ mappat mot Position ID
+          openTradesMap.set(positionId, { 
+            openTime: cells[0],
+            openPrice: parseCleanNumber(cells[6]),
+            type: cells[3].toUpperCase().includes('BUY') ? 'BUY' : 'SELL',
+            inCommission: parseCleanNumber(cells[9])
+          });
         }
-
-        // Hämta openPrice m.h.a. Position ID
-        const openData = openTradesMap.get(positionId);
-        const openPrice = openData ? openData.openPrice : parseCleanNumber(cells[6]);
-        const closePrice = parseCleanNumber(cells[6]);
-        
-        // I Deals tabellen är 'out' dealen alltid Motsatt till originalpositionen!
-        // Så om out-dealen är 'sell' så var originalpositionen en 'buy'.
-        const tradeType = openData ? openData.type : (cells[3].toUpperCase().includes('BUY') ? 'SELL' : 'BUY');
-
-        trades.push({
-          ticket_id: cells[1], // Deal ticket
-          user_id: user.id,
-          account_name: accountName,
-          symbol: symbol.replace('.', ''),
-          type: tradeType,
-          open_time: trueOpenTime,
-          close_time: trueCloseTime,
-          commission,
-          swap,
-          profit: netProfit,
-          volume: parseCleanNumber(cells[5]),
-          hold_time_mins: holdTimeMins,
-          open_price: openPrice || 0,
-          close_price: closePrice || 0
-        });
-      } else if (direction === 'in') {
-        symbolOpenMap.set(symbol, cells[0]);
-        // Spara openPrice och original typ mappat mot Position ID
-        openTradesMap.set(positionId, { 
-          openTime: cells[0],
-          openPrice: parseCleanNumber(cells[6]),
-          type: cells[3].toUpperCase().includes('BUY') ? 'BUY' : 'SELL'
-        });
       }
     }
 
